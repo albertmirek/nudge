@@ -1,3 +1,7 @@
 packages:
   - client
   - server
+
+# Expo/Metro does not resolve pnpm's symlinked node_modules reliably;
+# a flat, hoisted layout is the setup Expo documents for pnpm monorepos.
+nodeLinker: hoisted
