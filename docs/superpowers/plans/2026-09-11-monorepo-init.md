@@ -25,14 +25,17 @@
 ### Task 1: Root workspace skeleton
 
 **Files:**
+
 - Create: `package.json`, `pnpm-workspace.yaml`, `.npmrc`, `.nvmrc`, `.editorconfig`, `.gitignore`, `.env.example`, `tsconfig.base.json`, `.prettierrc`, `.prettierignore`
 
 **Interfaces:**
+
 - Produces: `tsconfig.base.json` that Tasks 2 and 3 extend; `.env.example` variable names used by Task 5.
 
 - [ ] **Step 1: Write root manifests**
 
 `package.json`:
+
 ```json
 {
   "name": "nudge",
@@ -58,6 +61,7 @@
 ```
 
 `pnpm-workspace.yaml`:
+
 ```yaml
 packages:
   - client
@@ -65,6 +69,7 @@ packages:
 ```
 
 `.npmrc`:
+
 ```
 node-linker=hoisted
 ```
@@ -72,6 +77,7 @@ node-linker=hoisted
 `.nvmrc`: `22`
 
 `tsconfig.base.json`:
+
 ```json
 {
   "compilerOptions": {
@@ -86,6 +92,7 @@ node-linker=hoisted
 ```
 
 `.prettierrc`:
+
 ```json
 { "singleQuote": true, "semi": true, "trailingComma": "all", "printWidth": 100 }
 ```
@@ -97,6 +104,7 @@ node-linker=hoisted
 `.gitignore`: `node_modules/`, `dist/`, `.expo/`, `expo-env.d.ts`, `.env`, `*.log`, `.DS_Store`, `docs/.idea/`, `coverage/`, `client/ios/`, `client/android/`.
 
 `.env.example`:
+
 ```
 POSTGRES_USER=nudge
 POSTGRES_PASSWORD=nudge
@@ -121,6 +129,7 @@ git add -A && git commit -m "chore: bootstrap pnpm workspace skeleton"
 ### Task 2: NestJS server with /health
 
 **Files:**
+
 - Create: `server/` via `pnpm dlx @nestjs/cli@latest new server --package-manager pnpm --strict --skip-git`
 - Modify: `server/package.json` (name, add `typecheck`, remove eslint/prettier devDeps and `lint`/`format` scripts that reference local configs)
 - Delete: `server/eslint.config.mjs`, `server/.prettierrc`
@@ -129,10 +138,12 @@ git add -A && git commit -m "chore: bootstrap pnpm workspace skeleton"
 - Modify: `server/src/app.module.ts`, `server/src/main.ts`
 
 **Interfaces:**
+
 - Produces: `GET /health` → `{ "status": "ok" }`; server listens on `process.env.PORT ?? 3000`.
 
 - [ ] **Step 1: Scaffold** — run the `nest new` command above from the repo root.
 - [ ] **Step 2: Write the failing test** `server/src/health/health.controller.spec.ts`:
+
 ```ts
 import { Test } from '@nestjs/testing';
 import { HealthController } from './health.controller';
@@ -145,8 +156,10 @@ describe('HealthController', () => {
   });
 });
 ```
+
 - [ ] **Step 3: Run** `pnpm --filter @nudge/server test` → FAIL (module not found).
 - [ ] **Step 4: Implement** `health.controller.ts`:
+
 ```ts
 import { Controller, Get } from '@nestjs/common';
 
@@ -158,7 +171,9 @@ export class HealthController {
   }
 }
 ```
+
 Register in `AppModule.controllers`. Add `ConfigModule.forRoot({ isGlobal: true })` (`pnpm --filter @nudge/server add @nestjs/config`). In `main.ts`: `await app.listen(process.env.PORT ?? 3000)`.
+
 - [ ] **Step 5: Run** tests + `pnpm --filter @nudge/server typecheck` (`tsc --noEmit -p tsconfig.json`) → PASS.
 - [ ] **Step 6: Commit** `feat(server): scaffold NestJS app with /health endpoint`.
 
@@ -167,6 +182,7 @@ Register in `AppModule.controllers`. Add `ConfigModule.forRoot({ isGlobal: true 
 ### Task 3: Expo client
 
 **Files:**
+
 - Create: `client/` via `pnpm dlx create-expo-app@latest client --no-install`
 - Modify: `client/package.json` (name `@nudge/client`, add `typecheck`, remove `lint` script & eslint config)
 - Delete: `client/eslint.config.js`
@@ -174,10 +190,12 @@ Register in `AppModule.controllers`. Add `ConfigModule.forRoot({ isGlobal: true 
 - Modify: `client/tsconfig.json` to extend `../tsconfig.base.json` then `expo/tsconfig.base`
 
 **Interfaces:**
+
 - Produces: `pnpm client:start` boots Metro.
 
 - [ ] **Step 1: Scaffold** with the command above; `pnpm install` from root.
 - [ ] **Step 2: Write** `client/metro.config.js`:
+
 ```js
 const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
@@ -194,6 +212,7 @@ config.resolver.nodeModulesPaths = [
 
 module.exports = config;
 ```
+
 - [ ] **Step 3: Verify** `pnpm --filter @nudge/client typecheck` (`tsc --noEmit`) and `pnpm --filter @nudge/client exec expo export --platform web` → both exit 0. Delete the generated `client/dist`.
 - [ ] **Step 4: Commit** `feat(client): scaffold Expo app with monorepo metro config`.
 
@@ -202,11 +221,13 @@ module.exports = config;
 ### Task 4: Unified ESLint + Prettier
 
 **Files:**
+
 - Create: `eslint.config.mjs`
 - Modify: root `package.json` devDependencies
 
 - [ ] **Step 1: Install** at root: `pnpm add -wD eslint @eslint/js typescript typescript-eslint eslint-config-prettier eslint-config-expo prettier globals`.
 - [ ] **Step 2: Write** `eslint.config.mjs`:
+
 ```js
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
@@ -215,7 +236,16 @@ import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 
 export default tseslint.config(
-  { ignores: ['**/node_modules/**', '**/dist/**', '**/.expo/**', 'docs/**', 'client/ios/**', 'client/android/**'] },
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.expo/**',
+      'docs/**',
+      'client/ios/**',
+      'client/android/**',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   { files: ['client/**/*.{js,jsx,ts,tsx}'], extends: [expoConfig] },
@@ -234,6 +264,7 @@ export default tseslint.config(
   prettier,
 );
 ```
+
 - [ ] **Step 3: Run** `pnpm lint`, `pnpm format` then `pnpm format:check` → all exit 0. Fix any reported issues in scaffolded code.
 - [ ] **Step 4: Commit** `chore: unify eslint and prettier at workspace root`.
 
@@ -242,9 +273,11 @@ export default tseslint.config(
 ### Task 5: Docker Compose for server + Postgres
 
 **Files:**
+
 - Create: `server/Dockerfile`, `.dockerignore`, `docker-compose.yml`
 
 - [ ] **Step 1: Write** `server/Dockerfile` (context = repo root):
+
 ```dockerfile
 FROM node:22-alpine AS base
 RUN corepack enable && corepack prepare pnpm@11.23.0 --activate
@@ -275,7 +308,9 @@ COPY --from=build /app/server/dist ./dist
 EXPOSE 3000
 CMD ["node", "dist/main.js"]
 ```
+
 - [ ] **Step 2: Write** `docker-compose.yml`:
+
 ```yaml
 services:
   db:
@@ -298,6 +333,7 @@ services:
 volumes:
   nudge_pgdata:
 ```
+
 - [ ] **Step 3: Verify** `cp .env.example .env && pnpm docker:up`; wait; `curl -s localhost:3000/health` → `{"status":"ok"}`; `docker compose exec db pg_isready` → accepting connections; `docker build -f server/Dockerfile --target prod .` exits 0; `pnpm docker:down`.
 - [ ] **Step 4: Commit** `feat: dockerize server and postgres with docker compose`.
 
@@ -306,16 +342,19 @@ volumes:
 ### Task 6: Git hooks + README
 
 **Files:**
+
 - Create: `.husky/pre-commit`, `README.md`
 - Modify: root `package.json` (`prepare`, `lint-staged`)
 
 - [ ] **Step 1: Install** `pnpm add -wD husky lint-staged && pnpm exec husky init`; set `.husky/pre-commit` to `pnpm exec lint-staged`. Add to `package.json`:
+
 ```json
 "lint-staged": {
   "*.{ts,tsx,js,mjs,cjs}": ["eslint --fix", "prettier --write"],
   "*.{json,md,yml,yaml}": ["prettier --write"]
 }
 ```
+
 - [ ] **Step 2: Write** `README.md` covering prerequisites, layout, and every root script from Task 1.
 - [ ] **Step 3: Verify** the hook: stage a deliberately mis-formatted `.ts` file, commit, confirm it was reformatted; then discard the test file.
 - [ ] **Step 4: Final verification** — run the spec's full checklist: `pnpm install`, `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm test`, `pnpm docker:up` + curl, `expo export`.

@@ -93,14 +93,14 @@ nudge/
 
 ## Root scripts
 
-| Script | Runs |
-| --- | --- |
-| `client:start` / `client:ios` / `client:android` | `pnpm --filter @nudge/client <start|ios|android>` |
-| `server:dev` | `pnpm --filter @nudge/server start:dev` (native, against `docker:db`) |
-| `docker:up` / `docker:down` / `docker:logs` | `docker compose up --build -d` / `down` / `logs -f` |
-| `docker:db` | `docker compose up -d db` |
-| `lint` / `format` / `typecheck` | `eslint .` / `prettier --write .` / `pnpm -r typecheck` |
-| `format:check` | `prettier --check .` |
+| Script                                           | Runs                                                                  |
+| ------------------------------------------------ | --------------------------------------------------------------------- |
+| `client:start` / `client:ios` / `client:android` | `pnpm --filter @nudge/client <start                                   | ios | android>` |
+| `server:dev`                                     | `pnpm --filter @nudge/server start:dev` (native, against `docker:db`) |
+| `docker:up` / `docker:down` / `docker:logs`      | `docker compose up --build -d` / `down` / `logs -f`                   |
+| `docker:db`                                      | `docker compose up -d db`                                             |
+| `lint` / `format` / `typecheck`                  | `eslint .` / `prettier --write .` / `pnpm -r typecheck`               |
+| `format:check`                                   | `prettier --check .`                                                  |
 
 ## Verification (must pass before the initial commit)
 
