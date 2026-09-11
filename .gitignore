@@ -32,3 +32,6 @@ docs/.idea/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# drawio backups
+.$*.bkp
