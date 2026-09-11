@@ -35,3 +35,6 @@ docs/.idea/
 
 # drawio backups
 .$*.bkp
+
+# typescript incremental
+*.tsbuildinfo
