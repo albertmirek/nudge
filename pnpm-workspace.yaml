@@ -5,3 +5,11 @@ packages:
 # Expo/Metro does not resolve pnpm's symlinked node_modules reliably;
 # a flat, hoisted layout is the setup Expo documents for pnpm monorepos.
 nodeLinker: hoisted
+
+# pnpm refuses packages published more recently than `minimumReleaseAge` (supply-chain
+# protection). Expo ships frequent patch releases pinned by `expo install`, so exempt its
+# ecosystem from the waiting period.
+minimumReleaseAgeExclude:
+  - expo
+  - 'expo-*'
+  - '@expo/*'

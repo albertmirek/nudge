@@ -7,7 +7,6 @@ coverage/
 
 # expo
 .expo/
-expo-env.d.ts
 client/ios/
 client/android/
 *.jks
