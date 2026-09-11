@@ -1,0 +1,23 @@
+{
+  "name": "nudge",
+  "private": true,
+  "packageManager": "pnpm@11.23.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "client:start": "pnpm --filter @nudge/client start",
+    "client:ios": "pnpm --filter @nudge/client ios",
+    "client:android": "pnpm --filter @nudge/client android",
+    "server:dev": "pnpm --filter @nudge/server start:dev",
+    "docker:up": "docker compose up --build -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:db": "docker compose up -d db",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
+  }
+}

@@ -1,0 +1,9 @@
+node_modules
+dist
+.expo
+pnpm-lock.yaml
+docs/.idea
+docs/*.drawio*
+**/ios
+**/android
+coverage
