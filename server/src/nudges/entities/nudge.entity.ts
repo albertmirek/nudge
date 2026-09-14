@@ -1,4 +1,14 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+  UpdateDateColumn,
+} from 'typeorm';
 import type { Relation } from 'typeorm';
 import { Friend } from '../../friends/entities/friend.entity.js';
 import { User } from '../../users/entities/user.entity.js';
@@ -6,7 +16,8 @@ import { NudgeStatus } from './nudge-status.enum.js';
 
 @Entity({ name: 'nudges' })
 @Index('nudges_user_id_status_scheduled_for_idx', ['userId', 'status', 'scheduledFor'])
-@Index('nudges_friend_id_idx', ['friendId'])
+@Unique('nudges_friend_id_key', ['friendId'])
+@Index('nudges_status_scheduled_for_idx', ['status', 'scheduledFor'])
 export class Nudge {
   @PrimaryGeneratedColumn('uuid', { primaryKeyConstraintName: 'nudges_pkey' })
   id: string;
@@ -21,7 +32,7 @@ export class Nudge {
   @Column({ type: 'uuid', name: 'friend_id' })
   friendId: string;
 
-  @ManyToOne(() => Friend, (friend) => friend.nudges, { onDelete: 'CASCADE', nullable: false })
+  @OneToOne(() => Friend, (friend) => friend.nudge, { onDelete: 'CASCADE', nullable: false })
   @JoinColumn({ name: 'friend_id', foreignKeyConstraintName: 'nudges_friend_id_fkey' })
   friend: Relation<Friend>;
 
@@ -36,4 +47,11 @@ export class Nudge {
     default: NudgeStatus.PLANNED,
   })
   status: NudgeStatus;
+
+  /** Changes whenever the schedule is changed or invalidated; included in queued jobs. */
+  @Column({ type: 'integer', default: 1 })
+  revision: number;
+
+  @UpdateDateColumn({ type: 'timestamptz', name: 'last_edited_at' })
+  lastEditedAt: Date;
 }
