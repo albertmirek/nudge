@@ -1,98 +1,64 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { ContactRow } from '@/components/contact/contact-row';
+import { ThemeModePicker } from '@/components/settings/theme-mode-picker';
+import { type Theme, useStyles } from '@/theme';
+import { Text } from '@/ui';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+/** Placeholder data until the contacts API is wired through React Query. */
+const CONTACTS = [
+  { id: '1', name: 'Anastasia Kleisioni', lastContactAt: daysAgo(288) },
+  { id: '2', name: 'Aku Koskien', lastContactAt: daysAgo(12) },
+  { id: '3', name: 'Borbála Varga', lastContactAt: daysAgo(0) },
+  { id: '4', name: 'Elia Cagnazo', lastContactAt: daysAgo(45) },
+];
+
+export default function ContactsScreen() {
+  const styles = useStyles(makeStyles);
+  const [checkedIds, setCheckedIds] = useState<ReadonlySet<string>>(new Set());
+
+  const toggle = (id: string, checked: boolean) => {
+    setCheckedIds((current) => {
+      const next = new Set(current);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  };
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
+    <SafeAreaView style={styles.screen}>
+      <FlatList
+        data={CONTACTS}
+        keyExtractor={(contact) => contact.id}
+        contentContainerStyle={styles.content}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Text variant="title">Your friend list</Text>
+            <ThemeModePicker />
+          </View>
+        }
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        renderItem={({ item }) => (
+          <ContactRow
+            name={item.name}
+            lastContactAt={item.lastContactAt}
+            checked={checkedIds.has(item.id)}
+            onCheckedChange={(checked) => toggle(item.id, checked)}
+          />
+        )}
+      />
+    </SafeAreaView>
   );
 }
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
+const makeStyles = (theme: Theme) => ({
+  screen: { flex: 1, backgroundColor: theme.colors.background },
+  content: { paddingHorizontal: theme.spacing[5], paddingBottom: theme.spacing[6] },
+  header: { gap: theme.spacing[4], paddingVertical: theme.spacing[5] },
+  separator: { height: theme.spacing[5] },
 });

@@ -9,3 +9,5 @@ docs/*.drawio*
 coverage
 client/assets
 .superpowers
+.pnpm-store
+client/.rnstorybook/storybook.requires.ts

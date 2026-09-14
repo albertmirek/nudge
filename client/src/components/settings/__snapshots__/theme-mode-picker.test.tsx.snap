@@ -1,0 +1,238 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "gap": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Inter_400Regular",
+            "fontSize": 12,
+            "lineHeight": 16,
+          },
+          {
+            "color": "#8a8a8f",
+          },
+          undefined,
+        ]
+      }
+    >
+      Appearance
+    </Text>
+    <View
+      accessibilityRole="radiogroup"
+      style={
+        {
+          "alignSelf": "flex-start",
+          "backgroundColor": "#f0f0f3",
+          "borderRadius": 8,
+          "flexDirection": "row",
+          "gap": 4,
+          "padding": 4,
+        }
+      }
+    >
+      <View
+        accessibilityLabel="System"
+        accessibilityRole="radio"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": true,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            {
+              "borderRadius": 8,
+              "paddingHorizontal": 12,
+              "paddingVertical": 4,
+            },
+            {
+              "backgroundColor": "#ffffff",
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 12,
+                "lineHeight": 16,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          System
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Light"
+        accessibilityRole="radio"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            {
+              "borderRadius": 8,
+              "paddingHorizontal": 12,
+              "paddingVertical": 4,
+            },
+            false,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 12,
+                "lineHeight": 16,
+              },
+              {
+                "color": "#8a8a8f",
+              },
+              undefined,
+            ]
+          }
+        >
+          Light
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Dark"
+        accessibilityRole="radio"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            {
+              "borderRadius": 8,
+              "paddingHorizontal": 12,
+              "paddingVertical": 4,
+            },
+            false,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 12,
+                "lineHeight": 16,
+              },
+              {
+                "color": "#8a8a8f",
+              },
+              undefined,
+            ]
+          }
+        >
+          Dark
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
