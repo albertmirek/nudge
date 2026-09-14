@@ -13,17 +13,22 @@ declare module 'vitest' {
 // migration, and hands the URL to the test workers (see setup-env.ts).
 export default async function setup(project: TestProject): Promise<() => Promise<void>> {
   const container = await new PostgreSqlContainer('postgres:17-alpine').start();
-  const url = container.getConnectionUri();
-
-  const dataSource = new DataSource(buildDataSourceOptions(url));
-  await dataSource.initialize();
   try {
-    await dataSource.runMigrations();
-  } finally {
-    await dataSource.destroy();
-  }
+    const url = container.getConnectionUri();
 
-  project.provide('DATABASE_URL', url);
+    const dataSource = new DataSource(buildDataSourceOptions(url));
+    await dataSource.initialize();
+    try {
+      await dataSource.runMigrations();
+    } finally {
+      await dataSource.destroy();
+    }
+
+    project.provide('DATABASE_URL', url);
+  } catch (error) {
+    await container.stop();
+    throw error;
+  }
 
   return async () => {
     await container.stop();
