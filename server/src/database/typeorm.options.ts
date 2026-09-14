@@ -1,4 +1,9 @@
 import type { DataSourceOptions } from 'typeorm';
+import { CatchUp } from '../friends/entities/catch-up.entity.js';
+import { Channel } from '../friends/entities/channel.entity.js';
+import { Friend } from '../friends/entities/friend.entity.js';
+import { Nudge } from '../nudges/entities/nudge.entity.js';
+import { User } from '../users/entities/user.entity.js';
 import { migrations } from './migrations/index.js';
 
 // Single source of truth for the TypeORM connection. Used by DatabaseModule (Nest runtime),
@@ -10,7 +15,7 @@ export function buildDataSourceOptions(url: string): DataSourceOptions {
     type: 'postgres',
     url,
     uuidExtension: 'pgcrypto',
-    entities: [],
+    entities: [User, Friend, Channel, CatchUp, Nudge],
     migrations,
     migrationsTableName: 'migrations',
     synchronize: false,
