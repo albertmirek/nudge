@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    accessibilityLabel="Anastasia Kleisioni"
+    accessibilityRole="image"
+    style={
+      [
+        {
+          "backgroundColor": "#3a448a",
+          "borderRadius": 9999,
+          "height": 49,
+          "overflow": "hidden",
+          "width": 49,
+        },
+        undefined,
+      ]
+    }
+  />
+</View>
+`;
