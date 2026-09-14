@@ -1,0 +1,15 @@
+meta {
+  name: Delete Catch-up
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/v1/friends/{{friendId}}/catch-up/{{catchUpId}}
+  body: none
+}
+
+docs {
+  204 No Content. Deleting the most recent catch-up restores the friend's lastContactAt
+  to the previous one (or null if none remain).
+}

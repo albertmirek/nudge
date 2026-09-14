@@ -1,0 +1,28 @@
+meta {
+  name: Snooze Nudge
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/nudges/{{nudgeId}}/snooze
+  body: json
+}
+
+body:json {
+  {
+    "revision": {{revision}}
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("revision", res.body.revision);
+  }
+}
+
+docs {
+  Pushes the schedule out by 24h. revision is optimistic-concurrency: it must match the
+  nudge's current revision or this returns 409 — re-run "Get Friend" if it's gone stale.
+  On success this updates {{revision}} for you.
+}

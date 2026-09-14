@@ -1,0 +1,12 @@
+{
+  "name": "Nudge API",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"],
+  "size": 0.0046863555908203125,
+  "filesCount": 20,
+  "presets": {
+    "requestType": "http",
+    "requestUrl": "localhost:3000"
+  },
+  "version": "1"
+}

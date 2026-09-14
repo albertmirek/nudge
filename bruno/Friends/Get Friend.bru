@@ -1,0 +1,22 @@
+meta {
+  name: Get Friend
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/friends/{{friendId}}
+  body: none
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.nudge) {
+    bru.setEnvVar("nudgeId", res.body.nudge.id);
+    bru.setEnvVar("revision", res.body.nudge.revision);
+  }
+}
+
+docs {
+  Also refreshes nudgeId/revision in the environment — handy after catch-up actions,
+  which bump the nudge's revision without returning it directly.
+}

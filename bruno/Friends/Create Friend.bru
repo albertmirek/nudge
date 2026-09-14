@@ -1,0 +1,32 @@
+meta {
+  name: Create Friend
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/friends
+  body: json
+}
+
+body:json {
+  {
+    "name": "Alice",
+    "periodicity": "MONTHLY",
+    "nudgeEnabled": true
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setEnvVar("friendId", res.body.id);
+    bru.setEnvVar("nudgeId", res.body.nudge.id);
+    bru.setEnvVar("revision", res.body.nudge.revision);
+  }
+}
+
+docs {
+  periodicity: WEEKLY | BIWEEKLY | MONTHLY | QUARTERLY. nudgeEnabled defaults to true.
+  Creating a friend also creates its (single) nudge — this saves friendId, nudgeId and
+  revision into the environment so the other requests can chain off it.
+}

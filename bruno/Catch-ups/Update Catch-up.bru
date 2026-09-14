@@ -1,0 +1,20 @@
+meta {
+  name: Update Catch-up
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/v1/friends/{{friendId}}/catch-up/{{catchUpId}}
+  body: json
+}
+
+body:json {
+  {
+    "note": "Updated note"
+  }
+}
+
+docs {
+  note is required for this call (send null or "" to clear it).
+}

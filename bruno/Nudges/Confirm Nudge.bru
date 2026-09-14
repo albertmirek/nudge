@@ -1,0 +1,28 @@
+meta {
+  name: Confirm Nudge
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/nudges/{{nudgeId}}/confirm
+  body: json
+}
+
+body:json {
+  {
+    "revision": {{revision}}
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("revision", res.body.revision);
+  }
+}
+
+docs {
+  Records contact now and replans from it. revision is optimistic-concurrency: it must
+  match the nudge's current revision or this returns 409. On success this updates
+  {{revision}} for you.
+}

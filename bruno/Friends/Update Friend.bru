@@ -1,0 +1,22 @@
+meta {
+  name: Update Friend
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/v1/friends/{{friendId}}
+  body: json
+}
+
+body:json {
+  {
+    "name": "Alicia"
+  }
+}
+
+docs {
+  Send only the fields you want to change: name, periodicity, nudgeEnabled.
+  At least one field is required. Changing periodicity or nudgeEnabled replans the nudge
+  (bumps its revision) — re-run "Get Friend" afterwards to refresh {{revision}}.
+}

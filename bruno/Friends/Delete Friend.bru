@@ -1,0 +1,14 @@
+meta {
+  name: Delete Friend
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/v1/friends/{{friendId}}
+  body: none
+}
+
+docs {
+  204 No Content. Cascades: also deletes the friend's nudge and catch-ups.
+}

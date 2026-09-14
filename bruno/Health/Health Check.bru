@@ -1,0 +1,15 @@
+meta {
+  name: Health Check
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+}
+
+docs {
+  Checks the DB connection. 200 {status: ok, db: ok} or 503 if the database is unreachable.
+  No auth required.
+}
