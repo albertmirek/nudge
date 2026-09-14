@@ -56,8 +56,10 @@ server/src/
 ├── database/
 │   ├── database.module.ts        # TypeOrmModule.forRootAsync from ConfigService
 │   ├── data-source.ts            # standalone DataSource for the TypeORM CLI
-│   ├── typeorm.options.ts        # shared options (url, naming strategy, entity/migration globs)
+│   ├── typeorm.options.ts        # shared options (url, explicit entity + migration lists)
+│   ├── cli.ts                    # shim: imports typeorm/cli.js (run through tsx)
 │   └── migrations/
+│       ├── index.ts              # export const migrations = [InitialSchema...]
 │       └── <timestamp>-InitialSchema.ts
 ├── health/health.controller.ts   # + DB ping
 ├── users/
@@ -77,9 +79,11 @@ future DTOs can reuse them.
 ## Connection
 
 `DatabaseModule` calls `TypeOrmModule.forRootAsync` with `ConfigService`, reading
-`DATABASE_URL`. `autoLoadEntities: true` picks up every entity registered through
-`forFeature`, so there is no central entity list. The same option builder
-(`typeorm.options.ts`) feeds both the Nest module and the CLI data source, so they can't drift.
+`DATABASE_URL`. One option builder (`typeorm.options.ts`) holds the explicit `entities` and
+`migrations` lists and feeds both the Nest module and the CLI data source, so they can't drift.
+Explicit class lists (rather than file globs) work identically under `tsx` (CLI), vitest (e2e)
+and compiled `dist/` (runtime) without a TypeScript loader. Feature modules still call
+`TypeOrmModule.forFeature([...])` to expose repositories.
 
 `GET /health` executes `SELECT 1` through the `DataSource` and returns
 `{ status: 'ok', db: 'ok' }`; a failed query yields HTTP 503 `{ status: 'error', db: 'down' }`.
@@ -87,9 +91,14 @@ future DTOs can reuse them.
 ## Migrations
 
 The TypeORM CLI is run through `tsx` (the server is ESM + TypeScript 6; `ts-node` is not
-supported for this setup). `data-source.ts` loads the repo-root `.env`, then uses the shared
-options with globs `src/**/*.entity.ts` and `src/database/migrations/*.ts`. Because the CLI
+supported for this setup) via a one-line shim `src/database/cli.ts` that imports
+`typeorm/cli.js` — needed because pnpm's hoisted layout leaves no `server/node_modules/typeorm`.
+`data-source.ts` loads the repo-root `.env` with `process.loadEnvFile`, then uses the shared
+options. New migrations are registered in `src/database/migrations/index.ts`. Because the CLI
 diffs against a live database, `migration:generate` requires `pnpm docker:db` to be running.
+
+`tsx` (esbuild) does not emit decorator metadata, so every `@Column` declares an explicit
+`type` and every relation names its target class; the CLI never relies on `design:type`.
 
 Scripts on `@nudge/server`:
 
@@ -105,8 +114,10 @@ Root adds `db:migrate` → `pnpm --filter @nudge/server migration:run`.
 The initial migration `InitialSchema` is generated from the entities, reviewed, and committed.
 It creates the three enum types, five tables, FKs and indexes; `down()` drops them in reverse.
 
-The entity/migration globs resolve for both `.ts` (source, CLI) and compiled `.js` (`dist/`),
-so a later deploy-time `migration:run` against the `prod` image needs no restructuring.
+Constraint names are explicit in the entities (`users_pkey`, `friends_user_id_fkey`,
+`friends_user_id_idx`, `friends_periodicity_enum`, …) so the generated SQL is deterministic and
+readable in `psql`. Explicit class lists compile into `dist/`, so a later deploy-time
+`migration:run` against the `prod` image needs no restructuring.
 
 ## Test environment
 
