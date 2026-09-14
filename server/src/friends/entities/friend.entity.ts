@@ -6,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -54,6 +55,6 @@ export class Friend {
   @OneToMany(() => CatchUp, (catchUp) => catchUp.friend)
   catchUps: Relation<CatchUp[]>;
 
-  @OneToMany(() => Nudge, (nudge) => nudge.friend)
-  nudges: Relation<Nudge[]>;
+  @OneToOne(() => Nudge, (nudge) => nudge.friend)
+  nudge: Relation<Nudge | null>;
 }

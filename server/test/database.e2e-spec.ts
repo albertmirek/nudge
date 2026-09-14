@@ -45,7 +45,7 @@ describe('Entities (e2e)', () => {
     expect(found.createdAt).toBeInstanceOf(Date);
   });
 
-  it('loads a friend with its channels, catch-ups and nudges', async () => {
+  it('loads a friend with its channels, catch-ups and nudge', async () => {
     const user = await createUser();
     const friend = await createFriend(user);
     await dataSource
@@ -60,7 +60,7 @@ describe('Entities (e2e)', () => {
 
     const loaded = await dataSource.getRepository(Friend).findOneOrFail({
       where: { id: friend.id },
-      relations: { user: true, channels: true, catchUps: true, nudges: true },
+      relations: { user: true, channels: true, catchUps: true, nudge: true },
     });
 
     expect(loaded.user.id).toBe(user.id);
@@ -70,12 +70,12 @@ describe('Entities (e2e)', () => {
       expect.objectContaining({ type: ChannelType.WHATSAPP, deepLink: 'whatsapp://send' }),
     ]);
     expect(loaded.catchUps).toEqual([expect.objectContaining({ note: 'coffee' })]);
-    expect(loaded.nudges).toEqual([
+    expect(loaded.nudge).toEqual(
       expect.objectContaining({
         status: NudgeStatus.PLANNED,
         scheduledFor: new Date('2026-10-01T16:00:00Z'),
       }),
-    ]);
+    );
   });
 
   it('rejects values outside the enums', async () => {

@@ -44,6 +44,8 @@ Prettier on staged files before every commit.
 | `pnpm server:dev`  | Run the server natively in watch mode (pair with `docker:db`) |
 
 The server listens on `http://localhost:3000`; `GET /health` returns `{"status":"ok","db":"ok"}`.
+Friend and catch-up CRUD plus nudge actions are documented in
+[`docs/backend-api.md`](docs/backend-api.md), including the authentication boundary and scheduling rules.
 `server/src` is bind-mounted into the container, so edits restart the server automatically.
 Adding a dependency to the server requires `pnpm docker:up` again to rebuild the image.
 
