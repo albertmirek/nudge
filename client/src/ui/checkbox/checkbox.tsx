@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { Pressable } from 'react-native';
 
 import checkIcon from '@/assets/icons/checkbox-check.svg';
-import { type Theme, useStyles } from '@/theme';
+import { type Theme, useStyles, useTheme } from '@/theme';
 
 export type CheckboxProps = {
   checked: boolean;
@@ -12,16 +12,13 @@ export type CheckboxProps = {
   accessibilityLabel?: string;
 };
 
-const SIZE = 18;
-/** Figma's enlarged "touch area" — brings the target to 38×38. */
-const HIT_SLOP = 10;
-
 export function Checkbox({
   checked,
   onCheckedChange,
   disabled = false,
   accessibilityLabel,
 }: CheckboxProps) {
+  const { sizes } = useTheme();
   const styles = useStyles(makeStyles);
 
   return (
@@ -30,7 +27,8 @@ export function Checkbox({
       accessibilityState={{ checked, disabled }}
       accessibilityLabel={accessibilityLabel}
       disabled={disabled}
-      hitSlop={HIT_SLOP}
+      // Figma's enlarged "touch area" — brings the target to 38×38.
+      hitSlop={sizes.checkboxHitSlop}
       onPress={() => onCheckedChange(!checked)}
       style={[styles.box, checked && styles.checked, disabled && styles.disabled]}
     >
@@ -48,14 +46,14 @@ export function Checkbox({
 
 const makeStyles = (theme: Theme) => ({
   box: {
-    width: SIZE,
-    height: SIZE,
+    width: theme.sizes.checkbox,
+    height: theme.sizes.checkbox,
     borderRadius: theme.radii.sm,
-    borderWidth: 1,
+    borderWidth: theme.sizes.border,
     borderColor: theme.colors.border,
   },
   // The exported asset already paints the filled box, so the border goes away.
   checked: { borderWidth: 0 },
   disabled: { opacity: 0.4 },
-  icon: { width: SIZE, height: SIZE },
+  icon: { width: theme.sizes.checkbox, height: theme.sizes.checkbox },
 });

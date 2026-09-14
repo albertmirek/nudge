@@ -6,18 +6,19 @@ import { useTheme } from '@/theme';
 export type AvatarProps = {
   /** Who the picture shows; used as the accessibility label. */
   label: string;
-  /** Diameter in px. Figma contact row uses 49. */
+  /** Diameter in px. Defaults to `theme.sizes.avatar` (49, the Figma contact row). */
   size?: number;
   /** Remote image URL. Without it the avatar is a solid accent disc (Figma placeholder). */
   source?: string;
   style?: StyleProp<ViewStyle>;
 };
 
-export function Avatar({ label, size = 49, source, style }: AvatarProps) {
+export function Avatar({ label, size, source, style }: AvatarProps) {
   const theme = useTheme();
+  const diameter = size ?? theme.sizes.avatar;
   const shape: ViewStyle = {
-    width: size,
-    height: size,
+    width: diameter,
+    height: diameter,
     borderRadius: theme.radii.full,
     backgroundColor: theme.colors.accent,
     overflow: 'hidden',
