@@ -28,37 +28,38 @@
 
 ## File map
 
-| Path (under `client/`) | Responsibility |
-| --- | --- |
-| `jest.config.js` | jest-expo preset, alias mapping, storybook transpile list, kv-store mock |
-| `src/test/setup.ts` | Jest setup: mocks `useSystemColorScheme`, registers Storybook project annotations |
-| `src/test/mocks/kv-store.ts` | In-memory stand-in for `expo-sqlite/kv-store` |
-| `src/test/render.tsx` | `renderWithTheme(ui, { scheme })` for non-story tests |
-| `src/test/stories.tsx` | `describeStories(name, csf)` — renders every story in light and dark |
-| `src/lib/date.ts` | `formatDaysAgo` |
-| `src/theme/tokens/{colors,spacing,typography,radii}.ts` | Raw + semantic tokens |
-| `src/theme/theme.ts` | `Theme` type, `lightTheme`, `darkTheme`, `themes` |
-| `src/theme/theme-mode.ts` | `ThemeMode`, `ThemeStorage` interface, `parseThemeMode`, `createMemoryThemeStorage` |
-| `src/theme/theme-storage.ts` / `.web.ts` | Default persistent storage (kv-store / localStorage) |
-| `src/theme/use-system-color-scheme.ts` | Wraps RN `useColorScheme`, normalises to `'light' \| 'dark'` (mocked in tests) |
-| `src/theme/theme-provider.tsx` | `ThemeProvider`, `useTheme`, `useThemeMode` |
-| `src/theme/use-styles.ts` | `useStyles(makeStyles)` |
-| `src/theme/index.ts` | Barrel |
-| `src/types/assets.d.ts` | `*.svg` module declaration |
-| `src/ui/text/`, `src/ui/avatar/`, `src/ui/checkbox/`, `src/ui/index.ts` | Primitives |
-| `src/components/contact/contact-row.*` | Figma `contact` |
-| `src/components/settings/theme-mode-picker.*` | System/Light/Dark switch used by the demo screen |
-| `src/storybook/preview.tsx`, `with-theme.tsx`, `with-fonts.tsx`, `with-fonts.web.tsx` | Shared Storybook annotations |
-| `.rnstorybook/{main.ts,preview.tsx,index.tsx,storybook.requires.ts}` | On-device Storybook |
-| `.storybook/{main.ts,preview.tsx,preview-head.html}` | Web Storybook |
-| `assets/icons/checkbox-check.svg` | Figma export (checked state) |
-| `src/app/_layout.tsx`, `src/app/index.tsx` | App shell (providers, Storybook toggle) and Contacts demo screen |
+| Path (under `client/`)                                                                | Responsibility                                                                      |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `jest.config.js`                                                                      | jest-expo preset, alias mapping, storybook transpile list, kv-store mock            |
+| `src/test/setup.ts`                                                                   | Jest setup: mocks `useSystemColorScheme`, registers Storybook project annotations   |
+| `src/test/mocks/kv-store.ts`                                                          | In-memory stand-in for `expo-sqlite/kv-store`                                       |
+| `src/test/render.tsx`                                                                 | `renderWithTheme(ui, { scheme })` for non-story tests                               |
+| `src/test/stories.tsx`                                                                | `describeStories(name, csf)` — renders every story in light and dark                |
+| `src/lib/date.ts`                                                                     | `formatDaysAgo`                                                                     |
+| `src/theme/tokens/{colors,spacing,typography,radii}.ts`                               | Raw + semantic tokens                                                               |
+| `src/theme/theme.ts`                                                                  | `Theme` type, `lightTheme`, `darkTheme`, `themes`                                   |
+| `src/theme/theme-mode.ts`                                                             | `ThemeMode`, `ThemeStorage` interface, `parseThemeMode`, `createMemoryThemeStorage` |
+| `src/theme/theme-storage.ts` / `.web.ts`                                              | Default persistent storage (kv-store / localStorage)                                |
+| `src/theme/use-system-color-scheme.ts`                                                | Wraps RN `useColorScheme`, normalises to `'light' \| 'dark'` (mocked in tests)      |
+| `src/theme/theme-provider.tsx`                                                        | `ThemeProvider`, `useTheme`, `useThemeMode`                                         |
+| `src/theme/use-styles.ts`                                                             | `useStyles(makeStyles)`                                                             |
+| `src/theme/index.ts`                                                                  | Barrel                                                                              |
+| `src/types/assets.d.ts`                                                               | `*.svg` module declaration                                                          |
+| `src/ui/text/`, `src/ui/avatar/`, `src/ui/checkbox/`, `src/ui/index.ts`               | Primitives                                                                          |
+| `src/components/contact/contact-row.*`                                                | Figma `contact`                                                                     |
+| `src/components/settings/theme-mode-picker.*`                                         | System/Light/Dark switch used by the demo screen                                    |
+| `src/storybook/preview.tsx`, `with-theme.tsx`, `with-fonts.tsx`, `with-fonts.web.tsx` | Shared Storybook annotations                                                        |
+| `.rnstorybook/{main.ts,preview.tsx,index.tsx,storybook.requires.ts}`                  | On-device Storybook                                                                 |
+| `.storybook/{main.ts,preview.tsx,preview-head.html}`                                  | Web Storybook                                                                       |
+| `assets/icons/checkbox-check.svg`                                                     | Figma export (checked state)                                                        |
+| `src/app/_layout.tsx`, `src/app/index.tsx`                                            | App shell (providers, Storybook toggle) and Contacts demo screen                    |
 
 ---
 
 ### Task 1: Jest foundation + `formatDaysAgo`
 
 **Files:**
+
 - Modify: `client/package.json` (scripts + devDependencies)
 - Create: `client/jest.config.js`
 - Create: `client/src/test/setup.ts`
@@ -66,6 +67,7 @@
 - Test: `client/src/lib/date.test.ts`
 
 **Interfaces:**
+
 - Produces: `formatDaysAgo(date: Date, now?: Date): string` and `daysBetween(date: Date, now: Date): number` from `@/lib/date`.
 
 - [ ] **Step 1: Install the workspace and the test dependencies**
@@ -195,11 +197,13 @@ git commit -m "feat(client): add jest-expo test setup and formatDaysAgo"
 ### Task 2: Design tokens and theme objects
 
 **Files:**
+
 - Create: `client/src/theme/tokens/colors.ts`, `spacing.ts`, `typography.ts`, `radii.ts`
 - Create: `client/src/theme/theme.ts`
 - Test: `client/src/theme/theme.test.ts`
 
 **Interfaces:**
+
 - Produces:
   - `palette` (raw hex), `SemanticColors`, `lightColors`, `darkColors` from `@/theme/tokens/colors`
   - `spacing` (`{0:0,1:4,2:8,3:12,4:16,5:24,6:32}`), `radii` (`{sm:2, md:8, full:9999}`)
@@ -444,6 +448,7 @@ git commit -m "feat(client): add design tokens and light/dark theme objects"
 ### Task 3: Theme mode persistence
 
 **Files:**
+
 - Create: `client/src/theme/theme-mode.ts`
 - Create: `client/src/theme/theme-storage.ts`
 - Create: `client/src/theme/theme-storage.web.ts`
@@ -452,6 +457,7 @@ git commit -m "feat(client): add design tokens and light/dark theme objects"
 - Test: `client/src/theme/theme-mode.test.ts`, `client/src/theme/theme-storage.test.ts`
 
 **Interfaces:**
+
 - Produces (from `@/theme/theme-mode`):
   - `type ThemeMode = 'system' | 'light' | 'dark'`, `THEME_MODES`, `THEME_MODE_STORAGE_KEY = 'nudge.theme.mode'`
   - `parseThemeMode(value: string | null | undefined): ThemeMode | null`
@@ -663,6 +669,7 @@ git commit -m "feat(client): add persisted theme mode storage adapters"
 ### Task 4: `ThemeProvider`, hooks and `useStyles`
 
 **Files:**
+
 - Create: `client/src/theme/use-system-color-scheme.ts`
 - Create: `client/src/theme/theme-provider.tsx`
 - Create: `client/src/theme/use-styles.ts`
@@ -672,6 +679,7 @@ git commit -m "feat(client): add persisted theme mode storage adapters"
 - Test: `client/src/theme/theme-provider.test.tsx`, `client/src/theme/use-styles.test.tsx`
 
 **Interfaces:**
+
 - Produces (from `@/theme`):
   - `useSystemColorScheme(): ColorScheme`
   - `ThemeProvider({ children, storage?, initialMode? })` — `storage` defaults to `createDefaultThemeStorage()`; `initialMode` overrides the stored value (Storybook uses it).
@@ -948,7 +956,12 @@ beforeEach(() => {
 import { render, type RenderOptions } from '@testing-library/react-native';
 import type { ReactElement } from 'react';
 
-import { type ColorScheme, ThemeProvider, type ThemeStorage, createMemoryThemeStorage } from '@/theme';
+import {
+  type ColorScheme,
+  ThemeProvider,
+  type ThemeStorage,
+  createMemoryThemeStorage,
+} from '@/theme';
 
 type Options = RenderOptions & {
   scheme?: ColorScheme;
@@ -990,11 +1003,13 @@ git commit -m "feat(client): add ThemeProvider, theme hooks and useStyles"
 ### Task 5: `Text` primitive
 
 **Files:**
+
 - Create: `client/src/ui/text/text.tsx`
 - Create: `client/src/ui/index.ts`
 - Test: `client/src/ui/text/text.test.tsx`
 
 **Interfaces:**
+
 - Produces: `Text` from `@/ui` with `TextProps = RNTextProps & { variant?: TypographyVariant; color?: 'primary' | 'secondary' }`. Defaults: `variant="body"`, `color="primary"`.
 
 - [ ] **Step 1: Write the failing test**
@@ -1099,6 +1114,7 @@ git commit -m "feat(client): add Text primitive"
 ### Task 6: Storybook (on-device + web) with the `Text` stories
 
 **Files:**
+
 - Modify: `client/package.json` (deps, scripts), root `package.json` (scripts)
 - Modify: `client/metro.config.js`, `client/jest.config.js`, `client/tsconfig.json`, root `eslint.config.mjs`, root `.prettierignore`, root `.gitignore`
 - Create: `client/src/storybook/with-theme.tsx`, `with-fonts.tsx`, `with-fonts.web.tsx`, `preview.tsx`
@@ -1108,6 +1124,7 @@ git commit -m "feat(client): add Text primitive"
 - Create: `client/src/ui/text/text.stories.tsx`; modify `client/src/ui/text/text.test.tsx`
 
 **Interfaces:**
+
 - Produces: `describeStories(name: string, csf)` from `@/test/stories` — renders every story in light and dark. Stories type with `import type { Meta, StoryObj } from '@storybook/react'`.
 - Storybook global `scheme` (`'system' | 'light' | 'dark'`, default `system`) selects the theme via the shared `withTheme` decorator.
 
@@ -1164,7 +1181,12 @@ export const withTheme: Decorator = (Story, context) => {
 `client/src/storybook/with-fonts.tsx` (native):
 
 ```tsx
-import { Inter_300Light, Inter_400Regular, Inter_600SemiBold, useFonts } from '@expo-google-fonts/inter';
+import {
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_600SemiBold,
+  useFonts,
+} from '@expo-google-fonts/inter';
 import type { Decorator } from '@storybook/react';
 
 /** Loads Inter before rendering stories so type matches the app. */
@@ -1534,11 +1556,13 @@ git commit -m "feat(client): add on-device and web Storybook with shared theme d
 ### Task 7: `Avatar` primitive
 
 **Files:**
+
 - Create: `client/src/ui/avatar/avatar.tsx`, `avatar.stories.tsx`
 - Modify: `client/src/ui/index.ts`
 - Test: `client/src/ui/avatar/avatar.test.tsx`
 
 **Interfaces:**
+
 - Produces: `Avatar` from `@/ui` with `AvatarProps = { label: string; size?: number (default 49); source?: string; style?: StyleProp<ViewStyle> }`.
 
 - [ ] **Step 1: Write the failing test**
@@ -1559,7 +1583,12 @@ describe('Avatar', () => {
   it('renders an accent-filled circle when there is no image', () => {
     renderWithTheme(<Avatar label="Anastasia Kleisioni" />);
     const node = screen.getByLabelText('Anastasia Kleisioni');
-    expect(node).toHaveStyle({ width: 49, height: 49, borderRadius: 9999, backgroundColor: '#3a448a' });
+    expect(node).toHaveStyle({
+      width: 49,
+      height: 49,
+      borderRadius: 9999,
+      backgroundColor: '#3a448a',
+    });
     expect(screen.queryByTestId('avatar-image')).toBeNull();
   });
 
@@ -1687,6 +1716,7 @@ git commit -m "feat(client): add Avatar primitive"
 ### Task 8: `Checkbox` primitive
 
 **Files:**
+
 - Create: `client/assets/icons/checkbox-check.svg` (Figma export, node `3001:1140`)
 - Create: `client/src/types/assets.d.ts`
 - Create: `client/src/ui/checkbox/checkbox.tsx`, `checkbox.stories.tsx`
@@ -1694,6 +1724,7 @@ git commit -m "feat(client): add Avatar primitive"
 - Test: `client/src/ui/checkbox/checkbox.test.tsx`
 
 **Interfaces:**
+
 - Produces: `Checkbox` from `@/ui` with `CheckboxProps = { checked: boolean; onCheckedChange(checked: boolean): void; disabled?: boolean; accessibilityLabel?: string }`.
 
 - [ ] **Step 1: Commit the Figma asset**
@@ -1743,7 +1774,9 @@ describe('Checkbox', () => {
   });
 
   it('exposes checkbox semantics', () => {
-    renderWithTheme(<Checkbox checked={false} onCheckedChange={() => {}} accessibilityLabel="Aku" />);
+    renderWithTheme(
+      <Checkbox checked={false} onCheckedChange={() => {}} accessibilityLabel="Aku" />,
+    );
     const box = screen.getByRole('checkbox', { name: 'Aku' });
     expect(box).toHaveAccessibilityState({ checked: false, disabled: false });
     expect(box).toHaveStyle({ width: 18, height: 18, borderRadius: 2, borderWidth: 1 });
@@ -1810,7 +1843,12 @@ const SIZE = 18;
 /** Figma's enlarged "touch area" — brings the target to 38×38. */
 const HIT_SLOP = 10;
 
-export function Checkbox({ checked, onCheckedChange, disabled = false, accessibilityLabel }: CheckboxProps) {
+export function Checkbox({
+  checked,
+  onCheckedChange,
+  disabled = false,
+  accessibilityLabel,
+}: CheckboxProps) {
   const styles = useStyles(makeStyles);
 
   return (
@@ -1824,7 +1862,12 @@ export function Checkbox({ checked, onCheckedChange, disabled = false, accessibi
       style={[styles.box, checked && styles.checked, disabled && styles.disabled]}
     >
       {checked ? (
-        <Image testID="checkbox-check" source={checkIcon} style={styles.icon} contentFit="contain" />
+        <Image
+          testID="checkbox-check"
+          source={checkIcon}
+          style={styles.icon}
+          contentFit="contain"
+        />
       ) : null}
     </Pressable>
   );
@@ -1911,10 +1954,12 @@ git commit -m "feat(client): add Checkbox primitive with Figma check asset"
 ### Task 9: `ContactRow`
 
 **Files:**
+
 - Create: `client/src/components/contact/contact-row.tsx`, `contact-row.stories.tsx`
 - Test: `client/src/components/contact/contact-row.test.tsx`
 
 **Interfaces:**
+
 - Consumes: `Avatar`, `Checkbox`, `Text` from `@/ui`; `formatDaysAgo` from `@/lib/date`; `useStyles`, `Theme` from `@/theme`.
 - Produces: `ContactRow` from `@/components/contact/contact-row`:
 
@@ -2156,6 +2201,7 @@ git commit -m "feat(client): add ContactRow component from Figma"
 ### Task 10: App shell, Contacts demo screen, template removal
 
 **Files:**
+
 - Modify: `client/package.json` (add `@tanstack/react-query`; drop template-only deps)
 - Create: `client/src/lib/query-client.ts`
 - Create: `client/src/components/settings/theme-mode-picker.tsx`, `.stories.tsx`, `.test.tsx`
@@ -2163,6 +2209,7 @@ git commit -m "feat(client): add ContactRow component from Figma"
 - Delete: `client/src/app/explore.tsx`, `client/src/components/{animated-icon.tsx,animated-icon.web.tsx,animated-icon.module.css,app-tabs.tsx,app-tabs.web.tsx,external-link.tsx,hint-row.tsx,themed-text.tsx,themed-view.tsx,web-badge.tsx}`, `client/src/components/ui/collapsible.tsx`, `client/src/constants/theme.ts`, `client/src/hooks/{use-color-scheme.ts,use-color-scheme.web.ts,use-theme.ts}`, `client/src/global.css`, unused template images.
 
 **Interfaces:**
+
 - Consumes: `ThemeProvider`, `useThemeMode`, `useTheme`, `useStyles`; `ContactRow`; `Text` from `@/ui`.
 - Produces: `ThemeModePicker` (`{ label?: string }`, reads/writes `useThemeMode`), `queryClient` from `@/lib/query-client`.
 
@@ -2210,8 +2257,12 @@ describe('ThemeModePicker', () => {
 
   it('marks the current mode as selected', () => {
     renderWithTheme(<ThemeModePicker />, { scheme: 'dark' });
-    expect(screen.getByRole('radio', { name: 'Dark' })).toHaveAccessibilityState({ selected: true });
-    expect(screen.getByRole('radio', { name: 'Light' })).toHaveAccessibilityState({ selected: false });
+    expect(screen.getByRole('radio', { name: 'Dark' })).toHaveAccessibilityState({
+      selected: true,
+    });
+    expect(screen.getByRole('radio', { name: 'Light' })).toHaveAccessibilityState({
+      selected: false,
+    });
   });
 
   it('persists the tapped mode', async () => {
@@ -2219,7 +2270,9 @@ describe('ThemeModePicker', () => {
     renderWithTheme(<ThemeModePicker />, { storage });
     await userEvent.setup().press(screen.getByRole('radio', { name: 'System' }));
     expect(storage.get()).toBe('system');
-    expect(screen.getByRole('radio', { name: 'System' })).toHaveAccessibilityState({ selected: true });
+    expect(screen.getByRole('radio', { name: 'System' })).toHaveAccessibilityState({
+      selected: true,
+    });
   });
 });
 
@@ -2345,9 +2398,19 @@ export const queryClient = new QueryClient({
 Replace `client/src/app/_layout.tsx`:
 
 ```tsx
-import { Inter_300Light, Inter_400Regular, Inter_600SemiBold, useFonts } from '@expo-google-fonts/inter';
+import {
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_600SemiBold,
+  useFonts,
+} from '@expo-google-fonts/inter';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavigationThemeProvider } from 'expo-router';
+import {
+  DarkTheme,
+  DefaultTheme,
+  Stack,
+  ThemeProvider as NavigationThemeProvider,
+} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -2369,7 +2432,11 @@ export default function RootLayout() {
 }
 
 function App() {
-  const [fontsLoaded, fontError] = useFonts({ Inter_300Light, Inter_400Regular, Inter_600SemiBold });
+  const [fontsLoaded, fontError] = useFonts({
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_600SemiBold,
+  });
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
@@ -2411,7 +2478,12 @@ function Navigation() {
       }}
     >
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.colors.background } }} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: theme.colors.background },
+        }}
+      />
     </NavigationThemeProvider>
   );
 }
@@ -2535,6 +2607,7 @@ git commit -m "feat(client): wire ThemeProvider, React Query and Contacts demo s
 ### Task 11: Documentation
 
 **Files:**
+
 - Modify: `README.md`
 - Modify: `client/README.md` (if it still describes the template; otherwise leave)
 
@@ -2543,9 +2616,9 @@ git commit -m "feat(client): wire ThemeProvider, React Query and Contacts demo s
 In the **Layout** table add rows after `client/`:
 
 ```markdown
-| `client/src/theme/`  | —               | Design tokens + persisted light/dark `ThemeProvider`.  |
-| `client/src/ui/`     | —               | Generic primitives (`Text`, `Avatar`, `Checkbox`).     |
-| `client/src/components/` | —           | App-specific compositions (`ContactRow`, …).           |
+| `client/src/theme/` | — | Design tokens + persisted light/dark `ThemeProvider`. |
+| `client/src/ui/` | — | Generic primitives (`Text`, `Avatar`, `Checkbox`). |
+| `client/src/components/` | — | App-specific compositions (`ContactRow`, …). |
 ```
 
 After the **Mobile client (Expo)** section add:
@@ -2558,11 +2631,11 @@ component folder holds the component, its `*.stories.tsx` and its test. `useThem
 `useStyles()` read the active theme; `useThemeMode().setMode('dark' | 'light' | 'system')`
 changes it and the choice is persisted (`expo-sqlite/kv-store` on device, `localStorage` on web).
 
-| Command                  | What                                                              |
-| ------------------------ | ----------------------------------------------------------------- |
+| Command                  | What                                                             |
+| ------------------------ | ---------------------------------------------------------------- |
 | `pnpm storybook`         | Web Storybook (react-native-web + Vite) at http://localhost:6006 |
 | `pnpm storybook:ios`     | Boot the Expo app into the on-device Storybook (iOS simulator)   |
-| `pnpm storybook:android` | Same, Android emulator                                            |
+| `pnpm storybook:android` | Same, Android emulator                                           |
 
 Both runtimes read the same `src/**/*.stories.tsx`. The "Scheme" toolbar in the web UI switches
 light/dark; on device, `system` follows the simulator's appearance setting.
@@ -2580,7 +2653,7 @@ light/dark; on device, `system` follows the simulator's appearance setting.
 In the **Quality** table change the `pnpm test` row to:
 
 ```markdown
-| `pnpm test`         | Unit tests in every package (`vitest` server, `jest` client) |
+| `pnpm test` | Unit tests in every package (`vitest` server, `jest` client) |
 ```
 
 - [ ] **Step 2: Client README**

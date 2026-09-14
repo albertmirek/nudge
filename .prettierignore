@@ -9,3 +9,4 @@ docs/*.drawio*
 coverage
 client/assets
 .superpowers
+.pnpm-store

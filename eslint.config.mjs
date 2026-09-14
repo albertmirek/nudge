@@ -17,6 +17,8 @@ export default tseslint.config(
       'client/android/**',
       'client/expo-env.d.ts',
       'docs/**',
+      '.superpowers/**',
+      '.pnpm-store/**',
     ],
   },
 
