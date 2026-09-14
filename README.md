@@ -8,14 +8,17 @@ pnpm monorepo with an Expo mobile app, a NestJS API and PostgreSQL. Design docs 
 
 ## Layout
 
-| Path                 | Package         | What                                                  |
-| -------------------- | --------------- | ----------------------------------------------------- |
-| `client/`            | `@nudge/client` | Expo app (expo-router, TypeScript). Runs on the host. |
-| `server/`            | `@nudge/server` | NestJS API. Runs in Docker (or natively).             |
-| `docker-compose.yml` | —               | Local backend stack: `db` (PostgreSQL 17) + `server`. |
-| `eslint.config.mjs`  | —               | Single ESLint config for the whole repo (+ Prettier). |
-| `tsconfig.base.json` | —               | Shared strict TypeScript options; packages extend it. |
-| `docs/`              | —               | Diagrams, tech notes, design specs and plans.         |
+| Path                     | Package         | What                                                  |
+| ------------------------ | --------------- | ----------------------------------------------------- |
+| `client/`                | `@nudge/client` | Expo app (expo-router, TypeScript). Runs on the host. |
+| `client/src/theme/`      | —               | Design tokens + persisted light/dark `ThemeProvider`. |
+| `client/src/ui/`         | —               | Generic primitives (`Text`, `Avatar`, `Checkbox`).    |
+| `client/src/components/` | —               | App-specific compositions (`ContactRow`, …).          |
+| `server/`                | `@nudge/server` | NestJS API. Runs in Docker (or natively).             |
+| `docker-compose.yml`     | —               | Local backend stack: `db` (PostgreSQL 17) + `server`. |
+| `eslint.config.mjs`      | —               | Single ESLint config for the whole repo (+ Prettier). |
+| `tsconfig.base.json`     | —               | Shared strict TypeScript options; packages extend it. |
+| `docs/`                  | —               | Diagrams, tech notes, design specs and plans.         |
 
 ## Prerequisites
 
@@ -85,15 +88,40 @@ never touch your dev database.
 Expo runs on the host, not in Docker, because it needs the simulators and the Metro dev server
 talking to a physical device.
 
+## Design system & Storybook
+
+Components are built from typed theme tokens (`client/src/theme`) with plain `StyleSheet`; every
+component folder holds the component, its `*.stories.tsx` and its test. `useTheme()` /
+`useStyles()` read the active theme; `useThemeMode().setMode('dark' | 'light' | 'system')`
+changes it and the choice is persisted (`expo-sqlite/kv-store` on device, `localStorage` on web).
+
+| Command                  | What                                                             |
+| ------------------------ | ---------------------------------------------------------------- |
+| `pnpm storybook`         | Web Storybook (react-native-web + Vite) at http://localhost:6006 |
+| `pnpm storybook:ios`     | Boot the Expo app into the on-device Storybook (iOS simulator)   |
+| `pnpm storybook:android` | Same, Android emulator                                           |
+
+Both runtimes read the same `src/**/*.stories.tsx`. The "Scheme" toolbar in the web UI switches
+light/dark; on device, `system` follows the simulator's appearance setting.
+
+## Frontend testing
+
+`pnpm test` runs `jest-expo` + React Native Testing Library in `client/`:
+
+- **Story render tests** — every story is rendered in light and dark via Storybook portable stories (`describeStories`), so a new story is a new test.
+- **Behaviour tests** — RTL queries and `userEvent` assert roles, accessibility state and callbacks (e.g. pressing a checkbox calls `onCheckedChange`).
+- **Snapshot tests** — exactly one `toMatchSnapshot()` per component, on its default story, to catch unintended structural changes.
+- **Not covered yet** — pixel/visual regression and end-to-end flows (Maestro); the story setup leaves room for both.
+
 ## Quality
 
-| Command             | What                                                 |
-| ------------------- | ---------------------------------------------------- |
-| `pnpm lint`         | ESLint across the repo                               |
-| `pnpm format`       | Prettier — write                                     |
-| `pnpm format:check` | Prettier — check only (what CI should run)           |
-| `pnpm typecheck`    | `tsc --noEmit` in every package                      |
-| `pnpm test`         | Unit tests in every package (`vitest` in the server) |
+| Command             | What                                                         |
+| ------------------- | ------------------------------------------------------------ |
+| `pnpm lint`         | ESLint across the repo                                       |
+| `pnpm format`       | Prettier — write                                             |
+| `pnpm format:check` | Prettier — check only (what CI should run)                   |
+| `pnpm typecheck`    | `tsc --noEmit` in every package                              |
+| `pnpm test`         | Unit tests in every package (`vitest` server, `jest` client) |
 
 Package-specific scripts can be run with `pnpm --filter @nudge/<pkg> <script>`, e.g.
 `pnpm --filter @nudge/server test:e2e`.
