@@ -29,7 +29,7 @@ export class Nudge {
   @Column({ type: 'timestamptz', name: 'scheduled_for' })
   scheduledFor: Date;
 
-  // Keep the enum name implicit: TypeORM cannot round-trip an explicit enumName during diffing.
+  // Use TypeORM's default enum name: explicitly repeating it causes spurious schema diffs.
   @Column({
     type: 'enum',
     enum: NudgeStatus,

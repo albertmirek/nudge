@@ -10,6 +10,48 @@
 
 **Spec:** `docs/superpowers/specs/2026-09-14-database-entities-design.md`
 
+## Completion record — 2026-09-14
+
+Tasks 1–5 are complete on `backend-model`. Checkboxes below reflect the existing task reports
+and commits; their original snippets are retained as the implementation recipe.
+
+| Task                        | Implementation commits |
+| --------------------------- | ---------------------- |
+| 1 — connection, CLI, health | `db0208f`, `4af6c67`   |
+| 2 — isolated e2e database   | `061868f`, `bd83799`   |
+| 3 — entities and modules    | `00f505a`              |
+| 4 — persistence tests       | `0f4eddd`, `14a2e31`   |
+| 5 — migration and docs      | `c74c703`              |
+
+The final branch review found one missing test: the design requires NOT NULL rejection
+coverage, while the original plan only supplies enum and foreign-key rejection tests.
+The final fix adds a missing-timezone insert asserting PostgreSQL code `23502` and column
+`timezone`, and comments explaining the enum naming workaround. The final e2e suite passes
+with 9 tests; scoped re-review is recorded in the plan ledger.
+
+Resumed verification: lint, formatting, typechecking, and all 3 unit tests pass. The original
+9 e2e tests pass against a disposable migrated PostgreSQL. The dev database contains all five
+entity tables, the three expected enum types, and `InitialSchema1789376400000` applied.
+`GET /health` returns `{"status":"ok","db":"ok"}`; read-only `schema:log` reports no schema
+changes. The earlier Task 5 report also records a successful migration revert/reapply cycle.
+Schema inspection still emits a non-failing `pg` concurrent-query deprecation warning.
+
+### Decisions retained from implementation and review
+
+- Use the existing local database and rebuild its server from this worktree, as authorized by
+  the original task. Cost if wrong: the local dev server temporarily runs this branch.
+- Stop the test container if initialization or migration fails. Cost: a small cleanup block.
+- Give the `updated_at` test a 20 ms timing window and assert the changed name. Cost: a slightly
+  slower test.
+- Use `Relation<T>` on relation properties to avoid compiled ESM circular-import initialization
+  errors, and rely on TypeORM's default enum names to avoid spurious migration diffs. The
+  resulting SQL names match the spec. Cost: TypeORM-specific annotations and dependence on its
+  default enum naming convention; comments retain the workaround's intent.
+- Add the missing NOT NULL rejection assertion required by the binding design. Cost: one extra
+  database insert in the e2e suite.
+
+The completion record takes precedence over the original snippets where these decisions differ.
+
 ## Global Constraints
 
 - Package manager pnpm 11; run `CI=1 pnpm add …` (non-interactive). pnpm settings live in `pnpm-workspace.yaml`, not `.npmrc`.
@@ -52,7 +94,7 @@
 - Produces: `DatabaseModule` (imported by `AppModule`).
 - Produces: `server` scripts `typeorm`, `migration:generate`, `migration:run`, `migration:revert`, `migration:show`; root script `db:migrate`.
 
-- [ ] **Step 1: Install dependencies**
+- [x] **Step 1: Install dependencies**
 
 ```bash
 cd server
@@ -63,7 +105,7 @@ cd ..
 
 Expected: lockfile updated at the root, no build-script warnings. If pnpm refuses a version for release age, use the newest version it accepts (do not add exclusions).
 
-- [ ] **Step 2: Write the failing health unit test**
+- [x] **Step 2: Write the failing health unit test**
 
 Replace `server/src/health/health.controller.spec.ts`:
 
@@ -103,12 +145,12 @@ describe('HealthController', () => {
 });
 ```
 
-- [ ] **Step 3: Run the unit test to verify it fails**
+- [x] **Step 3: Run the unit test to verify it fails**
 
 Run: `pnpm --filter @nudge/server test -- health`
 Expected: FAIL — `check()` returns a plain object, not a promise, and `@nestjs/typeorm` token is unused (`resolves` assertion fails).
 
-- [ ] **Step 4: Write the shared TypeORM options**
+- [x] **Step 4: Write the shared TypeORM options**
 
 `server/src/database/migrations/index.ts`:
 
@@ -144,7 +186,7 @@ export function buildDataSourceOptions(url: string): DataSourceOptions {
 }
 ```
 
-- [ ] **Step 5: Write the Nest DatabaseModule**
+- [x] **Step 5: Write the Nest DatabaseModule**
 
 `server/src/database/database.module.ts`:
 
@@ -166,7 +208,7 @@ import { buildDataSourceOptions } from './typeorm.options.js';
 export class DatabaseModule {}
 ```
 
-- [ ] **Step 6: Write the CLI data source and shim**
+- [x] **Step 6: Write the CLI data source and shim**
 
 `server/src/database/data-source.ts`:
 
@@ -200,7 +242,7 @@ export default new DataSource(buildDataSourceOptions(url));
 import 'typeorm/cli.js';
 ```
 
-- [ ] **Step 7: Add scripts**
+- [x] **Step 7: Add scripts**
 
 In `server/package.json` `scripts`, add:
 
@@ -221,7 +263,7 @@ In root `package.json` `scripts`, after `"docker:db"`, add:
 "db:migrate": "pnpm --filter @nudge/server migration:run",
 ```
 
-- [ ] **Step 8: Wire DatabaseModule into AppModule and load the root .env**
+- [x] **Step 8: Wire DatabaseModule into AppModule and load the root .env**
 
 Replace `server/src/app.module.ts`:
 
@@ -246,7 +288,7 @@ import { HealthController } from './health/health.controller.js';
 export class AppModule {}
 ```
 
-- [ ] **Step 9: Add the DB ping to the health controller**
+- [x] **Step 9: Add the DB ping to the health controller**
 
 Replace `server/src/health/health.controller.ts`:
 
@@ -273,12 +315,12 @@ export class HealthController {
 }
 ```
 
-- [ ] **Step 10: Run unit tests, typecheck, lint**
+- [x] **Step 10: Run unit tests, typecheck, lint**
 
 Run: `pnpm --filter @nudge/server test && pnpm typecheck && pnpm lint && pnpm format:check`
 Expected: all pass (3 unit test files).
 
-- [ ] **Step 11: Smoke-test the CLI against the running database**
+- [x] **Step 11: Smoke-test the CLI against the running database**
 
 ```bash
 cp -n .env.example .env
@@ -287,7 +329,7 @@ pnpm --filter @nudge/server migration:show
 
 Expected: exits 0 and prints no migrations (the list is empty) — proves `data-source.ts` loads under tsx and connects. If it prints `DATABASE_URL is not set`, the `.env` path resolution is wrong; fix `data-source.ts`.
 
-- [ ] **Step 12: Commit**
+- [x] **Step 12: Commit**
 
 ```bash
 git add server/package.json pnpm-lock.yaml package.json server/src
@@ -315,7 +357,7 @@ Claude-Session: https://claude.ai/code/session_01T6RnKKXP8gLVBKYmcp4AK7"
 - Produces: `createTestApp(): Promise<{ app: INestApplication<App>; dataSource: DataSource }>` and `truncateAll(dataSource: DataSource): Promise<void>` in `server/test/create-test-app.ts` — used by Task 4.
 - Produces: `process.env.DATABASE_URL` set in every e2e worker to the Testcontainers URL, schema migrated.
 
-- [ ] **Step 1: Update the e2e test to expect the DB ping (failing)**
+- [x] **Step 1: Update the e2e test to expect the DB ping (failing)**
 
 Replace `server/test/app.e2e-spec.ts`:
 
@@ -349,12 +391,12 @@ describe('AppController (e2e)', () => {
 });
 ```
 
-- [ ] **Step 2: Run e2e to verify it fails**
+- [x] **Step 2: Run e2e to verify it fails**
 
 Run: `pnpm --filter @nudge/server test:e2e`
 Expected: FAIL — `./create-test-app.js` cannot be resolved.
 
-- [ ] **Step 3: Write the global setup (container + migrations)**
+- [x] **Step 3: Write the global setup (container + migrations)**
 
 `server/test/global-setup.ts`:
 
@@ -401,7 +443,7 @@ import { inject } from 'vitest';
 process.env.DATABASE_URL = inject('DATABASE_URL');
 ```
 
-- [ ] **Step 4: Write the test-app helper**
+- [x] **Step 4: Write the test-app helper**
 
 `server/test/create-test-app.ts`:
 
@@ -430,7 +472,7 @@ export async function truncateAll(dataSource: DataSource): Promise<void> {
 }
 ```
 
-- [ ] **Step 5: Wire vitest e2e config**
+- [x] **Step 5: Wire vitest e2e config**
 
 Replace `server/vitest.config.e2e.ts`:
 
@@ -455,17 +497,17 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 6: Run e2e to verify it passes**
+- [x] **Step 6: Run e2e to verify it passes**
 
 Run: `pnpm --filter @nudge/server test:e2e`
 Expected: PASS, 2 tests; console shows the container starting. Run `docker ps` afterwards — no `postgres:17-alpine` test container left behind (only `nudge-db-1`).
 
-- [ ] **Step 7: Typecheck and lint**
+- [x] **Step 7: Typecheck and lint**
 
 Run: `pnpm typecheck && pnpm lint && pnpm format:check`
 Expected: pass. (`server/tsconfig.json` has no `include`, so `test/` is typechecked.)
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add server/test server/vitest.config.e2e.ts
@@ -500,7 +542,7 @@ Claude-Session: https://claude.ai/code/session_01T6RnKKXP8gLVBKYmcp4AK7"
 - Produces entity classes `User`, `Friend`, `Channel`, `CatchUp`, `Nudge` and enums `FriendPeriodicity`, `ChannelType`, `NudgeStatus` — used by Task 4 tests and Task 5 migration.
 - Property names (camelCase) ↔ column names (snake_case) exactly as below; Task 4 relies on the property names.
 
-- [ ] **Step 1: User entity and module**
+- [x] **Step 1: User entity and module**
 
 `server/src/users/entities/user.entity.ts`:
 
@@ -551,7 +593,7 @@ import { User } from './entities/user.entity.js';
 export class UsersModule {}
 ```
 
-- [ ] **Step 2: Friend enums and entities**
+- [x] **Step 2: Friend enums and entities**
 
 `server/src/friends/entities/friend-periodicity.enum.ts`:
 
@@ -721,7 +763,7 @@ import { Friend } from './entities/friend.entity.js';
 export class FriendsModule {}
 ```
 
-- [ ] **Step 3: Nudge enum, entity and module**
+- [x] **Step 3: Nudge enum, entity and module**
 
 `server/src/nudges/entities/nudge-status.enum.ts`:
 
@@ -791,7 +833,7 @@ import { Nudge } from './entities/nudge.entity.js';
 export class NudgesModule {}
 ```
 
-- [ ] **Step 4: Register entities and modules**
+- [x] **Step 4: Register entities and modules**
 
 In `server/src/database/typeorm.options.ts`, add imports and fill the list:
 
@@ -813,12 +855,12 @@ import { NudgesModule } from './nudges/nudges.module.js';
 import { UsersModule } from './users/users.module.js';
 ```
 
-- [ ] **Step 5: Verify the metadata builds and the app still boots**
+- [x] **Step 5: Verify the metadata builds and the app still boots**
 
 Run: `pnpm typecheck && pnpm lint && pnpm format:check && pnpm --filter @nudge/server test:e2e`
 Expected: all pass. The e2e boot proves TypeORM accepted the entity metadata (circular imports between `user`/`friend`/`nudge` entities are fine because relation targets are arrow functions). There are no tables yet — that is Task 5.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add server/src
@@ -840,7 +882,7 @@ Claude-Session: https://claude.ai/code/session_01T6RnKKXP8gLVBKYmcp4AK7"
 
 - Consumes: `createTestApp`, `truncateAll` (Task 2); entities and enums (Task 3).
 
-- [ ] **Step 1: Write the test**
+- [x] **Step 1: Write the test**
 
 `server/test/database.e2e-spec.ts`:
 
@@ -977,12 +1019,12 @@ describe('Entities (e2e)', () => {
 });
 ```
 
-- [ ] **Step 2: Run it to verify it fails for the right reason**
+- [x] **Step 2: Run it to verify it fails for the right reason**
 
 Run: `pnpm --filter @nudge/server test:e2e`
 Expected: `app.e2e-spec.ts` passes; `database.e2e-spec.ts` fails on every test with `QueryFailedError: relation "users" does not exist` (from `truncateAll` or the first insert). Any other failure means Task 3 is wrong — fix it there, not here.
 
-- [ ] **Step 3: Typecheck and lint, then commit**
+- [x] **Step 3: Typecheck and lint, then commit**
 
 Run: `pnpm typecheck && pnpm lint && pnpm format:check`
 Expected: pass.
@@ -1010,7 +1052,7 @@ Claude-Session: https://claude.ai/code/session_01T6RnKKXP8gLVBKYmcp4AK7"
 - Consumes: entities (Task 3), CLI scripts (Task 1).
 - Produces: applied schema in the local Postgres; green e2e suite.
 
-- [ ] **Step 1: Generate the migration from the entities**
+- [x] **Step 1: Generate the migration from the entities**
 
 The compose database must be running (`docker ps` shows `nudge-db-1`) and `.env` must exist (Task 1 Step 11).
 
@@ -1020,7 +1062,7 @@ pnpm --filter @nudge/server migration:generate InitialSchema
 
 Expected: `Migration .../src/database/migrations/<timestamp>-InitialSchema.ts has been generated successfully.` Rename the file to `1789376400000-InitialSchema.ts` and the class to `InitialSchema1789376400000` (`name` property too) so the plan's references match.
 
-- [ ] **Step 2: Review the generated file against the reference**
+- [x] **Step 2: Review the generated file against the reference**
 
 It must be equivalent to the following (statement order may differ; `public.` prefixes are fine). If any constraint or column differs, fix the **entity** and regenerate — do not hand-edit the SQL:
 
@@ -1106,7 +1148,7 @@ export class InitialSchema1789376400000 implements MigrationInterface {
 
 Change the generated `import { MigrationInterface, QueryRunner } from "typeorm"` to `import type …` (both are types), then run `pnpm prettier --write server/src/database/migrations`.
 
-- [ ] **Step 3: Register the migration**
+- [x] **Step 3: Register the migration**
 
 Replace `server/src/database/migrations/index.ts`:
 
@@ -1118,12 +1160,12 @@ import { InitialSchema1789376400000 } from './1789376400000-InitialSchema.js';
 export const migrations: MixedList<new () => MigrationInterface> = [InitialSchema1789376400000];
 ```
 
-- [ ] **Step 4: Run e2e to verify green**
+- [x] **Step 4: Run e2e to verify green**
 
 Run: `pnpm --filter @nudge/server test:e2e`
 Expected: PASS — `app.e2e-spec.ts` (2) and `database.e2e-spec.ts` (6). The global setup now applies `InitialSchema` to the container.
 
-- [ ] **Step 5: Apply to the local Postgres and prove it is in sync**
+- [x] **Step 5: Apply to the local Postgres and prove it is in sync**
 
 ```bash
 pnpm db:migrate
@@ -1149,7 +1191,7 @@ pnpm db:migrate
 
 Expected: after revert only `migrations` remains; after re-running, all five tables are back.
 
-- [ ] **Step 6: Verify the dockerised server reports the DB**
+- [x] **Step 6: Verify the dockerised server reports the DB**
 
 Rebuild the running compose project's server from this worktree (same project name so it replaces `nudge-server-1` rather than starting a second stack):
 
@@ -1160,7 +1202,7 @@ sleep 5 && curl -s localhost:3000/health
 
 Expected: `{"status":"ok","db":"ok"}`. Then `docker compose -p nudge logs --tail=20 server` shows no TypeORM connection errors.
 
-- [ ] **Step 7: Update README**
+- [x] **Step 7: Update README**
 
 In `README.md`, under **Backend (Docker)**, add after the existing table paragraph:
 
@@ -1195,7 +1237,7 @@ Also replace the last bullet under **Conventions** ("The server does not yet con
   HTTP 503 when Postgres is unreachable.
 ```
 
-- [ ] **Step 8: Full verification and commit**
+- [x] **Step 8: Full verification and commit**
 
 Run: `pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm --filter @nudge/server test:e2e`
 Expected: all green.

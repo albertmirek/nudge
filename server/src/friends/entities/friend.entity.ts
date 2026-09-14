@@ -32,7 +32,7 @@ export class Friend {
   @Column({ type: 'text' })
   name: string;
 
-  // Keep the enum name implicit: TypeORM cannot round-trip an explicit enumName during diffing.
+  // Use TypeORM's default enum name: explicitly repeating it causes spurious schema diffs.
   @Column({ type: 'enum', enum: FriendPeriodicity })
   periodicity: FriendPeriodicity;
 
