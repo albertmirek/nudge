@@ -8,3 +8,4 @@ docs/*.drawio*
 **/android
 coverage
 client/assets
+.superpowers
