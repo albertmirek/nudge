@@ -7,6 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { Friend } from './friend.entity.js';
 
 @Entity({ name: 'catch_ups' })
@@ -20,7 +21,7 @@ export class CatchUp {
 
   @ManyToOne(() => Friend, (friend) => friend.catchUps, { onDelete: 'CASCADE', nullable: false })
   @JoinColumn({ name: 'friend_id', foreignKeyConstraintName: 'catch_ups_friend_id_fkey' })
-  friend: Friend;
+  friend: Relation<Friend>;
 
   @Column({ type: 'text', nullable: true })
   note: string | null;

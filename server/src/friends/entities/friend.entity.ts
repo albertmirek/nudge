@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { Nudge } from '../../nudges/entities/nudge.entity.js';
 import { User } from '../../users/entities/user.entity.js';
 import { CatchUp } from './catch-up.entity.js';
@@ -26,12 +27,12 @@ export class Friend {
 
   @ManyToOne(() => User, (user) => user.friends, { onDelete: 'CASCADE', nullable: false })
   @JoinColumn({ name: 'user_id', foreignKeyConstraintName: 'friends_user_id_fkey' })
-  user: User;
+  user: Relation<User>;
 
   @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'enum', enum: FriendPeriodicity, enumName: 'friends_periodicity_enum' })
+  @Column({ type: 'enum', enum: FriendPeriodicity })
   periodicity: FriendPeriodicity;
 
   @Column({ type: 'timestamptz', name: 'last_contact_at', nullable: true })
@@ -47,11 +48,11 @@ export class Friend {
   updatedAt: Date;
 
   @OneToMany(() => Channel, (channel) => channel.friend)
-  channels: Channel[];
+  channels: Relation<Channel[]>;
 
   @OneToMany(() => CatchUp, (catchUp) => catchUp.friend)
-  catchUps: CatchUp[];
+  catchUps: Relation<CatchUp[]>;
 
   @OneToMany(() => Nudge, (nudge) => nudge.friend)
-  nudges: Nudge[];
+  nudges: Relation<Nudge[]>;
 }

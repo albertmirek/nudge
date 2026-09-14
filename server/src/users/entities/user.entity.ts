@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { Friend } from '../../friends/entities/friend.entity.js';
 import { Nudge } from '../../nudges/entities/nudge.entity.js';
 
@@ -23,8 +24,8 @@ export class User {
   createdAt: Date;
 
   @OneToMany(() => Friend, (friend) => friend.user)
-  friends: Friend[];
+  friends: Relation<Friend[]>;
 
   @OneToMany(() => Nudge, (nudge) => nudge.user)
-  nudges: Nudge[];
+  nudges: Relation<Nudge[]>;
 }

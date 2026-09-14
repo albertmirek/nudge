@@ -1,4 +1,5 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { Friend } from '../../friends/entities/friend.entity.js';
 import { User } from '../../users/entities/user.entity.js';
 import { NudgeStatus } from './nudge-status.enum.js';
@@ -15,14 +16,14 @@ export class Nudge {
 
   @ManyToOne(() => User, (user) => user.nudges, { onDelete: 'CASCADE', nullable: false })
   @JoinColumn({ name: 'user_id', foreignKeyConstraintName: 'nudges_user_id_fkey' })
-  user: User;
+  user: Relation<User>;
 
   @Column({ type: 'uuid', name: 'friend_id' })
   friendId: string;
 
   @ManyToOne(() => Friend, (friend) => friend.nudges, { onDelete: 'CASCADE', nullable: false })
   @JoinColumn({ name: 'friend_id', foreignKeyConstraintName: 'nudges_friend_id_fkey' })
-  friend: Friend;
+  friend: Relation<Friend>;
 
   /** UTC instant at which the push should be delivered. */
   @Column({ type: 'timestamptz', name: 'scheduled_for' })
@@ -31,7 +32,6 @@ export class Nudge {
   @Column({
     type: 'enum',
     enum: NudgeStatus,
-    enumName: 'nudges_status_enum',
     default: NudgeStatus.PLANNED,
   })
   status: NudgeStatus;

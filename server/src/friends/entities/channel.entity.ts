@@ -1,4 +1,5 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { ChannelType } from './channel-type.enum.js';
 import { Friend } from './friend.entity.js';
 
@@ -13,9 +14,9 @@ export class Channel {
 
   @ManyToOne(() => Friend, (friend) => friend.channels, { onDelete: 'CASCADE', nullable: false })
   @JoinColumn({ name: 'friend_id', foreignKeyConstraintName: 'channels_friend_id_fkey' })
-  friend: Friend;
+  friend: Relation<Friend>;
 
-  @Column({ type: 'enum', enum: ChannelType, enumName: 'channels_type_enum' })
+  @Column({ type: 'enum', enum: ChannelType })
   type: ChannelType;
 
   /** App/URL scheme link that opens the conversation (whatsapp://…, tel:…, mailto:…). */
