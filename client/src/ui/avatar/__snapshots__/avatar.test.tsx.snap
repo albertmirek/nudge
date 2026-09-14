@@ -13,6 +13,7 @@ exports[`matches the default story snapshot 1`] = `
   <View
     accessibilityLabel="Anastasia Kleisioni"
     accessibilityRole="image"
+    accessible={true}
     style={
       [
         {

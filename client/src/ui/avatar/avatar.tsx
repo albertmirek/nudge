@@ -24,7 +24,7 @@ export function Avatar({ label, size = 49, source, style }: AvatarProps) {
   };
 
   return (
-    <View accessibilityRole="image" accessibilityLabel={label} style={[shape, style]}>
+    <View accessible accessibilityRole="image" accessibilityLabel={label} style={[shape, style]}>
       {source ? (
         <Image
           testID="avatar-image"
