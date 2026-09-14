@@ -16,4 +16,8 @@ minimumReleaseAgeExclude:
 
 # Dependencies allowed to run postinstall scripts (pnpm blocks all others).
 allowBuilds:
+  cpu-features: true
+  esbuild: true
+  protobufjs: true
+  ssh2: true
   unrs-resolver: true

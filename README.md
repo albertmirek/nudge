@@ -43,12 +43,34 @@ Prettier on staged files before every commit.
 | `pnpm docker:db`   | Start only PostgreSQL                                         |
 | `pnpm server:dev`  | Run the server natively in watch mode (pair with `docker:db`) |
 
-The server listens on `http://localhost:3000`; `GET /health` returns `{"status":"ok"}`.
+The server listens on `http://localhost:3000`; `GET /health` returns `{"status":"ok","db":"ok"}`.
 `server/src` is bind-mounted into the container, so edits restart the server automatically.
 Adding a dependency to the server requires `pnpm docker:up` again to rebuild the image.
 
 `server/Dockerfile` also has a `prod` target (`docker build -f server/Dockerfile --target prod .`)
 that produces the slim image used for deployment.
+
+### Database & migrations
+
+The server uses TypeORM with `synchronize` off — the schema only changes through migrations in
+`server/src/database/migrations/`.
+
+| Command                                                 | What                                                     |
+| ------------------------------------------------------- | -------------------------------------------------------- |
+| `pnpm db:migrate`                                       | Apply pending migrations to `DATABASE_URL` (from `.env`) |
+| `pnpm --filter @nudge/server migration:generate <Name>` | Diff entities against the database → new migration file  |
+| `pnpm --filter @nudge/server migration:revert`          | Roll back the last migration                             |
+| `pnpm --filter @nudge/server migration:show`            | List applied / pending migrations                        |
+
+After generating a migration, add its class to `server/src/database/migrations/index.ts` and
+review the SQL. `migration:generate` needs a running database (`pnpm docker:db`).
+
+Entities live in their feature module (`server/src/<module>/entities/*.entity.ts`) and are
+registered in `server/src/database/typeorm.options.ts`.
+
+E2e tests (`pnpm --filter @nudge/server test:e2e`) start a throwaway `postgres:17-alpine`
+container via Testcontainers and run all migrations into it, so they need Docker running but
+never touch your dev database.
 
 ## Mobile client (Expo)
 
@@ -81,5 +103,5 @@ Package-specific scripts can be run with `pnpm --filter @nudge/<pkg> <script>`, 
 - pnpm uses the hoisted `node_modules` layout (`pnpm-workspace.yaml`) because Metro cannot
   follow pnpm's symlinked store. Expo's ecosystem is exempt from pnpm's minimum-release-age
   policy for the same reason `expo install` pins fresh patch versions.
-- The server does not yet connect to the database; `DATABASE_URL` is wired through the
-  environment for when an ORM/query layer is added.
+- `GET /health` pings the database (`SELECT 1`) and answers `{"status":"ok","db":"ok"}`, or
+  HTTP 503 when Postgres is unreachable.
