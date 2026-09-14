@@ -88,6 +88,12 @@ describe('Entities (e2e)', () => {
     ).rejects.toBeInstanceOf(QueryFailedError);
   });
 
+  it('rejects a user without a timezone', async () => {
+    await expect(dataSource.getRepository(User).insert({})).rejects.toMatchObject({
+      driverError: { code: '23502', column: 'timezone' },
+    });
+  });
+
   it('rejects a friend without an existing user', async () => {
     await expect(
       dataSource.getRepository(Friend).insert({

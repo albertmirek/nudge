@@ -16,6 +16,7 @@ export class Channel {
   @JoinColumn({ name: 'friend_id', foreignKeyConstraintName: 'channels_friend_id_fkey' })
   friend: Relation<Friend>;
 
+  // Keep the enum name implicit: TypeORM cannot round-trip an explicit enumName during diffing.
   @Column({ type: 'enum', enum: ChannelType })
   type: ChannelType;
 

@@ -29,6 +29,7 @@ export class Nudge {
   @Column({ type: 'timestamptz', name: 'scheduled_for' })
   scheduledFor: Date;
 
+  // Keep the enum name implicit: TypeORM cannot round-trip an explicit enumName during diffing.
   @Column({
     type: 'enum',
     enum: NudgeStatus,
