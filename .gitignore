@@ -37,3 +37,9 @@ docs/.idea/
 
 # typescript incremental
 *.tsbuildinfo
+
+# storybook
+client/storybook-static/
+
+# pnpm local store (created when the global store is on another volume)
+.pnpm-store/

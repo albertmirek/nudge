@@ -1,7 +1,11 @@
-import { screen } from '@testing-library/react-native';
+import { composeStories } from '@storybook/react';
+import { render, screen } from '@testing-library/react-native';
 
 import { renderWithTheme } from '@/test/render';
+import { describeStories } from '@/test/stories';
 import { Text } from '@/ui';
+
+import * as stories from './text.stories';
 
 describe('Text', () => {
   it('renders body/primary by default', async () => {
@@ -33,4 +37,11 @@ describe('Text', () => {
     expect(node).toHaveStyle({ textAlign: 'right', fontSize: 15 });
     expect(node.props.numberOfLines).toBe(1);
   });
+});
+
+describeStories('Text', stories);
+
+it('matches the default story snapshot', async () => {
+  const { Body } = composeStories(stories);
+  expect((await render(<Body />)).toJSON()).toMatchSnapshot();
 });

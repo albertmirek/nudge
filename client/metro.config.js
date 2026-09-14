@@ -16,4 +16,10 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
 ];
 
-module.exports = config;
+const { withStorybook } = require('@storybook/react-native/metro/withStorybook');
+
+// Storybook is only bundled when the flag is set; otherwise its imports become empty modules.
+module.exports = withStorybook(config, {
+  enabled: process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true',
+  configPath: path.resolve(projectRoot, '.rnstorybook'),
+});

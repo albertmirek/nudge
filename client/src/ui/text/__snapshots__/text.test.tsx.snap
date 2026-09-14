@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <Text
+    style={
+      [
+        {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 15,
+          "lineHeight": 20,
+        },
+        {
+          "color": "#151518",
+        },
+        undefined,
+      ]
+    }
+  >
+    Anastasia Kleisioni
+  </Text>
+</View>
+`;

@@ -19,6 +19,8 @@ export default tseslint.config(
       'docs/**',
       '.superpowers/**',
       '.pnpm-store/**',
+      'client/.rnstorybook/storybook.requires.ts',
+      'client/storybook-static/**',
     ],
   },
 
