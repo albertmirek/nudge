@@ -121,10 +121,11 @@ describe('Entities (e2e)', () => {
     const user = await createUser();
     const friend = await createFriend(user);
 
-    await new Promise((resolve) => setTimeout(resolve, 5));
+    await new Promise((resolve) => setTimeout(resolve, 20));
     await dataSource.getRepository(Friend).update({ id: friend.id }, { name: 'Alicia' });
 
     const reloaded = await dataSource.getRepository(Friend).findOneByOrFail({ id: friend.id });
+    expect(reloaded.name).toBe('Alicia');
     expect(reloaded.updatedAt.getTime()).toBeGreaterThan(friend.updatedAt.getTime());
   });
 });
