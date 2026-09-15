@@ -16,6 +16,7 @@ exports[`matches the default story snapshot 1`] = `
         "borderBottomColor": "#151518",
         "borderBottomWidth": 1,
         "flexDirection": "row",
+        "position": "relative",
       }
     }
   >
@@ -52,21 +53,14 @@ exports[`matches the default story snapshot 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        [
-          {
-            "alignItems": "center",
-            "borderBottomColor": "transparent",
-            "borderBottomWidth": 2,
-            "flex": 1,
-            "flexDirection": "row",
-            "gap": 4,
-            "justifyContent": "center",
-            "paddingVertical": 12,
-          },
-          {
-            "borderBottomColor": "#151518",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "flexDirection": "row",
+          "gap": 4,
+          "justifyContent": "center",
+          "paddingVertical": 12,
+        }
       }
     >
       <Text
@@ -153,19 +147,14 @@ exports[`matches the default story snapshot 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        [
-          {
-            "alignItems": "center",
-            "borderBottomColor": "transparent",
-            "borderBottomWidth": 2,
-            "flex": 1,
-            "flexDirection": "row",
-            "gap": 4,
-            "justifyContent": "center",
-            "paddingVertical": 12,
-          },
-          false,
-        ]
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "flexDirection": "row",
+          "gap": 4,
+          "justifyContent": "center",
+          "paddingVertical": 12,
+        }
       }
     >
       <Text
@@ -186,6 +175,20 @@ exports[`matches the default story snapshot 1`] = `
         Upcoming
       </Text>
     </View>
+    <View
+      collapsable={false}
+      style={
+        {
+          "backgroundColor": "#151518",
+          "bottom": -1,
+          "height": 2,
+          "left": "0%",
+          "position": "absolute",
+          "width": "50%",
+        }
+      }
+      testID="nudge-tabs-indicator"
+    />
   </View>
 </View>
 `;

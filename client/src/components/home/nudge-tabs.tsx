@@ -1,4 +1,5 @@
-import { Pressable, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Pressable, View } from 'react-native';
 
 import { type Theme, useStyles } from '@/theme';
 import { Text } from '@/ui';
@@ -17,9 +18,26 @@ const TABS: { key: NudgeTab; label: string }[] = [
   { key: 'upcoming', label: 'Upcoming' },
 ];
 
-/** Figma "navbar": Overdue/Upcoming segmented control with an underline indicator. */
+const TAB_INDEX: Record<NudgeTab, number> = { overdue: 0, upcoming: 1 };
+
+/** Figma "navbar": Overdue/Upcoming segmented control with a sliding underline indicator. */
 export function NudgeTabs({ value, onChange, overdueCount }: NudgeTabsProps) {
   const styles = useStyles(makeStyles);
+  const [indicatorPosition] = useState(() => new Animated.Value(TAB_INDEX[value]));
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    // Skip the animation on mount: the indicator already starts at the right position.
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    Animated.timing(indicatorPosition, {
+      toValue: TAB_INDEX[value],
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [value, indicatorPosition]);
 
   return (
     <View style={styles.row}>
@@ -32,7 +50,7 @@ export function NudgeTabs({ value, onChange, overdueCount }: NudgeTabsProps) {
             accessibilityLabel={label}
             accessibilityState={{ selected }}
             onPress={() => onChange(key)}
-            style={[styles.tab, selected && styles.tabSelected]}
+            style={styles.tab}
           >
             <Text variant="body" color={selected ? 'primary' : 'secondary'}>
               {label}
@@ -47,6 +65,15 @@ export function NudgeTabs({ value, onChange, overdueCount }: NudgeTabsProps) {
           </Pressable>
         );
       })}
+      <Animated.View
+        testID="nudge-tabs-indicator"
+        style={[
+          styles.indicator,
+          {
+            left: indicatorPosition.interpolate({ inputRange: [0, 1], outputRange: ['0%', '50%'] }),
+          },
+        ]}
+      />
     </View>
   );
 }
@@ -56,6 +83,7 @@ const makeStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     borderBottomWidth: theme.sizes.border,
     borderBottomColor: theme.colors.text.primary,
+    position: 'relative' as const,
   },
   tab: {
     flexDirection: 'row' as const,
@@ -64,10 +92,14 @@ const makeStyles = (theme: Theme) => ({
     gap: theme.spacing[1],
     flex: 1,
     paddingVertical: theme.spacing[3],
-    borderBottomWidth: 2,
-    borderBottomColor: 'transparent',
   },
-  tabSelected: { borderBottomColor: theme.colors.text.primary },
+  indicator: {
+    position: 'absolute' as const,
+    bottom: -theme.sizes.border,
+    width: '50%' as const,
+    height: 2,
+    backgroundColor: theme.colors.text.primary,
+  },
   badge: {
     minWidth: theme.sizes.badge,
     height: theme.sizes.badge,

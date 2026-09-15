@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/react';
-import { render, screen, userEvent } from '@testing-library/react-native';
+import { act, render, screen, userEvent } from '@testing-library/react-native';
 
 import { renderWithTheme } from '@/test/render';
 import { describeStories } from '@/test/stories';
@@ -37,6 +37,20 @@ describe('NudgeTabs', () => {
   it('hides the badge when there is nothing overdue', async () => {
     await renderWithTheme(<NudgeTabs {...baseProps} overdueCount={0} />);
     expect(screen.queryByText('0')).toBeNull();
+  });
+
+  it('animates the selection indicator to the tapped tab', async () => {
+    jest.useFakeTimers();
+    const { rerender } = await renderWithTheme(<NudgeTabs {...baseProps} />);
+    const indicator = screen.getByTestId('nudge-tabs-indicator');
+    expect(indicator).toBeOnTheScreen();
+
+    await rerender(<NudgeTabs {...baseProps} value="upcoming" />);
+    await act(() => jest.advanceTimersByTime(250));
+
+    // Re-renders without crashing and keeps the same indicator mounted (not remounted per tab).
+    expect(screen.getByTestId('nudge-tabs-indicator')).toBe(indicator);
+    jest.useRealTimers();
   });
 });
 
