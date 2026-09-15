@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { Friend } from '@/api/types';
+import { useConfirmNudge } from '@/api/use-confirm-nudge';
 import { useFriends } from '@/api/use-friends';
 import { useMe } from '@/api/use-me';
 import { ContactRow } from '@/components/contact/contact-row';
@@ -19,21 +21,33 @@ function summaryFor(overdueCount: number): string {
 export function HomeScreen() {
   const styles = useStyles(makeStyles);
   const [tab, setTab] = useState<NudgeTab>('overdue');
-  const [checkedIds, setCheckedIds] = useState<ReadonlySet<string>>(new Set());
+  // Friends whose nudge confirmation is in flight; the row shows checked until the friends
+  // list refetches and the friend moves out of the current tab's bucket.
+  const [confirmingIds, setConfirmingIds] = useState<ReadonlySet<string>>(new Set());
   // Captured once per mount so every row's relative-date label stays consistent, rather than
   // each row computing its own `new Date()` at its own render time.
   const [now] = useState(() => new Date());
 
   const me = useMe();
   const friends = useFriends();
+  const confirmNudge = useConfirmNudge();
 
-  const toggle = (id: string, checked: boolean) => {
-    setCheckedIds((current) => {
-      const next = new Set(current);
-      if (checked) next.add(id);
-      else next.delete(id);
-      return next;
-    });
+  const confirm = (friend: Friend) => {
+    if (!friend.nudge) return;
+    const friendId = friend.id;
+    setConfirmingIds((current) => new Set(current).add(friendId));
+    confirmNudge.mutate(
+      { nudgeId: friend.nudge.id, revision: friend.nudge.revision },
+      {
+        onSettled: () => {
+          setConfirmingIds((current) => {
+            const next = new Set(current);
+            next.delete(friendId);
+            return next;
+          });
+        },
+      },
+    );
   };
 
   if (me.isPending || friends.isPending) {
@@ -79,8 +93,8 @@ export function HomeScreen() {
             name={item.name}
             lastContactAt={item.lastContactAt ? new Date(item.lastContactAt) : null}
             nudgeDueAt={tab === 'upcoming' && item.nudge ? new Date(item.nudge.scheduledFor) : null}
-            checked={checkedIds.has(item.id)}
-            onCheckedChange={(checked) => toggle(item.id, checked)}
+            checked={confirmingIds.has(item.id)}
+            onCheckedChange={(checked) => checked && confirm(item)}
             now={now}
           />
         )}

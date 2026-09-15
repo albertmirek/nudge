@@ -3,14 +3,16 @@ import { render, screen, userEvent, waitFor } from '@testing-library/react-nativ
 import type { ReactElement } from 'react';
 
 import { ThemeProvider } from '@/theme';
-import type { Friend, Me } from '@/api/types';
+import type { Friend, Me, Nudge } from '@/api/types';
 import * as friendsApi from '@/api/friends';
+import * as nudgesApi from '@/api/nudges';
 import * as usersApi from '@/api/users';
 
 import { HomeScreen } from './home-screen';
 
 jest.mock('@/api/users');
 jest.mock('@/api/friends');
+jest.mock('@/api/nudges');
 
 const NOW = new Date('2026-09-14T12:00:00Z');
 
@@ -49,7 +51,9 @@ const FRIENDS: Friend[] = [
 ];
 
 function renderScreen(ui: ReactElement) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0 }, mutations: { gcTime: 0 } },
+  });
   return render(
     <QueryClientProvider client={client}>
       <ThemeProvider initialMode="light">{ui}</ThemeProvider>
@@ -62,6 +66,13 @@ describe('HomeScreen', () => {
     jest.useFakeTimers().setSystemTime(NOW);
     jest.mocked(usersApi.getMe).mockResolvedValue(ME);
     jest.mocked(friendsApi.listFriends).mockResolvedValue(FRIENDS);
+    jest.mocked(nudgesApi.confirmNudge).mockResolvedValue({
+      id: 'nudge-overdue-1',
+      scheduledFor: '2026-10-14T12:00:00Z',
+      status: 'PLANNED',
+      revision: 2,
+      lastEditedAt: NOW.toISOString(),
+    } satisfies Nudge);
   });
 
   afterEach(() => {
@@ -100,5 +111,22 @@ describe('HomeScreen', () => {
 
     // Elia's nudge is scheduled 2026-10-01T12:00:00Z, 17 days after NOW.
     expect(screen.getByText('in 17 d')).toBeOnTheScreen();
+  });
+
+  it('confirms the nudge and refetches friends when a friend is checked off', async () => {
+    await renderScreen(<HomeScreen />);
+    await waitFor(() => expect(screen.getByText('Anastasia Kleisioni')).toBeOnTheScreen());
+    const callsBeforeConfirm = jest.mocked(friendsApi.listFriends).mock.calls.length;
+
+    await userEvent
+      .setup({ advanceTimers: jest.advanceTimersByTime })
+      .press(screen.getByRole('checkbox', { name: 'Select Anastasia Kleisioni' }));
+
+    await waitFor(() => expect(nudgesApi.confirmNudge).toHaveBeenCalledWith('nudge-overdue-1', 1));
+    await waitFor(() =>
+      expect(jest.mocked(friendsApi.listFriends).mock.calls.length).toBeGreaterThan(
+        callsBeforeConfirm,
+      ),
+    );
   });
 });
