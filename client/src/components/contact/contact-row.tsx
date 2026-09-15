@@ -7,7 +7,8 @@ import { Avatar, Checkbox, Text } from '@/ui';
 export type ContactRowProps = {
   name: string;
   avatarUri?: string;
-  lastContactAt: Date;
+  /** null when the friend has never been contacted. */
+  lastContactAt: Date | null;
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   /** Tapping the avatar + name. Omit to make that area non-interactive. */
@@ -44,7 +45,7 @@ export function ContactRow({
       </Pressable>
       <View style={styles.meta}>
         <Text variant="bodyLight" style={styles.date}>
-          {formatDaysAgo(lastContactAt, now)}
+          {lastContactAt ? formatDaysAgo(lastContactAt, now) : 'Never'}
         </Text>
         <Checkbox
           checked={checked}

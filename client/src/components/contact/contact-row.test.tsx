@@ -35,6 +35,11 @@ describe('ContactRow', () => {
     expect(screen.getByRole('checkbox', { name: 'Select Anastasia Kleisioni' })).toBeOnTheScreen();
   });
 
+  it('shows "Never" when there is no contact history', async () => {
+    await renderWithTheme(<ContactRow {...baseProps} lastContactAt={null} />);
+    expect(screen.getByText('Never')).toBeOnTheScreen();
+  });
+
   it('truncates long names to one line', async () => {
     await renderWithTheme(<ContactRow {...baseProps} name="Anastasia Kleisioni-Papadopoulou" />);
     expect(screen.getByText('Anastasia Kleisioni-Papadopoulou').props.numberOfLines).toBe(1);

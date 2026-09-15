@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "backgroundColor": "#76ff2c",
+        "height": 25,
+        "justifyContent": "center",
+        "overflow": "hidden",
+      }
+    }
+    testID="ticker-banner"
+  >
+    <View
+      collapsable={false}
+      onLayout={[Function]}
+      style={
+        {
+          "flexDirection": "row",
+          "transform": [
+            {
+              "translateX": 0,
+            },
+          ],
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+            {
+              "color": "#151518",
+            },
+            {
+              "color": "#151518",
+              "fontSize": 16,
+              "paddingRight": 24,
+            },
+          ]
+        }
+      >
+        stay in touch with your friends
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+            {
+              "color": "#151518",
+            },
+            {
+              "color": "#151518",
+              "fontSize": 16,
+              "paddingRight": 24,
+            },
+          ]
+        }
+      >
+        stay in touch with your friends
+      </Text>
+    </View>
+  </View>
+</View>
+`;

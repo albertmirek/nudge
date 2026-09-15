@@ -29,6 +29,8 @@ export const Checked: Story = { args: { checked: true } };
 
 export const ContactedToday: Story = { args: { name: 'Aku Koskien', lastContactAt: NOW } };
 
+export const NeverContacted: Story = { args: { name: 'Elia Cagnazo', lastContactAt: null } };
+
 export const LongName: Story = {
   args: { name: 'Anastasia Kleisioni-Papadopoulou of Thessaloniki', lastContactAt: daysBefore(12) },
 };
