@@ -20,6 +20,9 @@ export function HomeScreen() {
   const styles = useStyles(makeStyles);
   const [tab, setTab] = useState<NudgeTab>('overdue');
   const [checkedIds, setCheckedIds] = useState<ReadonlySet<string>>(new Set());
+  // Captured once per mount so every row's relative-date label stays consistent, rather than
+  // each row computing its own `new Date()` at its own render time.
+  const [now] = useState(() => new Date());
 
   const me = useMe();
   const friends = useFriends();
@@ -57,7 +60,7 @@ export function HomeScreen() {
   const visible = tab === 'overdue' ? overdue : upcoming;
 
   return (
-    <SafeAreaView style={styles.screen} edges={['bottom', 'left', 'right']}>
+    <SafeAreaView style={styles.screen} edges={['top', 'bottom', 'left', 'right']}>
       <TickerBanner text="stay in touch with your friends" />
       <FlatList
         data={visible}
@@ -75,8 +78,10 @@ export function HomeScreen() {
           <ContactRow
             name={item.name}
             lastContactAt={item.lastContactAt ? new Date(item.lastContactAt) : null}
+            nudgeDueAt={tab === 'upcoming' && item.nudge ? new Date(item.nudge.scheduledFor) : null}
             checked={checkedIds.has(item.id)}
             onCheckedChange={(checked) => toggle(item.id, checked)}
+            now={now}
           />
         )}
         ListEmptyComponent={

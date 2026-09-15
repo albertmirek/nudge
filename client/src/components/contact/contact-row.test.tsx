@@ -40,6 +40,13 @@ describe('ContactRow', () => {
     expect(screen.getByText('Never')).toBeOnTheScreen();
   });
 
+  it('shows time until the next nudge instead of the last-contact label when nudgeDueAt is set', async () => {
+    const dueIn2Days = new Date(NOW.getTime() + 2 * 24 * 60 * 60 * 1000);
+    await renderWithTheme(<ContactRow {...baseProps} nudgeDueAt={dueIn2Days} />);
+    expect(screen.getByText('in 2 d')).toBeOnTheScreen();
+    expect(screen.queryByText('288 d ago')).toBeNull();
+  });
+
   it('truncates long names to one line', async () => {
     await renderWithTheme(<ContactRow {...baseProps} name="Anastasia Kleisioni-Papadopoulou" />);
     expect(screen.getByText('Anastasia Kleisioni-Papadopoulou').props.numberOfLines).toBe(1);

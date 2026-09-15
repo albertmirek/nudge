@@ -89,4 +89,16 @@ describe('HomeScreen', () => {
     expect(screen.getByText('Elia Cagnazo')).toBeOnTheScreen();
     expect(screen.queryByText('Anastasia Kleisioni')).toBeNull();
   });
+
+  it('shows time until the nudge, not last-contact time, for upcoming friends', async () => {
+    await renderScreen(<HomeScreen />);
+    await waitFor(() => expect(screen.getByText('Anastasia Kleisioni')).toBeOnTheScreen());
+
+    await userEvent
+      .setup({ advanceTimers: jest.advanceTimersByTime })
+      .press(screen.getByRole('tab', { name: 'Upcoming' }));
+
+    // Elia's nudge is scheduled 2026-10-01T12:00:00Z, 17 days after NOW.
+    expect(screen.getByText('in 17 d')).toBeOnTheScreen();
+  });
 });
