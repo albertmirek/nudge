@@ -1,0 +1,14 @@
+meta {
+  name: Get Me
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/users/me
+  body: none
+}
+
+docs {
+  Reads the current user (identified by the x-user-id header), including name.
+}

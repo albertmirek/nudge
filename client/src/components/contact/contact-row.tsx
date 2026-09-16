@@ -1,13 +1,16 @@
 import { Pressable, View } from 'react-native';
 
-import { formatDaysAgo } from '@/lib/date';
+import { formatDaysAgo, formatDaysUntil } from '@/lib/date';
 import { type Theme, useStyles } from '@/theme';
 import { Avatar, Checkbox, Text } from '@/ui';
 
 export type ContactRowProps = {
   name: string;
   avatarUri?: string;
-  lastContactAt: Date;
+  /** null when the friend has never been contacted. */
+  lastContactAt: Date | null;
+  /** When set, shows "in n d" until this date instead of the last-contact label — used for upcoming nudges. */
+  nudgeDueAt?: Date | null;
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   /** Tapping the avatar + name. Omit to make that area non-interactive. */
@@ -21,12 +24,18 @@ export function ContactRow({
   name,
   avatarUri,
   lastContactAt,
+  nudgeDueAt,
   checked,
   onCheckedChange,
   onPress,
   now,
 }: ContactRowProps) {
   const styles = useStyles(makeStyles);
+  const dateLabel = nudgeDueAt
+    ? formatDaysUntil(nudgeDueAt, now)
+    : lastContactAt
+      ? formatDaysAgo(lastContactAt, now)
+      : 'Never';
 
   return (
     <View style={styles.row}>
@@ -44,7 +53,7 @@ export function ContactRow({
       </Pressable>
       <View style={styles.meta}>
         <Text variant="bodyLight" style={styles.date}>
-          {formatDaysAgo(lastContactAt, now)}
+          {dateLabel}
         </Text>
         <Checkbox
           checked={checked}

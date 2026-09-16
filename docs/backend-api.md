@@ -10,6 +10,7 @@ All bodies and responses use camelCase. Dates are ISO timestamps. IDs are UUIDs.
 
 | Method | Route                                       | Behaviour                                                          |
 | ------ | ------------------------------------------- | ------------------------------------------------------------------ |
+| GET    | `/v1/users/me`                              | Read the current user, including `name`                            |
 | POST   | `/v1/friends`                               | Create a friend and its nudge atomically                           |
 | GET    | `/v1/friends`                               | List the current user's friends, including each nudge and channels |
 | GET    | `/v1/friends/:friendId`                     | Read one friend, including its nudge and channels                  |
@@ -22,6 +23,10 @@ All bodies and responses use camelCase. Dates are ISO timestamps. IDs are UUIDs.
 | DELETE | `/v1/friends/:friendId/catch-up/:catchUpId` | Delete a catch-up; recalculate scheduling if last contact changes  |
 | POST   | `/v1/nudges/:nudgeId/snooze`                | Add 24 hours to scheduledFor and set status to SNOOZED             |
 | POST   | `/v1/nudges/:nudgeId/confirm`               | Record contact now and replan the same nudge                       |
+
+`GET /v1/users/me` has no request body; it 404s if the authenticated id has no matching row
+(the dev-auth header trusts any well-formed UUID, seeded or not). `name` is free text, empty
+by default; there is no route to edit it yet.
 
 Creation returns 201; reads, updates and nudge actions return 200; deletion returns 204.
 Invalid bodies/UUIDs return 400, missing authentication returns 401, and missing or

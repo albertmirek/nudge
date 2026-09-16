@@ -8,6 +8,9 @@ export class User {
   @PrimaryGeneratedColumn('uuid', { primaryKeyConstraintName: 'users_pkey' })
   id: string;
 
+  @Column({ type: 'text', default: '' })
+  name: string;
+
   /** IANA zone name (e.g. "Europe/Prague"); the scheduler resolves reminder times per date. */
   @Column({ type: 'text' })
   timezone: string;

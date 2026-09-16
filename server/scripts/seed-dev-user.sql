@@ -5,7 +5,7 @@
 --   # or, running the db natively via `pnpm docker:db`:
 --   psql "$DATABASE_URL" -f server/scripts/seed-dev-user.sql
 
-INSERT INTO users (id, timezone, preferred_reminder_local_time, nudge_enabled)
-VALUES ('00000000-0000-0000-0000-000000000001', 'Europe/Prague', '18:00:00', true)
+INSERT INTO users (id, name, timezone, preferred_reminder_local_time, nudge_enabled)
+VALUES ('00000000-0000-0000-0000-000000000001', 'Sandra', 'Europe/Prague', '18:00:00', true)
 ON CONFLICT (id) DO NOTHING
-RETURNING id, timezone, preferred_reminder_local_time, nudge_enabled, created_at;
+RETURNING id, name, timezone, preferred_reminder_local_time, nudge_enabled, created_at;
