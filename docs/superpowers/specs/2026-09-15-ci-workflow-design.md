@@ -41,10 +41,12 @@ No Turborepo (see Out of scope), so filtering is directory-based via
 - `client` — `client/**`
 - `server` — `server/**`
 
-Downstream jobs gate on `client || shared` and `server || shared` respectively, so a
-root dependency bump or config change still runs both packages' checks, while a
-pure `client/**` or `server/**` change only runs its own package's jobs, and a
-docs/bruno-only PR runs nothing but the (trivially fast) `changes` job itself.
+Downstream package jobs (`client-checks`, `server-checks`, `server-e2e`) gate on
+`client || shared` and `server || shared` respectively, so a root dependency bump
+or config change still runs both packages' checks, while a pure `client/**` or
+`server/**` change only runs its own package's jobs. `lint-and-format` is
+unconditional (see Job architecture) — a docs/bruno-only PR skips the three
+package jobs but still runs `changes` and `lint-and-format`.
 
 ## Job architecture
 
@@ -52,7 +54,7 @@ Single workflow file: `.github/workflows/ci.yml`.
 
 ```
 changes            paths-filter → outputs: client, server (booleans)
-├─ lint-and-format  [if: client-or-server changed]
+├─ lint-and-format  [unconditional — repo-wide, runs on every PR]
 │                   pnpm lint && pnpm format:check
 ├─ client-checks    [if: client changed]
 │                   pnpm --filter @nudge/client typecheck
@@ -69,9 +71,14 @@ changes            paths-filter → outputs: client, server (booleans)
 
 Rationale:
 
-- `lint-and-format` is repo-wide, not per-package: a single flat ESLint config
-  (`eslint.config.mjs`) covers both packages; splitting it would mean re-implementing
-  the file-glob scoping ESLint already does internally.
+- `lint-and-format` is repo-wide, not per-package (a single flat ESLint config,
+  `eslint.config.mjs`, covers both packages; splitting it would mean re-implementing
+  the file-glob scoping ESLint already does internally) and unconditional (no `if:`
+  gate) — `prettier --check .` covers every file in the repo, including `docs/`,
+  `README.md`, and other paths outside the `client`/`server`/`shared` filter groups,
+  so gating it on those groups would let a docs-only PR merge unformatted content
+  that breaks the next PR to touch a package. It's the cheapest job in the file
+  (~1 minute), so running it unconditionally costs little.
 - `server-checks` bundles typecheck + build + unit test into one job — all fast,
   no Docker — instead of three jobs, to avoid job-spawn overhead for cheap
   sequential steps.
