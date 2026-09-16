@@ -12,6 +12,7 @@ exports[`matches the default story snapshot 1`] = `
 >
   <View
     accessibilityElementsHidden={true}
+    onLayout={[Function]}
     style={
       {
         "backgroundColor": "#76ff2c",

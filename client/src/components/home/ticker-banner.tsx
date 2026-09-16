@@ -17,9 +17,14 @@ export function TickerBanner({ text, durationMs = 12137 }: TickerBannerProps) {
   const [translateX] = useState(() => new Animated.Value(0));
   const loopRef = useRef<Animated.CompositeAnimation | null>(null);
   const [segmentWidth, setSegmentWidth] = useState(0);
+  const [trackWidth, setTrackWidth] = useState(0);
+
+  const onTrackLayout = useCallback((event: LayoutChangeEvent) => {
+    setTrackWidth(event.nativeEvent.layout.width);
+  }, []);
 
   // Measures a single copy of the text (not the full duplicated content) so the loop travels
-  // exactly one segment: the second copy seamlessly fills in as the first slides out, and the
+  // exactly one segment: the next copy seamlessly fills in as the first slides out, and the
   // reset back to translateX 0 is visually identical to the mid-loop frame it replaces.
   const onSegmentLayout = useCallback(
     (event: LayoutChangeEvent) => {
@@ -44,13 +49,29 @@ export function TickerBanner({ text, durationMs = 12137 }: TickerBannerProps) {
   // Stop the loop on unmount so no animation keeps ticking (and no timer keeps a test process alive).
   useEffect(() => () => loopRef.current?.stop(), []);
 
+  // Enough copies to cover the whole track, plus one so the tail is still covered once a full
+  // segment has slid out (right before the loop resets). Two copies alone leave the right edge
+  // blank whenever a single segment is narrower than the track.
+  const copies =
+    segmentWidth > 0 && trackWidth > 0 ? Math.max(2, Math.ceil(trackWidth / segmentWidth) + 1) : 2;
+
   return (
-    <View testID="ticker-banner" style={styles.track} accessibilityElementsHidden>
+    <View
+      testID="ticker-banner"
+      style={styles.track}
+      accessibilityElementsHidden
+      onLayout={onTrackLayout}
+    >
       <Animated.View style={[styles.content, { transform: [{ translateX }] }]}>
-        <Text style={styles.text} onLayout={onSegmentLayout}>
-          {text}
-        </Text>
-        <Text style={styles.text}>{text}</Text>
+        {Array.from({ length: copies }, (_, index) => (
+          <Text
+            key={index}
+            style={styles.text}
+            onLayout={index === 0 ? onSegmentLayout : undefined}
+          >
+            {text}
+          </Text>
+        ))}
       </Animated.View>
     </View>
   );

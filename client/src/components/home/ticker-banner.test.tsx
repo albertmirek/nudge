@@ -54,6 +54,29 @@ describe('TickerBanner', () => {
     loopSpy.mockRestore();
     timingSpy.mockRestore();
   });
+
+  it('renders enough copies to cover the track plus one extra segment', async () => {
+    const loopSpy = jest.spyOn(Animated, 'loop').mockReturnValue({
+      start: jest.fn(),
+      stop: jest.fn(),
+      reset: jest.fn(),
+    } as unknown as Animated.CompositeAnimation);
+    await renderWithTheme(<TickerBanner text="hi" />);
+    const track = screen.getByTestId('ticker-banner', { includeHiddenElements: true });
+    const firstCopy = screen.getAllByText('hi', { includeHiddenElements: true })[0];
+    if (!firstCopy) throw new Error('expected at least one "hi" text node');
+
+    // A 390-wide track with 120-wide segments needs ceil(390 / 120) = 4 copies to cover it,
+    // plus one more so the tail is still covered after a full segment has slid out.
+    await act(() => {
+      track.props.onLayout({ nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 25 } } });
+      firstCopy.props.onLayout({ nativeEvent: { layout: { x: 0, y: 0, width: 120, height: 20 } } });
+    });
+
+    expect(screen.getAllByText('hi', { includeHiddenElements: true })).toHaveLength(5);
+
+    loopSpy.mockRestore();
+  });
 });
 
 describeStories('TickerBanner', stories);
