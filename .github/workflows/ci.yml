@@ -8,6 +8,9 @@ jobs:
   changes:
     name: Detect changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       client: ${{ steps.filter.outputs.client == 'true' || steps.filter.outputs.shared == 'true' }}
       server: ${{ steps.filter.outputs.server == 'true' || steps.filter.outputs.shared == 'true' }}
