@@ -16,13 +16,16 @@ export function TickerBanner({ text, durationMs = 12137 }: TickerBannerProps) {
   // Lazy useState instead of useRef().current: reading `.current` during render is disallowed.
   const [translateX] = useState(() => new Animated.Value(0));
   const loopRef = useRef<Animated.CompositeAnimation | null>(null);
-  const [contentWidth, setContentWidth] = useState(0);
+  const [segmentWidth, setSegmentWidth] = useState(0);
 
-  const onLayout = useCallback(
+  // Measures a single copy of the text (not the full duplicated content) so the loop travels
+  // exactly one segment: the second copy seamlessly fills in as the first slides out, and the
+  // reset back to translateX 0 is visually identical to the mid-loop frame it replaces.
+  const onSegmentLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const width = event.nativeEvent.layout.width;
-      if (width === contentWidth) return;
-      setContentWidth(width);
+      if (width === segmentWidth) return;
+      setSegmentWidth(width);
       translateX.setValue(0);
       loopRef.current?.stop();
       loopRef.current = Animated.loop(
@@ -35,7 +38,7 @@ export function TickerBanner({ text, durationMs = 12137 }: TickerBannerProps) {
       );
       loopRef.current.start();
     },
-    [contentWidth, durationMs, translateX],
+    [segmentWidth, durationMs, translateX],
   );
 
   // Stop the loop on unmount so no animation keeps ticking (and no timer keeps a test process alive).
@@ -43,8 +46,10 @@ export function TickerBanner({ text, durationMs = 12137 }: TickerBannerProps) {
 
   return (
     <View testID="ticker-banner" style={styles.track} accessibilityElementsHidden>
-      <Animated.View style={[styles.content, { transform: [{ translateX }] }]} onLayout={onLayout}>
-        <Text style={styles.text}>{text}</Text>
+      <Animated.View style={[styles.content, { transform: [{ translateX }] }]}>
+        <Text style={styles.text} onLayout={onSegmentLayout}>
+          {text}
+        </Text>
         <Text style={styles.text}>{text}</Text>
       </Animated.View>
     </View>
