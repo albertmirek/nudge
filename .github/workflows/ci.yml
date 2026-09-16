@@ -31,3 +31,19 @@ jobs:
               - 'client/**'
             server:
               - 'server/**'
+
+  lint-and-format:
+    name: Lint & format
+    needs: changes
+    if: needs.changes.outputs.client == 'true' || needs.changes.outputs.server == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
