@@ -80,7 +80,7 @@ Rationale:
   the fast checks.
 - `client-checks` bundles typecheck + test; client has no separate build step
   today (see Out of scope — no EAS config), so "build" for client is typecheck.
-- `ci-gate` exists because GitHub Actions branch protection handles *skipped*
+- `ci-gate` exists because GitHub Actions branch protection handles _skipped_
   required jobs inconsistently; a single always-run gate job that inspects the
   results of its dependencies is the standard workaround, and gives future branch
   protection setup one check to require instead of five.

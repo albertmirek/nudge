@@ -25,9 +25,11 @@
 ### Task 1: Workflow skeleton + `changes` job
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`
 
 **Interfaces:**
+
 - Produces: job `changes` with outputs `client` (string `'true'`/`'false'`) and `server` (string `'true'`/`'false'`). All later tasks read these as `needs.changes.outputs.client` / `needs.changes.outputs.server`.
 
 - [ ] **Step 1: Write the workflow skeleton with the `changes` job**
@@ -87,9 +89,11 @@ git commit -m "ci: add workflow skeleton with path-filter change detection"
 ### Task 2: `lint-and-format` job
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml` (append job after `changes`)
 
 **Interfaces:**
+
 - Consumes: `needs.changes.outputs.client`, `needs.changes.outputs.server` (from Task 1)
 - Produces: job `lint-and-format`
 
@@ -97,6 +101,7 @@ git commit -m "ci: add workflow skeleton with path-filter change detection"
 
 Open `.github/workflows/ci.yml`. After the `changes` job's last line (`              - 'server/**'`), add a blank line and this job (same indentation level as `changes:`, i.e. 2 spaces under `jobs:`):
 
+<!-- prettier-ignore -->
 ```yaml
 
   lint-and-format:
@@ -138,9 +143,11 @@ git commit -m "ci: add lint-and-format job"
 ### Task 3: `client-checks` job
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml` (append job after `lint-and-format`)
 
 **Interfaces:**
+
 - Consumes: `needs.changes.outputs.client` (from Task 1)
 - Produces: job `client-checks`
 
@@ -148,6 +155,7 @@ git commit -m "ci: add lint-and-format job"
 
 After the `lint-and-format` job's last line (`      - run: pnpm format:check`), add:
 
+<!-- prettier-ignore -->
 ```yaml
 
   client-checks:
@@ -189,9 +197,11 @@ git commit -m "ci: add client-checks job"
 ### Task 4: `server-checks` job
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml` (append job after `client-checks`)
 
 **Interfaces:**
+
 - Consumes: `needs.changes.outputs.server` (from Task 1)
 - Produces: job `server-checks`
 
@@ -199,6 +209,7 @@ git commit -m "ci: add client-checks job"
 
 After the `client-checks` job's last line (`      - run: pnpm --filter @nudge/client test`), add:
 
+<!-- prettier-ignore -->
 ```yaml
 
   server-checks:
@@ -241,9 +252,11 @@ git commit -m "ci: add server-checks job"
 ### Task 5: `server-e2e` job
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml` (append job after `server-checks`)
 
 **Interfaces:**
+
 - Consumes: `needs.changes.outputs.server` (from Task 1)
 - Produces: job `server-e2e`
 
@@ -251,6 +264,7 @@ git commit -m "ci: add server-checks job"
 
 After the `server-checks` job's last line (`      - run: pnpm --filter @nudge/server test`), add:
 
+<!-- prettier-ignore -->
 ```yaml
 
   server-e2e:
@@ -292,9 +306,11 @@ git commit -m "ci: add server-e2e job"
 ### Task 6: `ci-gate` job
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml` (append job after `server-e2e`)
 
 **Interfaces:**
+
 - Consumes: jobs `changes`, `lint-and-format`, `client-checks`, `server-checks`, `server-e2e` (from Tasks 1-5) — reads their `result` via the `needs` context
 - Produces: job `ci-gate` — the single check intended to be marked required in future branch-protection configuration (out of scope for this plan; see spec)
 
@@ -302,6 +318,7 @@ git commit -m "ci: add server-e2e job"
 
 After the `server-e2e` job's last line (`      - run: pnpm --filter @nudge/server test:e2e`), add:
 
+<!-- prettier-ignore -->
 ```yaml
 
   ci-gate:
@@ -334,6 +351,7 @@ git commit -m "ci: add ci-gate job as the single required-check target"
 **Files:** none (validation only)
 
 **Interfaces:**
+
 - Consumes: the complete `.github/workflows/ci.yml` from Tasks 1-6
 
 This task pushes the branch and opens a real PR against `main` — a visible, shared-state action. **Get explicit user confirmation before Step 1.**
