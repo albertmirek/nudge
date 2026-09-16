@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      client: ${{ steps.filter.outputs.client == 'true' || steps.filter.outputs.shared == 'true' }}
+      server: ${{ steps.filter.outputs.server == 'true' || steps.filter.outputs.shared == 'true' }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            shared:
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'tsconfig.base.json'
+              - 'eslint.config.mjs'
+              - '.prettierrc'
+              - '.prettierignore'
+              - '.nvmrc'
+              - '.github/workflows/**'
+            client:
+              - 'client/**'
+            server:
+              - 'server/**'
