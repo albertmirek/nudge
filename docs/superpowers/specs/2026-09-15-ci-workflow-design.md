@@ -64,7 +64,7 @@ changes            paths-filter → outputs: client, server (booleans)
 ├─ server-e2e       [if: server changed]
 │                   pnpm --filter @nudge/server test:e2e    (vitest e2e, testcontainers)
 └─ ci-gate          [if: always(), needs: all jobs above]
-                    passes only if no needed job's result is "failure"
+                    passes only if no needed job's result is "failure" or "cancelled"
 ```
 
 Rationale:
