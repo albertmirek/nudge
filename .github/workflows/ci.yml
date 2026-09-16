@@ -80,3 +80,18 @@ jobs:
       - run: pnpm --filter @nudge/server typecheck
       - run: pnpm --filter @nudge/server build
       - run: pnpm --filter @nudge/server test
+
+  server-e2e:
+    name: Server e2e
+    needs: changes
+    if: needs.changes.outputs.server == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @nudge/server test:e2e
