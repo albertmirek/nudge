@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <ViewManagerAdapter_ExpoImage
+    containerViewRef={"[React.ref]"}
+    contentFit="contain"
+    contentPosition={
+      {
+        "left": "50%",
+        "top": "50%",
+      }
+    }
+    height={22}
+    nativeViewRef={"[React.ref]"}
+    onError={[Function]}
+    onLoad={[Function]}
+    onLoadStart={[Function]}
+    onProgress={[Function]}
+    placeholder={[]}
+    sfEffect={null}
+    source={
+      [
+        {
+          "testUri": "../../../client/assets/icons/home.svg",
+        },
+      ]
+    }
+    style={
+      {
+        "height": 22,
+        "width": 22,
+      }
+    }
+    symbolSize={null}
+    symbolWeight={null}
+    testID="icon-home"
+    tintColor={4279571736}
+    transition={null}
+    width={22}
+  />
+</View>
+`;

@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "gap": 8,
+        },
+        undefined,
+      ]
+    }
+  >
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Inter_400Regular",
+            "fontSize": 15,
+            "lineHeight": 20,
+          },
+          {
+            "color": "#151518",
+          },
+          undefined,
+        ]
+      }
+    >
+      Name
+    </Text>
+    <TextInput
+      accessibilityLabel="Name"
+      onChangeText={[MockFunction spy]}
+      placeholderTextColor="#8a8a8f"
+      style={
+        [
+          {
+            "backgroundColor": "#f0f0f3",
+            "borderColor": "#cfcfcf",
+            "borderRadius": 8,
+            "borderWidth": 1,
+            "color": "#151518",
+            "fontFamily": "Inter_400Regular",
+            "fontSize": 15,
+            "lineHeight": 20,
+            "minHeight": 40,
+            "paddingHorizontal": 12,
+            "paddingVertical": 8,
+          },
+          undefined,
+          null,
+        ]
+      }
+      textAlignVertical="center"
+      value=""
+    />
+  </View>
+</View>
+`;

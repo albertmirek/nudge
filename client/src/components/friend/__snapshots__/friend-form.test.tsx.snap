@@ -1,0 +1,868 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "gap": 24,
+      }
+    }
+  >
+    <View
+      accessibilityLabel="Add photo"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 9999,
+            "justifyContent": "center",
+          },
+          {
+            "height": 80,
+            "width": 80,
+          },
+          {
+            "backgroundColor": "#f0f0f3",
+            "elevation": 3,
+            "shadowColor": "#151518",
+            "shadowOffset": {
+              "height": 2,
+              "width": 0,
+            },
+            "shadowOpacity": 0.12,
+            "shadowRadius": 8,
+          },
+          false,
+          false,
+          {
+            "alignSelf": "center",
+          },
+        ]
+      }
+    >
+      <ViewManagerAdapter_ExpoImage
+        containerViewRef={"[React.ref]"}
+        contentFit="contain"
+        contentPosition={
+          {
+            "left": "50%",
+            "top": "50%",
+          }
+        }
+        height={28}
+        nativeViewRef={"[React.ref]"}
+        onError={[Function]}
+        onLoad={[Function]}
+        onLoadStart={[Function]}
+        onProgress={[Function]}
+        placeholder={[]}
+        sfEffect={null}
+        source={
+          [
+            {
+              "testUri": "../../../client/assets/icons/camera.svg",
+            },
+          ]
+        }
+        style={
+          {
+            "height": 28,
+            "width": 28,
+          }
+        }
+        symbolSize={null}
+        symbolWeight={null}
+        testID="icon-camera"
+        tintColor={4279571736}
+        transition={null}
+        width={28}
+      />
+    </View>
+    <View
+      style={
+        {
+          "gap": 16,
+          "paddingHorizontal": 24,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "gap": 8,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Name
+        </Text>
+        <TextInput
+          accessibilityLabel="Name"
+          autoCapitalize="words"
+          autoComplete="name"
+          onChangeText={[Function]}
+          placeholderTextColor="#8a8a8f"
+          style={
+            [
+              {
+                "backgroundColor": "#f0f0f3",
+                "borderColor": "#cfcfcf",
+                "borderRadius": 8,
+                "borderWidth": 1,
+                "color": "#151518",
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+                "minHeight": 40,
+                "paddingHorizontal": 12,
+                "paddingVertical": 8,
+              },
+              undefined,
+              null,
+            ]
+          }
+          textAlignVertical="center"
+          value=""
+        />
+      </View>
+      <View
+        style={
+          [
+            {
+              "gap": 8,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Contact Frequency
+        </Text>
+        <View
+          accessibilityLabel="Contact Frequency"
+          accessibilityRole="radiogroup"
+          style={
+            {
+              "flexDirection": "row",
+              "flexWrap": "wrap",
+              "gap": 8,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="Weekly"
+            accessibilityRole="radio"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": false,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#f0f0f3",
+                  "borderColor": "#cfcfcf",
+                  "borderRadius": 9999,
+                  "borderWidth": 1,
+                  "height": 36,
+                  "justifyContent": "center",
+                  "paddingHorizontal": 16,
+                },
+                false,
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 15,
+                    "lineHeight": 20,
+                  },
+                  {
+                    "color": "#151518",
+                  },
+                  undefined,
+                ]
+              }
+            >
+              Weekly
+            </Text>
+          </View>
+          <View
+            accessibilityLabel="Every 2 weeks"
+            accessibilityRole="radio"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": false,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#f0f0f3",
+                  "borderColor": "#cfcfcf",
+                  "borderRadius": 9999,
+                  "borderWidth": 1,
+                  "height": 36,
+                  "justifyContent": "center",
+                  "paddingHorizontal": 16,
+                },
+                false,
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 15,
+                    "lineHeight": 20,
+                  },
+                  {
+                    "color": "#151518",
+                  },
+                  undefined,
+                ]
+              }
+            >
+              Every 2 weeks
+            </Text>
+          </View>
+          <View
+            accessibilityLabel="Monthly"
+            accessibilityRole="radio"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": false,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#f0f0f3",
+                  "borderColor": "#cfcfcf",
+                  "borderRadius": 9999,
+                  "borderWidth": 1,
+                  "height": 36,
+                  "justifyContent": "center",
+                  "paddingHorizontal": 16,
+                },
+                false,
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 15,
+                    "lineHeight": 20,
+                  },
+                  {
+                    "color": "#151518",
+                  },
+                  undefined,
+                ]
+              }
+            >
+              Monthly
+            </Text>
+          </View>
+          <View
+            accessibilityLabel="Quarterly"
+            accessibilityRole="radio"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": false,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#f0f0f3",
+                  "borderColor": "#cfcfcf",
+                  "borderRadius": 9999,
+                  "borderWidth": 1,
+                  "height": 36,
+                  "justifyContent": "center",
+                  "paddingHorizontal": 16,
+                },
+                false,
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 15,
+                    "lineHeight": 20,
+                  },
+                  {
+                    "color": "#151518",
+                  },
+                  undefined,
+                ]
+              }
+            >
+              Quarterly
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "gap": 8,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Last Contact
+        </Text>
+        <TextInput
+          accessibilityLabel="Last Contact"
+          keyboardType="numbers-and-punctuation"
+          onChangeText={[Function]}
+          placeholder="YYYY-MM-DD"
+          placeholderTextColor="#8a8a8f"
+          style={
+            [
+              {
+                "backgroundColor": "#f0f0f3",
+                "borderColor": "#cfcfcf",
+                "borderRadius": 8,
+                "borderWidth": 1,
+                "color": "#151518",
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+                "minHeight": 40,
+                "paddingHorizontal": 12,
+                "paddingVertical": 8,
+              },
+              undefined,
+              null,
+            ]
+          }
+          textAlignVertical="center"
+          value=""
+        />
+      </View>
+      <View
+        style={
+          [
+            {
+              "gap": 8,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Met at
+        </Text>
+        <TextInput
+          accessibilityLabel="Met at"
+          onChangeText={[Function]}
+          placeholderTextColor="#8a8a8f"
+          style={
+            [
+              {
+                "backgroundColor": "#f0f0f3",
+                "borderColor": "#cfcfcf",
+                "borderRadius": 8,
+                "borderWidth": 1,
+                "color": "#151518",
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+                "minHeight": 40,
+                "paddingHorizontal": 12,
+                "paddingVertical": 8,
+              },
+              undefined,
+              null,
+            ]
+          }
+          textAlignVertical="center"
+          value=""
+        />
+      </View>
+      <View
+        style={
+          [
+            {
+              "gap": 8,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Lives in
+        </Text>
+        <TextInput
+          accessibilityLabel="Lives in"
+          onChangeText={[Function]}
+          placeholderTextColor="#8a8a8f"
+          style={
+            [
+              {
+                "backgroundColor": "#f0f0f3",
+                "borderColor": "#cfcfcf",
+                "borderRadius": 8,
+                "borderWidth": 1,
+                "color": "#151518",
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+                "minHeight": 40,
+                "paddingHorizontal": 12,
+                "paddingVertical": 8,
+              },
+              undefined,
+              null,
+            ]
+          }
+          textAlignVertical="center"
+          value=""
+        />
+      </View>
+      <View
+        style={
+          [
+            {
+              "gap": 8,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Birthday
+        </Text>
+        <TextInput
+          accessibilityLabel="Birthday"
+          keyboardType="numbers-and-punctuation"
+          onChangeText={[Function]}
+          placeholder="YYYY-MM-DD"
+          placeholderTextColor="#8a8a8f"
+          style={
+            [
+              {
+                "backgroundColor": "#f0f0f3",
+                "borderColor": "#cfcfcf",
+                "borderRadius": 8,
+                "borderWidth": 1,
+                "color": "#151518",
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+                "minHeight": 40,
+                "paddingHorizontal": 12,
+                "paddingVertical": 8,
+              },
+              undefined,
+              null,
+            ]
+          }
+          textAlignVertical="center"
+          value=""
+        />
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+            {
+              "color": "#151518",
+            },
+            {
+              "fontFamily": "Inter_600SemiBold",
+            },
+          ]
+        }
+      >
+        Notes
+      </Text>
+      <View
+        accessibilityLabel="Add note"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 9999,
+              "justifyContent": "center",
+            },
+            {
+              "height": 44,
+              "width": 44,
+            },
+            false,
+            false,
+            false,
+            undefined,
+          ]
+        }
+      >
+        <ViewManagerAdapter_ExpoImage
+          containerViewRef={"[React.ref]"}
+          contentFit="contain"
+          contentPosition={
+            {
+              "left": "50%",
+              "top": "50%",
+            }
+          }
+          height={22}
+          nativeViewRef={"[React.ref]"}
+          onError={[Function]}
+          onLoad={[Function]}
+          onLoadStart={[Function]}
+          onProgress={[Function]}
+          placeholder={[]}
+          sfEffect={null}
+          source={
+            [
+              {
+                "testUri": "../../../client/assets/icons/plus.svg",
+              },
+            ]
+          }
+          style={
+            {
+              "height": 22,
+              "width": 22,
+            }
+          }
+          symbolSize={null}
+          symbolWeight={null}
+          testID="icon-plus"
+          tintColor={4279571736}
+          transition={null}
+          width={22}
+        />
+      </View>
+    </View>
+    <View
+      style={
+        [
+          {
+            "gap": 8,
+          },
+          undefined,
+        ]
+      }
+    >
+      <TextInput
+        accessibilityLabel="Notes"
+        multiline={true}
+        onChangeText={[Function]}
+        placeholderTextColor="#8a8a8f"
+        style={
+          [
+            {
+              "backgroundColor": "#f0f0f3",
+              "borderColor": "#cfcfcf",
+              "borderRadius": 8,
+              "borderWidth": 1,
+              "color": "#151518",
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+              "minHeight": 40,
+              "paddingHorizontal": 12,
+              "paddingVertical": 8,
+            },
+            {
+              "minHeight": 96,
+            },
+            null,
+          ]
+        }
+        textAlignVertical="top"
+        value=""
+      />
+    </View>
+  </View>
+</View>
+`;

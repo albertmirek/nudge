@@ -32,6 +32,10 @@ function friend(id: string, name: string, scheduledFor: string): Friend {
     periodicity: 'MONTHLY',
     lastContactAt: null,
     nudgeEnabled: true,
+    metAt: null,
+    livesIn: null,
+    birthday: null,
+    notes: null,
     createdAt: '2026-01-01T00:00:00Z',
     updatedAt: '2026-01-01T00:00:00Z',
     nudge: {
