@@ -18,6 +18,7 @@
     "docker:logs": "docker compose logs -f",
     "docker:db": "docker compose up -d db",
     "db:migrate": "pnpm --filter @nudge/server migration:run",
+    "db:seed": "pnpm --filter @nudge/server seed",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
