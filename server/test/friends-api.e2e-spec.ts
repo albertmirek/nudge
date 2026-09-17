@@ -22,6 +22,10 @@ interface FriendResponse {
   id: string;
   name: string;
   lastContactAt: string | null;
+  metAt: string | null;
+  livesIn: string | null;
+  birthday: string | null;
+  notes: string | null;
   nudge: NudgeResponse;
 }
 interface CatchUpResponse {
@@ -96,12 +100,72 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
     await request(app.getHttpServer()).get(`/v1/friends/${friend.id}`).expect(404);
   });
 
+  it('stores profile fields on create and clears them with null on update', async () => {
+    const created = await request(app.getHttpServer())
+      .post('/v1/friends')
+      .send({
+        name: 'Alice',
+        periodicity: 'MONTHLY',
+        metAt: ' Prague ',
+        livesIn: 'Berlin',
+        birthday: '1990-05-17',
+        notes: 'Loves hiking',
+      })
+      .expect(201);
+    expect(created.body).toMatchObject({
+      metAt: 'Prague',
+      livesIn: 'Berlin',
+      birthday: '1990-05-17',
+      notes: 'Loves hiking',
+    });
+    const friend = created.body as FriendResponse;
+    expect(await getFriend(friend.id)).toMatchObject({
+      birthday: '1990-05-17',
+      notes: 'Loves hiking',
+    });
+
+    await request(app.getHttpServer())
+      .patch(`/v1/friends/${friend.id}`)
+      .send({ livesIn: null, notes: '', birthday: '1991-01-01' })
+      .expect(200);
+    expect(await getFriend(friend.id)).toMatchObject({
+      metAt: 'Prague',
+      livesIn: null,
+      birthday: '1991-01-01',
+      notes: null,
+    });
+    // Profile edits never touch the schedule.
+    expect((await getFriend(friend.id)).nudge.revision).toBe(1);
+  });
+
+  it('defaults profile fields to null', async () => {
+    const friend = await createFriend();
+    expect(friend).toMatchObject({ metAt: null, livesIn: null, birthday: null, notes: null });
+  });
+
+  it('plans the first nudge from a client-supplied last contact on create', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/v1/friends')
+      .send({ name: 'Alice', periodicity: 'WEEKLY', lastContactAt: '2026-01-10T12:00:00.000Z' })
+      .expect(201);
+    const friend = response.body as FriendResponse;
+    expect(friend.lastContactAt).toBe('2026-01-10T12:00:00.000Z');
+    // 2026-01-10 in Europe/Prague + 7 days at the default 18:00 local time (UTC+1 in January).
+    expect(friend.nudge.scheduledFor).toBe('2026-01-17T17:00:00.000Z');
+  });
+
   it.each([
     { name: '', periodicity: 'MONTHLY' },
     { name: 'Alice', periodicity: 'DAILY' },
     { name: 'Alice', periodicity: 'WEEKLY', nudgeEnabled: 'false' },
     { name: 'Alice', periodicity: 'MONTHLY', userId: 'spoofed' },
     { name: 'Alice', periodicity: null },
+    { name: 'Alice', periodicity: 'MONTHLY', lastContactAt: 'yesterday' },
+    { name: 'Alice', periodicity: 'MONTHLY', lastContactAt: '2999-01-01T00:00:00.000Z' },
+    { name: 'Alice', periodicity: 'MONTHLY', birthday: '17.05.1990' },
+    { name: 'Alice', periodicity: 'MONTHLY', birthday: '1990-02-30' },
+    { name: 'Alice', periodicity: 'MONTHLY', metAt: 'x'.repeat(201) },
+    { name: 'Alice', periodicity: 'MONTHLY', notes: 42 },
   ])('rejects invalid friend input: %j', async (body) => {
     await request(app.getHttpServer()).post('/v1/friends').send(body).expect(400);
     expect(await dataSource.getRepository(Friend).count()).toBe(0);

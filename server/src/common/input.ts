@@ -21,6 +21,38 @@ export function textInput(value: unknown, field: string, max: number): string {
   return value.trim();
 }
 
+/** Optional free text: `null` or an empty string clears the field. */
+export function optionalTextInput(value: unknown, field: string, max: number): string | null {
+  if (value === null || value === '') return null;
+  return textInput(value, field, max);
+}
+
+/** Optional calendar date in YYYY-MM-DD form; `null` or an empty string clears the field. */
+export function optionalDateInput(value: unknown, field: string): string | null {
+  if (value === null || value === '') return null;
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new BadRequestException(`${field} must be a YYYY-MM-DD date`);
+  }
+  // Date.UTC normalizes out-of-range days (Feb 30 -> Mar 2), so round-trip to catch them.
+  const parsed = new Date(`${value}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) {
+    throw new BadRequestException(`${field} must be a valid calendar date`);
+  }
+  return value;
+}
+
+/** ISO timestamp that is not in the future (e.g. when contact last happened). */
+export function pastTimestampInput(value: unknown, field: string): Date {
+  const parsed = typeof value === 'string' ? new Date(value) : new Date(Number.NaN);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new BadRequestException(`${field} must be an ISO timestamp`);
+  }
+  if (parsed.getTime() > Date.now()) {
+    throw new BadRequestException(`${field} cannot be in the future`);
+  }
+  return parsed;
+}
+
 export function booleanInput(value: unknown, field: string): boolean {
   if (typeof value !== 'boolean') throw new BadRequestException(`${field} must be a boolean`);
   return value;
