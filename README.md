@@ -8,17 +8,18 @@ pnpm monorepo with an Expo mobile app, a NestJS API and PostgreSQL. Design docs 
 
 ## Layout
 
-| Path                     | Package         | What                                                  |
-| ------------------------ | --------------- | ----------------------------------------------------- |
-| `client/`                | `@nudge/client` | Expo app (expo-router, TypeScript). Runs on the host. |
-| `client/src/theme/`      | —               | Design tokens + persisted light/dark `ThemeProvider`. |
-| `client/src/ui/`         | —               | Generic primitives (`Text`, `Avatar`, `Checkbox`).    |
-| `client/src/components/` | —               | App-specific compositions (`ContactRow`, …).          |
-| `server/`                | `@nudge/server` | NestJS API. Runs in Docker (or natively).             |
-| `docker-compose.yml`     | —               | Local backend stack: `db` (PostgreSQL 17) + `server`. |
-| `eslint.config.mjs`      | —               | Single ESLint config for the whole repo (+ Prettier). |
-| `tsconfig.base.json`     | —               | Shared strict TypeScript options; packages extend it. |
-| `docs/`                  | —               | Diagrams, tech notes, design specs and plans.         |
+| Path                     | Package         | What                                                       |
+| ------------------------ | --------------- | ---------------------------------------------------------- |
+| `client/`                | `@nudge/client` | Expo app (expo-router, TypeScript). Runs on the host.      |
+| `client/src/theme/`      | —               | Design tokens + persisted light/dark `ThemeProvider`.      |
+| `client/src/ui/`         | —               | Generic primitives (`Text`, `Button`, `Input`, `Icon`, …). |
+| `client/src/components/` | —               | App-specific compositions (`ContactRow`, `FriendForm`, …). |
+| `client/src/app/(tabs)/` | —               | expo-router tab routes: friend book, add a friend, home.   |
+| `server/`                | `@nudge/server` | NestJS API. Runs in Docker (or natively).                  |
+| `docker-compose.yml`     | —               | Local backend stack: `db` (PostgreSQL 17) + `server`.      |
+| `eslint.config.mjs`      | —               | Single ESLint config for the whole repo (+ Prettier).      |
+| `tsconfig.base.json`     | —               | Shared strict TypeScript options; packages extend it.      |
+| `docs/`                  | —               | Diagrams, tech notes, design specs and plans.              |
 
 ## Prerequisites
 
@@ -60,12 +61,13 @@ that produces the slim image used for deployment.
 The server uses TypeORM with `synchronize` off — the schema only changes through migrations in
 `server/src/database/migrations/`.
 
-| Command                                                 | What                                                     |
-| ------------------------------------------------------- | -------------------------------------------------------- |
-| `pnpm db:migrate`                                       | Apply pending migrations to `DATABASE_URL` (from `.env`) |
-| `pnpm --filter @nudge/server migration:generate <Name>` | Diff entities against the database → new migration file  |
-| `pnpm --filter @nudge/server migration:revert`          | Roll back the last migration                             |
-| `pnpm --filter @nudge/server migration:show`            | List applied / pending migrations                        |
+| Command                                                 | What                                                                                                                  |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `pnpm db:migrate`                                       | Apply pending migrations to `DATABASE_URL` (from `.env`)                                                              |
+| `pnpm db:seed`                                          | Dev data: the default dev user + friends with overdue and upcoming nudges (re-runnable; replaces that user's friends) |
+| `pnpm --filter @nudge/server migration:generate <Name>` | Diff entities against the database → new migration file                                                               |
+| `pnpm --filter @nudge/server migration:revert`          | Roll back the last migration                                                                                          |
+| `pnpm --filter @nudge/server migration:show`            | List applied / pending migrations                                                                                     |
 
 After generating a migration, add its class to `server/src/database/migrations/index.ts` and
 review the SQL. `migration:generate` needs a running database (`pnpm docker:db`).

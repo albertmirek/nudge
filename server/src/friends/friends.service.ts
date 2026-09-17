@@ -4,7 +4,7 @@ import { NudgeSchedulingService } from '../nudges/nudge-scheduling.service.js';
 import { User } from '../users/entities/user.entity.js';
 import { Friend } from './entities/friend.entity.js';
 import { ownedFriend } from './friend-access.js';
-import type { CreateFriendInput } from './friend-input.js';
+import type { CreateFriendInput, UpdateFriendInput } from './friend-input.js';
 
 @Injectable()
 export class FriendsService {
@@ -17,9 +17,10 @@ export class FriendsService {
     return this.dataSource.transaction(async (manager) => {
       if (!(await manager.existsBy(User, { id: userId })))
         throw new NotFoundException('User not found');
+      const { lastContactAt = null, ...fields } = input;
       const friend = await manager.save(
         Friend,
-        manager.create(Friend, { ...input, userId, lastContactAt: null }),
+        manager.create(Friend, { ...fields, userId, lastContactAt }),
       );
       friend.nudge = await this.scheduling.plan(manager, friend);
       return friend;
@@ -42,11 +43,7 @@ export class FriendsService {
     return friend;
   }
 
-  async update(
-    userId: string,
-    friendId: string,
-    input: Partial<CreateFriendInput>,
-  ): Promise<Friend> {
+  async update(userId: string, friendId: string, input: UpdateFriendInput): Promise<Friend> {
     return this.dataSource.transaction(async (manager) => {
       const friend = await ownedFriend(manager, userId, friendId, true);
       const periodicityChanged =

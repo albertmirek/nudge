@@ -13,7 +13,12 @@ body:json {
   {
     "name": "Alice",
     "periodicity": "MONTHLY",
-    "nudgeEnabled": true
+    "nudgeEnabled": true,
+    "lastContactAt": "2026-08-01T12:00:00.000Z",
+    "metAt": "Prague",
+    "livesIn": "Berlin",
+    "birthday": "1990-05-17",
+    "notes": "Loves hiking"
   }
 }
 
@@ -27,6 +32,8 @@ script:post-response {
 
 docs {
   periodicity: WEEKLY | BIWEEKLY | MONTHLY | QUARTERLY. nudgeEnabled defaults to true.
+  lastContactAt (ISO, not in the future) is only accepted on create and plans the first nudge.
+  metAt, livesIn, birthday (YYYY-MM-DD) and notes are optional profile fields.
   Creating a friend also creates its (single) nudge — this saves friendId, nudgeId and
   revision into the environment so the other requests can chain off it.
 }

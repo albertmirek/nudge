@@ -14,7 +14,7 @@ All bodies and responses use camelCase. Dates are ISO timestamps. IDs are UUIDs.
 | POST   | `/v1/friends`                               | Create a friend and its nudge atomically                           |
 | GET    | `/v1/friends`                               | List the current user's friends, including each nudge and channels |
 | GET    | `/v1/friends/:friendId`                     | Read one friend, including its nudge and channels                  |
-| PATCH  | `/v1/friends/:friendId`                     | Edit name, periodicity or nudgeEnabled                             |
+| PATCH  | `/v1/friends/:friendId`                     | Edit name, periodicity, nudgeEnabled or profile fields             |
 | DELETE | `/v1/friends/:friendId`                     | Delete the friend, nudge, catch-ups and channels                   |
 | POST   | `/v1/friends/:friendId/catch-up`            | Record contact now, update lastContactAt and replan the nudge      |
 | GET    | `/v1/friends/:friendId/catch-up`            | List catch-ups, newest first                                       |
@@ -35,12 +35,29 @@ other-user resources return 404. Stale nudge actions return 409.
 Create a friend:
 
 ```json
-{ "name": "Alice", "periodicity": "MONTHLY", "nudgeEnabled": true }
+{
+  "name": "Alice",
+  "periodicity": "MONTHLY",
+  "nudgeEnabled": true,
+  "lastContactAt": "2026-08-01T12:00:00.000Z",
+  "metAt": "Prague",
+  "livesIn": "Berlin",
+  "birthday": "1990-05-17",
+  "notes": "Loves hiking"
+}
 ```
 
-`name` and `periodicity` are required; `nudgeEnabled` defaults to true. PATCH accepts
-any nonempty subset of those fields. Periodicities are WEEKLY, BIWEEKLY, MONTHLY and
-QUARTERLY. Name is trimmed and limited to 200 characters.
+`name` and `periodicity` are required; `nudgeEnabled` defaults to true. Periodicities are
+WEEKLY, BIWEEKLY, MONTHLY and QUARTERLY. Name is trimmed and limited to 200 characters.
+
+`lastContactAt` is optional and **only accepted on create**: an ISO timestamp not in the
+future, recording when the user last talked to this friend so the first nudge is planned
+from that date instead of the creation date. Later contact is recorded through catch-ups.
+
+`metAt`, `livesIn` (≤ 200 characters), `birthday` (`YYYY-MM-DD`, no time zone) and `notes`
+(≤ 10,000 characters) are optional profile fields, `null` by default. PATCH accepts any
+nonempty subset of `name`, `periodicity`, `nudgeEnabled` and the profile fields; `null` or an
+empty string clears a profile field. Profile edits never change the schedule.
 
 Create a catch-up with an optional note; an empty body is also accepted:
 

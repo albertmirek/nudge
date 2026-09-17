@@ -43,6 +43,20 @@ export class Friend {
   @Column({ type: 'boolean', name: 'nudge_enabled', default: true })
   nudgeEnabled: boolean;
 
+  /** Free-text profile details from the "Add a friend" form; all optional. */
+  @Column({ type: 'text', name: 'met_at', nullable: true })
+  metAt: string | null;
+
+  @Column({ type: 'text', name: 'lives_in', nullable: true })
+  livesIn: string | null;
+
+  /** Calendar date without a time zone, serialized as YYYY-MM-DD. */
+  @Column({ type: 'date', nullable: true })
+  birthday: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  notes: string | null;
+
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 

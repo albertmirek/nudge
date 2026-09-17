@@ -11,6 +11,8 @@ export const palette = {
   indigo400: '#6a74b8',
   indigo600: '#3a448a',
   lime: '#76ff2c',
+  red: '#d93636',
+  redLight: '#ff6b6b',
 } as const;
 
 export type SemanticColors = {
@@ -23,6 +25,8 @@ export type SemanticColors = {
   /** Figma's ticker/badge green — bright enough to stay the same in both schemes. */
   highlight: string;
   onHighlight: string;
+  /** Validation errors and destructive actions. */
+  danger: string;
 };
 
 export const lightColors: SemanticColors = {
@@ -34,6 +38,7 @@ export const lightColors: SemanticColors = {
   onAccent: palette.offWhite,
   highlight: palette.lime,
   onHighlight: palette.ink900,
+  danger: palette.red,
 };
 
 export const darkColors: SemanticColors = {
@@ -45,4 +50,5 @@ export const darkColors: SemanticColors = {
   onAccent: palette.offWhite,
   highlight: palette.lime,
   onHighlight: palette.ink900,
+  danger: palette.redLight,
 };
