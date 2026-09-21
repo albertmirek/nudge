@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    accessibilityLabel="Note from 03/01/2025"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      [
+        {
+          "backgroundColor": "#f0f0f3",
+          "borderRadius": 8,
+          "height": 88,
+          "justifyContent": "space-between",
+          "padding": 12,
+        },
+        false,
+      ]
+    }
+  >
+    <Text
+      numberOfLines={2}
+      style={
+        [
+          {
+            "fontFamily": "Inter_400Regular",
+            "fontSize": 15,
+            "lineHeight": 20,
+          },
+          {
+            "color": "#151518",
+          },
+          {
+            "flexShrink": 1,
+          },
+        ]
+      }
+    >
+      Long call about her move to Athens
+    </Text>
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Inter_300Light",
+            "fontSize": 12,
+            "lineHeight": 16,
+          },
+          {
+            "color": "#8a8a8f",
+          },
+          undefined,
+        ]
+      }
+    >
+      03/01/2025
+    </Text>
+  </View>
+</View>
+`;
