@@ -1,7 +1,7 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { ownedFriend } from '../friends/friend-access.js';
-import { recordCatchUp } from '../friends/record-catch-up.js';
+import { Friend } from '../friends/entities/friend.entity.js';
 import { NudgeStatus } from './entities/nudge-status.enum.js';
 import { Nudge } from './entities/nudge.entity.js';
 import { NudgeSchedulingService } from './nudge-scheduling.service.js';
@@ -40,7 +40,9 @@ export class NudgesService {
         throw new ConflictException('Nudge changed; reload the friend before retrying');
 
       if (action === 'confirm') {
-        await recordCatchUp(manager, friend, null);
+        // Contact is recorded here only; catch-ups are the user's notes and never affect it.
+        friend.lastContactAt = new Date();
+        await manager.save(Friend, friend);
         return this.scheduling.plan(manager, friend);
       }
 

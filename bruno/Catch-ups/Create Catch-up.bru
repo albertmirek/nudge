@@ -22,6 +22,6 @@ script:post-response {
 }
 
 docs {
-  note is optional (omit it or send null). Recording a catch-up sets the friend's
-  lastContactAt and replans its nudge — run "Get Friend" afterwards to refresh {{revision}}.
+  note is required and non-empty. A catch-up is a note about the friend; it never
+  changes lastContactAt or the nudge (use "Confirm Nudge" to record contact).
 }

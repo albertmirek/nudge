@@ -1,8 +1,10 @@
 # Backend API and reusable nudges
 
-The API stores one current nudge per friend. This is a good fit for the next reminder;
-catch-ups store contact history. Delivery attempts and notification history, if needed,
-should have separate records rather than being inferred from the mutable nudge.
+The API stores one current nudge per friend. This is a good fit for the next reminder.
+Catch-ups are the user's notes about a friend (what they last talked about, to pick the
+conversation up quickly next time); they are independent of contact history, which is
+recorded only by nudge confirmation. Delivery attempts and notification history, if
+needed, should have separate records rather than being inferred from the mutable nudge.
 
 ## Routes
 
@@ -16,11 +18,11 @@ All bodies and responses use camelCase. Dates are ISO timestamps. IDs are UUIDs.
 | GET    | `/v1/friends/:friendId`                     | Read one friend, including its nudge and channels                  |
 | PATCH  | `/v1/friends/:friendId`                     | Edit name, periodicity, nudgeEnabled or profile fields             |
 | DELETE | `/v1/friends/:friendId`                     | Delete the friend, nudge, catch-ups and channels                   |
-| POST   | `/v1/friends/:friendId/catch-up`            | Record contact now, update lastContactAt and replan the nudge      |
-| GET    | `/v1/friends/:friendId/catch-up`            | List catch-ups, newest first                                       |
-| GET    | `/v1/friends/:friendId/catch-up/:catchUpId` | Read a catch-up                                                    |
-| PATCH  | `/v1/friends/:friendId/catch-up/:catchUpId` | Edit the note without changing contact time or scheduling          |
-| DELETE | `/v1/friends/:friendId/catch-up/:catchUpId` | Delete a catch-up; recalculate scheduling if last contact changes  |
+| POST   | `/v1/friends/:friendId/catch-up`            | Add a note; never touches lastContactAt or the nudge               |
+| GET    | `/v1/friends/:friendId/catch-up`            | List notes, newest first                                           |
+| GET    | `/v1/friends/:friendId/catch-up/:catchUpId` | Read a note                                                        |
+| PATCH  | `/v1/friends/:friendId/catch-up/:catchUpId` | Edit the note's text                                               |
+| DELETE | `/v1/friends/:friendId/catch-up/:catchUpId` | Delete a note                                                      |
 | POST   | `/v1/nudges/:nudgeId/snooze`                | Add 24 hours to scheduledFor and set status to SNOOZED             |
 | POST   | `/v1/nudges/:nudgeId/confirm`               | Record contact now and replan the same nudge                       |
 
@@ -52,22 +54,23 @@ WEEKLY, BIWEEKLY, MONTHLY and QUARTERLY. Name is trimmed and limited to 200 char
 
 `lastContactAt` is optional and **only accepted on create**: an ISO timestamp not in the
 future, recording when the user last talked to this friend so the first nudge is planned
-from that date instead of the creation date. Later contact is recorded through catch-ups.
+from that date instead of the creation date. Later contact is recorded through nudge
+confirmation.
 
 `metAt`, `livesIn` (≤ 200 characters), `birthday` (`YYYY-MM-DD`, no time zone) and `notes`
 (≤ 10,000 characters) are optional profile fields, `null` by default. PATCH accepts any
 nonempty subset of `name`, `periodicity`, `nudgeEnabled` and the profile fields; `null` or an
 empty string clears a profile field. Profile edits never change the schedule.
 
-Create a catch-up with an optional note; an empty body is also accepted:
+Create or edit a catch-up (a note):
 
 ```json
-{ "note": "Caught up over coffee" }
+{ "note": "Caught up over coffee; she is moving to Athens in May" }
 ```
 
-PATCH requires `note`; null or an empty string clears it. Notes are limited to 10,000
-characters. Contact time is server-assigned and cannot be edited. Supporting backdated
-contacts would warrant a separate `occurredAt` field instead of editing `createdAt`.
+`note` is required on both POST and PATCH, trimmed, non-empty and limited to 10,000
+characters; delete the catch-up instead of clearing it. `createdAt` is server-assigned and
+returned so the client can show when the note was written.
 
 Both nudge actions require the revision returned in `friend.nudge` or the last action:
 
@@ -76,7 +79,8 @@ Both nudge actions require the revision returned in `friend.nudge` or the last a
 ```
 
 Their response is the updated nudge, including `id`, `scheduledFor`, `status`,
-`revision` and `lastEditedAt`. Confirmation also inserts a catch-up with a null note.
+`revision` and `lastEditedAt`. Confirmation sets the friend's `lastContactAt` to now; it
+does not create a catch-up.
 After a 409, reload the friend. Do not automatically replay the action with the newer
 revision: it may refer to a different reminder. This prevents duplicate effects but
 does not replay a previous successful response as an idempotency-key system would.
@@ -98,9 +102,9 @@ middleware; they do not add an authentication bypass to the application.
 ## Scheduling rules
 
 - Creation schedules from the friend's creation date until there is contact history.
-- Catch-up creation and confirmation set `lastContactAt` to the recorded contact time.
-  The next reminder is on that local date plus the friend's calendar period, at the
-  user's `preferredReminderLocalTime` in their IANA `timezone`.
+- Confirmation sets `lastContactAt` to the confirmation time. The next reminder is on
+  that local date plus the friend's calendar period, at the user's
+  `preferredReminderLocalTime` in their IANA `timezone`.
 - WEEKLY and BIWEEKLY add 7 and 14 local calendar days. MONTHLY and QUARTERLY add
   1 and 3 calendar months, clamping to the destination month's final day when needed.
   January 31 plus one month becomes February 28, or February 29 in a leap year.
@@ -116,9 +120,8 @@ middleware; they do not add an authentication bypass to the application.
   A name change preserves the schedule. Toggling `nudgeEnabled` preserves it and
   increments its revision to invalidate old queued work. Re-enabling an overdue
   nudge makes it eligible immediately once a dispatcher exists.
-- Editing a catch-up note preserves the schedule. Deleting an older catch-up does
-  too. Deleting the latest restores the most recent remaining contact; deleting all
-  catch-ups resets `lastContactAt` to null and plans from friend creation.
+- Catch-ups (notes) never affect `lastContactAt` or the schedule: creating, editing
+  and deleting them preserves the current nudge, including a snooze.
 
 These calendar operations use PostgreSQL's documented
 [date/time operators and timezone conversions](https://www.postgresql.org/docs/17/functions-datetime.html).
@@ -136,8 +139,8 @@ TypeORM on updates. Timestamps provide edit information; use the revision for
 concurrency and job identity.
 
 Mutations run in a transaction and lock the friend before the nudge, using a
-consistent order. Confirmation writes the catch-up, last contact and new schedule
-in that transaction. This follows PostgreSQL's
+consistent order. Confirmation writes the last contact and new schedule in that
+transaction. This follows PostgreSQL's
 [row-locking semantics](https://www.postgresql.org/docs/17/explicit-locking.html).
 
 Migration `1789380000000-ReusableNudge` adds the unique friend constraint, revision,

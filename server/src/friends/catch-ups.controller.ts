@@ -26,7 +26,7 @@ export class CatchUpsController {
     @Param('friendId', ParseUUIDPipe) friendId: string,
     @Body() body: unknown,
   ) {
-    return this.catchUps.create(userId, friendId, noteInput(body ?? {}, false).note ?? null);
+    return this.catchUps.create(userId, friendId, noteInput(body));
   }
 
   @Get()
@@ -50,7 +50,7 @@ export class CatchUpsController {
     @Param('catchUpId', ParseUUIDPipe) catchUpId: string,
     @Body() body: unknown,
   ) {
-    return this.catchUps.update(userId, friendId, catchUpId, noteInput(body, true).note ?? null);
+    return this.catchUps.update(userId, friendId, catchUpId, noteInput(body));
   }
 
   @Delete(':catchUpId')

@@ -28,4 +28,4 @@ automatically by each request's post-response script, so the normal flow is:
 Create Friend → Get/List → Create Catch-up → Snooze/Confirm Nudge, run top to bottom.
 
 Nudge actions (snooze/confirm) use optimistic concurrency via `revision`. If it drifts
-(e.g. after catch-up actions, which bump it silently), re-run **Get Friend** to resync it.
+(e.g. after a periodicity change, which bumps it silently), re-run **Get Friend** to resync it.
