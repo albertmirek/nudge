@@ -3,14 +3,18 @@ import type { ImageStyle, StyleProp } from 'react-native';
 
 import bookIcon from '@/assets/icons/book.svg';
 import cameraIcon from '@/assets/icons/camera.svg';
+import gridIcon from '@/assets/icons/grid.svg';
 import homeIcon from '@/assets/icons/home.svg';
+import listIcon from '@/assets/icons/list.svg';
 import plusIcon from '@/assets/icons/plus.svg';
 import { type SemanticColors, useTheme } from '@/theme';
 
 const ICONS = {
   book: bookIcon,
   camera: cameraIcon,
+  grid: gridIcon,
   home: homeIcon,
+  list: listIcon,
   plus: plusIcon,
 } as const;
 
