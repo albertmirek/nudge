@@ -1,8 +1,13 @@
+import type { Friend } from '@/api/types';
+
 import {
   PERIODICITY_OPTIONS,
   emptyFriendForm,
+  friendToProfileValues,
   toCreateFriendBody,
+  toUpdateFriendBody,
   validateFriendForm,
+  validateFriendProfile,
 } from './friend-form';
 
 const NOW = new Date('2026-09-17T10:00:00Z');
@@ -85,4 +90,72 @@ it('offers every backend periodicity with a human label', () => {
     'MONTHLY',
     'QUARTERLY',
   ]);
+});
+
+const FRIEND: Friend = {
+  id: 'friend-1',
+  name: 'Anastasia Kleisioni',
+  periodicity: 'MONTHLY',
+  lastContactAt: '2025-01-03T10:00:00Z',
+  nudgeEnabled: true,
+  metAt: 'Stockholm University',
+  livesIn: 'Athens',
+  birthday: '2000-07-13',
+  notes: null,
+  createdAt: '2024-01-01T00:00:00Z',
+  updatedAt: '2024-01-01T00:00:00Z',
+  nudge: null,
+};
+
+describe('friendToProfileValues', () => {
+  it('copies the editable profile fields, turning null into empty text', () => {
+    expect(friendToProfileValues({ ...FRIEND, livesIn: null, birthday: null })).toEqual({
+      name: 'Anastasia Kleisioni',
+      periodicity: 'MONTHLY',
+      metAt: 'Stockholm University',
+      livesIn: '',
+      birthday: '',
+    });
+  });
+});
+
+describe('validateFriendProfile', () => {
+  it('requires a name and rejects a malformed birthday', () => {
+    expect(
+      validateFriendProfile({ ...friendToProfileValues(FRIEND), name: ' ', birthday: '13.07' }),
+    ).toEqual({ name: 'Name is required', birthday: 'Use the YYYY-MM-DD format' });
+  });
+
+  it('passes the values of an existing friend', () => {
+    expect(validateFriendProfile(friendToProfileValues(FRIEND))).toEqual({});
+  });
+});
+
+describe('toUpdateFriendBody', () => {
+  it('returns null when nothing changed', () => {
+    expect(toUpdateFriendBody(FRIEND, friendToProfileValues(FRIEND))).toBeNull();
+  });
+
+  it('sends only the changed fields, trimmed, and null for cleared text', () => {
+    const values = {
+      ...friendToProfileValues(FRIEND),
+      name: ' Ana ',
+      periodicity: 'WEEKLY' as const,
+      livesIn: '  ',
+      birthday: '',
+    };
+    expect(toUpdateFriendBody(FRIEND, values)).toEqual({
+      name: 'Ana',
+      periodicity: 'WEEKLY',
+      livesIn: null,
+      birthday: null,
+    });
+  });
+
+  it('treats whitespace-only edits of an already empty field as unchanged', () => {
+    const friend = { ...FRIEND, livesIn: null };
+    expect(
+      toUpdateFriendBody(friend, { ...friendToProfileValues(friend), livesIn: ' ' }),
+    ).toBeNull();
+  });
 });

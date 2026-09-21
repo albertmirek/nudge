@@ -1,6 +1,13 @@
 /// <reference types="jest" />
 
-import { daysBetween, daysUntil, formatDaysAgo, formatDaysUntil } from '@/lib/date';
+import {
+  daysBetween,
+  daysUntil,
+  formatCalendarDate,
+  formatDate,
+  formatDaysAgo,
+  formatDaysUntil,
+} from '@/lib/date';
 
 const NOW = new Date('2026-09-14T12:00:00Z');
 
@@ -67,5 +74,17 @@ describe('formatDaysUntil', () => {
 
   it('defaults `now` to the current time', () => {
     expect(formatDaysUntil(new Date())).toBe('today');
+  });
+});
+
+describe('formatDate', () => {
+  it('formats a local calendar date as DD/MM/YYYY', () => {
+    expect(formatDate(new Date(2025, 0, 3, 9, 30))).toBe('03/01/2025');
+  });
+});
+
+describe('formatCalendarDate', () => {
+  it('reorders a YYYY-MM-DD string to DD/MM/YYYY without parsing a time zone', () => {
+    expect(formatCalendarDate('2000-07-13')).toBe('13/07/2000');
   });
 });

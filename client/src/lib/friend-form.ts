@@ -1,4 +1,4 @@
-import type { CreateFriendBody, FriendPeriodicity } from '@/api/types';
+import type { CreateFriendBody, Friend, FriendPeriodicity, UpdateFriendBody } from '@/api/types';
 
 /** Raw text of every field in the "Add a friend" form; dates are typed as YYYY-MM-DD. */
 export type FriendFormValues = {
@@ -79,4 +79,51 @@ export function toCreateFriendBody(values: FriendFormValues): CreateFriendBody {
     ...(values.birthday ? { birthday: values.birthday } : {}),
     ...(notes ? { notes: notes.value } : {}),
   };
+}
+
+/** The fields the friend profile lets you edit in place; last contact is set by confirming a nudge. */
+export type FriendProfileValues = Pick<
+  FriendFormValues,
+  'name' | 'periodicity' | 'metAt' | 'livesIn' | 'birthday'
+>;
+
+export type FriendProfileErrors = Partial<Record<keyof FriendProfileValues, string>>;
+
+export function friendToProfileValues(friend: Friend): FriendProfileValues {
+  return {
+    name: friend.name,
+    periodicity: friend.periodicity,
+    metAt: friend.metAt ?? '',
+    livesIn: friend.livesIn ?? '',
+    birthday: friend.birthday ?? '',
+  };
+}
+
+export function validateFriendProfile(values: FriendProfileValues): FriendProfileErrors {
+  const {
+    lastContactAt: _ignored,
+    notes: _notes,
+    ...errors
+  } = validateFriendForm({ ...values, lastContactAt: '', notes: '' }, new Date());
+  return errors;
+}
+
+/**
+ * PATCH /v1/friends/:id body with only the fields that differ from `friend`, or null when
+ * nothing changed. Blank text clears a profile field. Call after validating.
+ */
+export function toUpdateFriendBody(
+  friend: Friend,
+  values: FriendProfileValues,
+): UpdateFriendBody | null {
+  if (!values.periodicity) throw new Error('periodicity is required');
+  const body: UpdateFriendBody = {};
+  const name = values.name.trim();
+  if (name !== friend.name) body.name = name;
+  if (values.periodicity !== friend.periodicity) body.periodicity = values.periodicity;
+  for (const key of ['metAt', 'livesIn', 'birthday'] as const) {
+    const next = values[key].trim() || null;
+    if (next !== friend[key]) body[key] = next;
+  }
+  return Object.keys(body).length ? body : null;
 }
