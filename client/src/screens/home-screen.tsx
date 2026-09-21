@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +21,7 @@ function summaryFor(overdueCount: number): string {
 
 export function HomeScreen() {
   const styles = useStyles(makeStyles);
+  const router = useRouter();
   const [tab, setTab] = useState<NudgeTab>('overdue');
   // Friends whose nudge confirmation is in flight; the row shows checked until the friends
   // list refetches and the friend moves out of the current tab's bucket.
@@ -95,6 +97,7 @@ export function HomeScreen() {
             nudgeDueAt={tab === 'upcoming' && item.nudge ? new Date(item.nudge.scheduledFor) : null}
             checked={confirmingIds.has(item.id)}
             onCheckedChange={(checked) => checked && confirm(item)}
+            onPress={() => router.push(`/friend/${item.id}`)}
             now={now}
           />
         )}

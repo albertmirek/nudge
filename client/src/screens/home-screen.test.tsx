@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, userEvent, waitFor } from '@testing-library/react-native';
+import { useRouter } from 'expo-router';
 import type { ReactElement } from 'react';
 
 import { ThemeProvider } from '@/theme';
@@ -13,6 +14,7 @@ import { HomeScreen } from './home-screen';
 jest.mock('@/api/users');
 jest.mock('@/api/friends');
 jest.mock('@/api/nudges');
+jest.mock('expo-router', () => ({ useRouter: jest.fn() }));
 
 const NOW = new Date('2026-09-14T12:00:00Z');
 
@@ -65,9 +67,13 @@ function renderScreen(ui: ReactElement) {
   );
 }
 
+const router = { push: jest.fn() };
+
 describe('HomeScreen', () => {
   beforeEach(() => {
     jest.useFakeTimers().setSystemTime(NOW);
+    router.push.mockClear();
+    jest.mocked(useRouter).mockReturnValue(router as unknown as ReturnType<typeof useRouter>);
     jest.mocked(usersApi.getMe).mockResolvedValue(ME);
     jest.mocked(friendsApi.listFriends).mockResolvedValue(FRIENDS);
     jest.mocked(nudgesApi.confirmNudge).mockResolvedValue({
@@ -132,5 +138,16 @@ describe('HomeScreen', () => {
         callsBeforeConfirm,
       ),
     );
+  });
+
+  it("opens the friend's profile when their row is tapped", async () => {
+    await renderScreen(<HomeScreen />);
+    await waitFor(() => expect(screen.getByText('Anastasia Kleisioni')).toBeOnTheScreen());
+
+    await userEvent
+      .setup({ advanceTimers: jest.advanceTimersByTime })
+      .press(screen.getByRole('button', { name: 'Anastasia Kleisioni' }));
+
+    expect(router.push).toHaveBeenCalledWith('/friend/overdue-1');
   });
 });

@@ -15,6 +15,7 @@ pnpm monorepo with an Expo mobile app, a NestJS API and PostgreSQL. Design docs 
 | `client/src/ui/`         | —               | Generic primitives (`Text`, `Button`, `Input`, `Icon`, …). |
 | `client/src/components/` | —               | App-specific compositions (`ContactRow`, `FriendForm`, …). |
 | `client/src/app/(tabs)/` | —               | expo-router tab routes: friend book, add a friend, home.   |
+| `client/src/app/friend/` | —               | `/friend/:friendId` — a friend's profile and notes.        |
 | `server/`                | `@nudge/server` | NestJS API. Runs in Docker (or natively).                  |
 | `docker-compose.yml`     | —               | Local backend stack: `db` (PostgreSQL 17) + `server`.      |
 | `eslint.config.mjs`      | —               | Single ESLint config for the whole repo (+ Prettier).      |
