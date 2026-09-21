@@ -25,6 +25,18 @@ describe('Icon', () => {
     expect(icon.props.tintColor).toBe(processColor(lightColors.text.secondary));
     expect(icon).toHaveStyle({ width: 32, height: 32 });
   });
+
+  it('includes the friend-list view toggle icons', async () => {
+    await renderWithTheme(
+      <>
+        <Icon name="grid" />
+        <Icon name="list" />
+      </>,
+    );
+    // expo-image resolves a missing asset to an empty source list.
+    expect(screen.getByTestId('icon-grid').props.source).not.toHaveLength(0);
+    expect(screen.getByTestId('icon-list').props.source).not.toHaveLength(0);
+  });
 });
 
 describeStories('Icon', stories);
