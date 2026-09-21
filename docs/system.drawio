@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Nudge" id="uVp2SrMSkr-c_9yuPG89">
-    <mxGraphModel dx="1719" dy="1761" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2587" dy="2243" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -25,16 +25,16 @@
         <mxCell id="tMOKAm_Q3KXa5mgoz5jI-22" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="id" vertex="1">
           <mxGeometry height="30" width="187" y="26" as="geometry" />
         </mxCell>
-        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-64" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="auth_subject" vertex="1">
+        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-64" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;fontColor=light-dark(#000000,#FF3333);" value="auth_subject" vertex="1">
           <mxGeometry height="30" width="187" y="56" as="geometry" />
         </mxCell>
-        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-183" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="timezone" vertex="1">
+        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-183" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;fontColor=light-dark(#000000,#FF3333);" value="timezone" vertex="1">
           <mxGeometry height="30" width="187" y="86" as="geometry" />
         </mxCell>
-        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-146" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="preffered_reminder_local_time" vertex="1">
+        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-146" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;fontColor=light-dark(#000000,#FF3333);" value="preffered_reminder_local_time" vertex="1">
           <mxGeometry height="30" width="187" y="116" as="geometry" />
         </mxCell>
-        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-147" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="snooze_offset" vertex="1">
+        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-147" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;fontColor=light-dark(#000000,#FF3333);" value="snooze_offset" vertex="1">
           <mxGeometry height="30" width="187" y="146" as="geometry" />
         </mxCell>
         <mxCell id="tMOKAm_Q3KXa5mgoz5jI-186" parent="tMOKAm_Q3KXa5mgoz5jI-21" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="created_at" vertex="1">
@@ -89,7 +89,7 @@
           <mxGeometry height="30" width="160" y="116" as="geometry" />
         </mxCell>
         <mxCell id="tMOKAm_Q3KXa5mgoz5jI-67" parent="tMOKAm_Q3KXa5mgoz5jI-16" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;fillColor=#d5e8d4;strokeColor=#82b366;sketch=1;curveFitting=1;jiggle=2;rounded=0;" value="Nudge" vertex="1">
-          <mxGeometry height="206" width="207" x="536" y="357" as="geometry" />
+          <mxGeometry height="176" width="207" x="536" y="357" as="geometry" />
         </mxCell>
         <mxCell id="tMOKAm_Q3KXa5mgoz5jI-143" parent="tMOKAm_Q3KXa5mgoz5jI-67" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="id" vertex="1">
           <mxGeometry height="30" width="207" y="26" as="geometry" />
@@ -105,9 +105,6 @@
         </mxCell>
         <mxCell id="tMOKAm_Q3KXa5mgoz5jI-63" parent="tMOKAm_Q3KXa5mgoz5jI-67" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="version (PLANNED / SNOOZED)" vertex="1">
           <mxGeometry height="30" width="207" y="146" as="geometry" />
-        </mxCell>
-        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-36" parent="tMOKAm_Q3KXa5mgoz5jI-67" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;rounded=0;sketch=1;curveFitting=1;jiggle=2;" value="item" vertex="1">
-          <mxGeometry height="30" width="207" y="176" as="geometry" />
         </mxCell>
         <mxCell id="tMOKAm_Q3KXa5mgoz5jI-74" edge="1" parent="tMOKAm_Q3KXa5mgoz5jI-16" source="tMOKAm_Q3KXa5mgoz5jI-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;" target="tMOKAm_Q3KXa5mgoz5jI-31">
           <mxGeometry relative="1" as="geometry" />
@@ -322,6 +319,9 @@
         </mxCell>
         <mxCell id="tMOKAm_Q3KXa5mgoz5jI-181" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;rounded=0;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;" value="&lt;div&gt;Problem:&lt;/div&gt;&lt;div&gt;As life moves on after studying abroad, maintaining long-distance friendships become increasingly diffucult. Careers and everyday responsibilities take priority, making it easy to postpone check-ins until frinedships gradually fade&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="106" width="317" x="-492" y="-812" as="geometry" />
+        </mxCell>
+        <mxCell id="tMOKAm_Q3KXa5mgoz5jI-189" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;rounded=0;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;" value="Improvements:&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- image upload for friends&lt;/div&gt;" vertex="1">
+          <mxGeometry height="114" width="241" x="-399" y="625" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
