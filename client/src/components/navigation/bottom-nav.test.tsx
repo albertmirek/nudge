@@ -31,6 +31,36 @@ describe('BottomNav', () => {
     await userEvent.setup().press(screen.getByRole('tab', { name: 'Friend book' }));
     expect(onNavigate).toHaveBeenCalledWith('friends');
   });
+
+  it('replaces the middle tab with the action button when one is given', async () => {
+    const onPress = jest.fn();
+    await renderWithTheme(
+      <BottomNav onNavigate={() => {}} action={{ label: 'Contact', onPress }} />,
+    );
+    expect(screen.queryByRole('tab', { name: 'Add a friend' })).not.toBeOnTheScreen();
+    expect(screen.getAllByRole('tab').map((tab) => tab.props.accessibilityLabel)).toEqual([
+      'Friend book',
+      'Home',
+    ]);
+    await userEvent.setup().press(screen.getByRole('button', { name: 'Contact' }));
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows the action as busy and blocks presses while loading', async () => {
+    const onPress = jest.fn();
+    await renderWithTheme(
+      <BottomNav onNavigate={() => {}} action={{ label: 'Contact', onPress, loading: true }} />,
+    );
+    const button = screen.getByRole('button', { name: 'Contact' });
+    expect(button).toBeBusy();
+    await userEvent.setup().press(button);
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it('selects no tab when no route is active', async () => {
+    await renderWithTheme(<BottomNav onNavigate={() => {}} />);
+    for (const tab of screen.getAllByRole('tab')) expect(tab).not.toBeSelected();
+  });
 });
 
 describeStories('BottomNav', stories);

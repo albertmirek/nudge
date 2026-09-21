@@ -39,6 +39,24 @@ export type CreateFriendBody = {
   notes?: string;
 };
 
+/** PATCH /v1/friends/:id body: any nonempty subset; null clears a profile field. */
+export type UpdateFriendBody = Partial<{
+  name: string;
+  periodicity: FriendPeriodicity;
+  nudgeEnabled: boolean;
+  metAt: string | null;
+  livesIn: string | null;
+  birthday: string | null;
+  notes: string | null;
+}>;
+
+/** A note about a friend (what you last talked about); independent of contact history. */
+export type CatchUp = {
+  id: string;
+  note: string;
+  createdAt: string;
+};
+
 export type Me = {
   id: string;
   name: string;

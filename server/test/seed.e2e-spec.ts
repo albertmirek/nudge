@@ -40,7 +40,7 @@ describe('Dev seed', () => {
     expect(upcoming.length).toBeGreaterThanOrEqual(3);
     expect(summary).toMatchObject({ overdue: overdue.length, upcoming: upcoming.length });
 
-    // Contact history matches lastContactAt so catch-up lists look real.
+    // Contacted friends get a note written at that contact so the Notes list looks real.
     const catchUps = await dataSource.getRepository(CatchUp).find();
     expect(catchUps).toHaveLength(friends.filter((friend) => friend.lastContactAt).length);
   });

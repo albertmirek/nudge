@@ -17,4 +17,8 @@ export const sizes = {
   inputMultiline: 96,
   chip: 36,
   tabBar: 56,
+  /** The lime "Contact" disc that floats over the bottom bar on a friend's profile. */
+  fab: 96,
+  /** Fixed height of a note card on the friend profile. */
+  noteCard: 88,
 } as const;

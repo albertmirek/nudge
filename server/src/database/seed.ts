@@ -13,8 +13,9 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 type SeedFriend = {
   name: string;
   periodicity: FriendPeriodicity;
-  /** Days since the last catch-up; omit for a friend who has never been contacted. */
+  /** Days since the last contact; omit for a friend who has never been contacted. */
   lastContactDaysAgo?: number;
+  /** A catch-up note written at the last contact, so the profile's Notes list looks real. */
   note?: string;
   metAt?: string;
   livesIn?: string;

@@ -21,3 +21,16 @@ export function formatDaysUntil(date: Date, now: Date = new Date()): string {
   const days = daysUntil(date, now);
   return days === 0 ? 'today' : `in ${days} d`;
 }
+
+const pad = (value: number) => String(value).padStart(2, '0');
+
+/** "03/01/2025" — the DD/MM/YYYY form used on the friend profile, in local time. */
+export function formatDate(date: Date): string {
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
+}
+
+/** DD/MM/YYYY for a YYYY-MM-DD calendar date (no time zone, so no Date parsing). */
+export function formatCalendarDate(date: string): string {
+  const [year, month, day] = date.split('-');
+  return `${day}/${month}/${year}`;
+}

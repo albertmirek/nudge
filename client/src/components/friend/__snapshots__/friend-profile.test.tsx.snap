@@ -1,0 +1,500 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "gap": 24,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+            {
+              "color": "#151518",
+            },
+            {
+              "fontFamily": "Inter_600SemiBold",
+            },
+          ]
+        }
+      >
+        Friend profile
+      </Text>
+      <View
+        accessibilityLabel="Edit profile"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 9999,
+              "justifyContent": "center",
+            },
+            {
+              "height": 44,
+              "width": 44,
+            },
+            false,
+            false,
+            false,
+            undefined,
+          ]
+        }
+      >
+        <ViewManagerAdapter_ExpoImage
+          containerViewRef={"[React.ref]"}
+          contentFit="contain"
+          contentPosition={
+            {
+              "left": "50%",
+              "top": "50%",
+            }
+          }
+          height={22}
+          nativeViewRef={"[React.ref]"}
+          onError={[Function]}
+          onLoad={[Function]}
+          onLoadStart={[Function]}
+          onProgress={[Function]}
+          placeholder={[]}
+          sfEffect={null}
+          source={
+            [
+              {
+                "testUri": "../../../client/assets/icons/pencil.svg",
+              },
+            ]
+          }
+          style={
+            {
+              "height": 22,
+              "width": 22,
+            }
+          }
+          symbolSize={null}
+          symbolWeight={null}
+          testID="icon-pencil"
+          tintColor={4279571736}
+          transition={null}
+          width={22}
+        />
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 24,
+        }
+      }
+    >
+      <View
+        accessibilityLabel="Anastasia Kleisioni"
+        accessibilityRole="image"
+        accessible={true}
+        style={
+          [
+            {
+              "backgroundColor": "#3a448a",
+              "borderRadius": 9999,
+              "height": 80,
+              "overflow": "hidden",
+              "width": 80,
+            },
+            undefined,
+          ]
+        }
+      />
+      <View
+        style={
+          {
+            "flex": 1,
+            "gap": 8,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "gap": 4,
+            }
+          }
+        >
+          <TextInput
+            accessibilityLabel="Name"
+            accessibilityState={
+              {
+                "disabled": true,
+              }
+            }
+            autoCapitalize="words"
+            editable={false}
+            onChangeText={[Function]}
+            placeholderTextColor="#8a8a8f"
+            style={
+              [
+                {
+                  "borderColor": "transparent",
+                  "borderRadius": 8,
+                  "borderWidth": 1,
+                  "color": "#151518",
+                  "fontFamily": "Inter_400Regular",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                  "minHeight": 40,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 8,
+                },
+                false,
+                null,
+                {
+                  "fontFamily": "Inter_600SemiBold",
+                },
+              ]
+            }
+            value="Anastasia Kleisioni"
+          />
+        </View>
+        <View
+          style={
+            {
+              "gap": 4,
+            }
+          }
+        >
+          <TextInput
+            accessibilityLabel="Birthday"
+            accessibilityState={
+              {
+                "disabled": true,
+              }
+            }
+            editable={false}
+            keyboardType="numbers-and-punctuation"
+            onChangeText={[Function]}
+            placeholder="YYYY-MM-DD"
+            placeholderTextColor="#8a8a8f"
+            style={
+              [
+                {
+                  "borderColor": "transparent",
+                  "borderRadius": 8,
+                  "borderWidth": 1,
+                  "color": "#151518",
+                  "fontFamily": "Inter_400Regular",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                  "minHeight": 40,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 8,
+                },
+                false,
+                null,
+                undefined,
+              ]
+            }
+            value="13/07/2000"
+          />
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "gap": 12,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 16,
+            "justifyContent": "space-between",
+            "minHeight": 40,
+          }
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Met at
+        </Text>
+        <View
+          style={
+            {
+              "gap": 4,
+            }
+          }
+        >
+          <TextInput
+            accessibilityLabel="Met at"
+            accessibilityState={
+              {
+                "disabled": true,
+              }
+            }
+            editable={false}
+            onChangeText={[Function]}
+            placeholderTextColor="#8a8a8f"
+            style={
+              [
+                {
+                  "borderColor": "transparent",
+                  "borderRadius": 8,
+                  "borderWidth": 1,
+                  "color": "#151518",
+                  "fontFamily": "Inter_400Regular",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                  "minHeight": 40,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 8,
+                },
+                false,
+                null,
+                {
+                  "flex": 1,
+                  "textAlign": "right",
+                },
+              ]
+            }
+            value="Stockholm University"
+          />
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 16,
+            "justifyContent": "space-between",
+            "minHeight": 40,
+          }
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Lives in
+        </Text>
+        <View
+          style={
+            {
+              "gap": 4,
+            }
+          }
+        >
+          <TextInput
+            accessibilityLabel="Lives in"
+            accessibilityState={
+              {
+                "disabled": true,
+              }
+            }
+            editable={false}
+            onChangeText={[Function]}
+            placeholderTextColor="#8a8a8f"
+            style={
+              [
+                {
+                  "borderColor": "transparent",
+                  "borderRadius": 8,
+                  "borderWidth": 1,
+                  "color": "#151518",
+                  "fontFamily": "Inter_400Regular",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                  "minHeight": 40,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 8,
+                },
+                false,
+                null,
+                {
+                  "flex": 1,
+                  "textAlign": "right",
+                },
+              ]
+            }
+            value="Athens"
+          />
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 16,
+            "justifyContent": "space-between",
+            "minHeight": 40,
+          }
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Contact Frequency
+        </Text>
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          monthly
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 16,
+            "justifyContent": "space-between",
+            "minHeight": 40,
+          }
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Last Contact
+        </Text>
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          03/01/2025
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

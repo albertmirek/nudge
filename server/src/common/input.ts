@@ -81,12 +81,8 @@ export function revisionInput(value: unknown): number {
   return body.revision;
 }
 
-export function noteInput(value: unknown, required: boolean): { note?: string | null } {
+/** Catch-up body: a note always has text; delete the catch-up instead of clearing it. */
+export function noteInput(value: unknown): string {
   const body = objectInput(value, ['note']);
-  if (body.note === undefined) {
-    if (required) throw new BadRequestException('note is required');
-    return {};
-  }
-  if (body.note === null || body.note === '') return { note: null };
-  return { note: textInput(body.note, 'note', 10000) };
+  return textInput(body.note, 'note', 10000);
 }

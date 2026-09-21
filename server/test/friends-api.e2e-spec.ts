@@ -61,12 +61,19 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
     const response = await request(app.getHttpServer()).get(`/v1/friends/${id}`).expect(200);
     return response.body as FriendResponse;
   }
-  async function catchUp(friendId: string): Promise<CatchUpResponse> {
+  async function addNote(friendId: string, note = 'Coffee'): Promise<CatchUpResponse> {
     const response = await request(app.getHttpServer())
       .post(`/v1/friends/${friendId}/catch-up`)
-      .send({ note: 'Coffee' })
+      .send({ note })
       .expect(201);
     return response.body as CatchUpResponse;
+  }
+  async function confirm(nudge: NudgeResponse): Promise<NudgeResponse> {
+    const response = await request(app.getHttpServer())
+      .post(`/v1/nudges/${nudge.id}/confirm`)
+      .send({ revision: nudge.revision })
+      .expect(200);
+    return response.body as NudgeResponse;
   }
 
   it('requires trusted authentication, ignoring client-supplied identity', async () => {
@@ -93,7 +100,7 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
       .expect(200);
     expect((await getFriend(friend.id)).name).toBe('Alicia');
     expect((await getFriend(friend.id)).nudge.revision).toBe(1);
-    await catchUp(friend.id);
+    await addNote(friend.id);
     await request(app.getHttpServer()).delete(`/v1/friends/${friend.id}`).expect(204);
     expect(await dataSource.getRepository(Nudge).count()).toBe(0);
     expect(await dataSource.getRepository(CatchUp).count()).toBe(0);
@@ -134,8 +141,13 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
       birthday: '1991-01-01',
       notes: null,
     });
-    // Profile edits never touch the schedule.
-    expect((await getFriend(friend.id)).nudge.revision).toBe(1);
+    // Profile edits never touch contact history or the schedule.
+    const reloaded = await getFriend(friend.id);
+    expect(reloaded.lastContactAt).toBeNull();
+    expect(reloaded.nudge).toMatchObject({
+      revision: 1,
+      scheduledFor: friend.nudge.scheduledFor,
+    });
   });
 
   it('defaults profile fields to null', async () => {
@@ -185,7 +197,7 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
 
   it('hides another user’s friends, catch-ups and nudges for every operation', async () => {
     const friend = await createFriend();
-    const contact = await catchUp(friend.id);
+    const contact = await addNote(friend.id);
     userId = (await dataSource.getRepository(User).save({ timezone: 'UTC' })).id;
     expect((await request(app.getHttpServer()).get('/v1/friends').expect(200)).body).toEqual([]);
     const friendUrl = `/v1/friends/${friend.id}`;
@@ -193,7 +205,7 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
     await request(app.getHttpServer()).get(friendUrl).expect(404);
     await request(app.getHttpServer()).patch(friendUrl).send({ name: 'Hijack' }).expect(404);
     await request(app.getHttpServer()).delete(friendUrl).expect(404);
-    await request(app.getHttpServer()).post(contactUrl).send({}).expect(404);
+    await request(app.getHttpServer()).post(contactUrl).send({ note: 'Hijack' }).expect(404);
     await request(app.getHttpServer()).get(contactUrl).expect(404);
     await request(app.getHttpServer()).get(`${contactUrl}/${contact.id}`).expect(404);
     await request(app.getHttpServer())
@@ -209,36 +221,60 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
     }
   });
 
-  it('provides catch-up CRUD and restores the previous contact when deleting the latest', async () => {
+  it('provides note CRUD, listing notes newest first', async () => {
     const friend = await createFriend();
-    const first = await catchUp(friend.id);
-    const second = await catchUp(friend.id);
+    const first = await addNote(friend.id, 'First');
+    const second = await addNote(friend.id, ' Second ');
+    expect(second.note).toBe('Second');
     const url = `/v1/friends/${friend.id}/catch-up`;
-    expect((await request(app.getHttpServer()).get(url).expect(200)).body).toHaveLength(2);
+    const listed = (await request(app.getHttpServer()).get(url).expect(200))
+      .body as CatchUpResponse[];
+    expect(listed.map((note) => note.id)).toEqual([second.id, first.id]);
     await request(app.getHttpServer())
       .patch(`${url}/${second.id}`)
       .send({ note: 'Updated' })
       .expect(200);
     expect(
       (await request(app.getHttpServer()).get(`${url}/${second.id}`).expect(200)).body,
-    ).toMatchObject({ note: 'Updated' });
-    expect((await getFriend(friend.id)).nudge.revision).toBe(3);
+    ).toMatchObject({ id: second.id, note: 'Updated', createdAt: second.createdAt });
     await request(app.getHttpServer()).delete(`${url}/${second.id}`).expect(204);
-    expect((await getFriend(friend.id)).lastContactAt).toBe(first.createdAt);
-    await request(app.getHttpServer()).delete(`${url}/${first.id}`).expect(204);
-    const reloaded = await getFriend(friend.id);
-    expect(reloaded.lastContactAt).toBeNull();
-    expect(reloaded.nudge.id).toBe(friend.nudge.id);
-    expect(reloaded.nudge.scheduledFor).toBe(friend.nudge.scheduledFor);
+    await request(app.getHttpServer()).get(`${url}/${second.id}`).expect(404);
+    expect((await request(app.getHttpServer()).get(url).expect(200)).body).toHaveLength(1);
   });
+
+  it('keeps notes separate from contact: creating, editing and deleting one never changes last contact or the nudge', async () => {
+    const friend = await createFriend();
+    const note = await addNote(friend.id);
+    await request(app.getHttpServer())
+      .patch(`/v1/friends/${friend.id}/catch-up/${note.id}`)
+      .send({ note: 'Edited' })
+      .expect(200);
+    expect(await getFriend(friend.id)).toMatchObject({ lastContactAt: null, nudge: friend.nudge });
+    await request(app.getHttpServer())
+      .delete(`/v1/friends/${friend.id}/catch-up/${note.id}`)
+      .expect(204);
+    expect(await getFriend(friend.id)).toMatchObject({ lastContactAt: null, nudge: friend.nudge });
+  });
+
+  it.each([{}, { note: null }, { note: '' }, { note: '   ' }, { note: 'x'.repeat(10001) }])(
+    'rejects a note without text: %j',
+    async (body) => {
+      const friend = await createFriend();
+      const url = `/v1/friends/${friend.id}/catch-up`;
+      await request(app.getHttpServer()).post(url).send(body).expect(400);
+      const note = await addNote(friend.id);
+      await request(app.getHttpServer()).patch(`${url}/${note.id}`).send(body).expect(400);
+      expect(await dataSource.getRepository(CatchUp).count()).toBe(1);
+    },
+  );
 
   it('prevents catch-up access through a different friend URL', async () => {
     const first = await createFriend();
     const second = await createFriend();
-    const contact = await catchUp(first.id);
+    const contact = await addNote(first.id);
     const url = `/v1/friends/${second.id}/catch-up/${contact.id}`;
     await request(app.getHttpServer()).get(url).expect(404);
-    await request(app.getHttpServer()).patch(url).send({ note: null }).expect(404);
+    await request(app.getHttpServer()).patch(url).send({ note: 'Hijack' }).expect(404);
     await request(app.getHttpServer()).delete(url).expect(404);
   });
 
@@ -270,10 +306,10 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
       request(app.getHttpServer()).post(url).send({ revision: 2 }),
     ]);
     expect(results.map((result) => result.status).sort()).toEqual([200, 409]);
-    const contacts = await dataSource.getRepository(CatchUp).findBy({ friendId: friend.id });
-    expect(contacts).toHaveLength(1);
+    // Confirmation records contact only; notes are written by the user through catch-ups.
+    expect(await dataSource.getRepository(CatchUp).count()).toBe(0);
     const reloaded = await getFriend(friend.id);
-    expect(reloaded.lastContactAt).toBe(contacts[0]!.createdAt.toISOString());
+    expect(reloaded.lastContactAt).not.toBeNull();
     expect(reloaded.nudge).toMatchObject({ id: friend.nudge.id, status: 'PLANNED', revision: 3 });
     expect(Date.parse(reloaded.nudge.scheduledFor)).toBeGreaterThan(
       Date.parse(reloaded.lastContactAt!),
@@ -293,19 +329,39 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
     expect((await getFriend(friend.id)).nudge.revision).toBe(2);
   });
 
-  it('preserves a snooze when editing or deleting an older catch-up', async () => {
+  it('preserves a snooze when editing or deleting a note', async () => {
     const friend = await createFriend();
-    const older = await catchUp(friend.id);
-    await catchUp(friend.id);
+    const note = await addNote(friend.id);
     await request(app.getHttpServer())
       .post(`/v1/nudges/${friend.nudge.id}/snooze`)
-      .send({ revision: 3 })
+      .send({ revision: 1 })
       .expect(200);
-    const before = (await getFriend(friend.id)).nudge;
+    const before = await getFriend(friend.id);
     await request(app.getHttpServer())
-      .delete(`/v1/friends/${friend.id}/catch-up/${older.id}`)
+      .patch(`/v1/friends/${friend.id}/catch-up/${note.id}`)
+      .send({ note: 'Edited' })
+      .expect(200);
+    await request(app.getHttpServer())
+      .delete(`/v1/friends/${friend.id}/catch-up/${note.id}`)
       .expect(204);
-    expect((await getFriend(friend.id)).nudge).toEqual(before);
+    expect(await getFriend(friend.id)).toMatchObject({
+      lastContactAt: before.lastContactAt,
+      nudge: before.nudge,
+    });
+  });
+
+  it('records contact through confirmation and plans the next nudge from it', async () => {
+    const friend = await createFriend();
+    const confirmed = await confirm(friend.nudge);
+    const reloaded = await getFriend(friend.id);
+    expect(reloaded.lastContactAt).not.toBeNull();
+    expect(Date.parse(confirmed.scheduledFor)).toBeGreaterThan(Date.parse(reloaded.lastContactAt!));
+    // Adding a note afterwards keeps the contact time recorded by the confirmation.
+    await addNote(friend.id);
+    expect(await getFriend(friend.id)).toMatchObject({
+      lastContactAt: reloaded.lastContactAt,
+      nudge: confirmed,
+    });
   });
 
   it('replans for periodicity changes and invalidates jobs when disabling nudges', async () => {
@@ -358,7 +414,7 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
     },
   );
 
-  it('rolls back contact creation if rescheduling fails', async () => {
+  it('rolls back contact recording if rescheduling fails', async () => {
     const friend = await createFriend();
     const scheduling = app.get(NudgeSchedulingService);
     const spy = vi

@@ -1,0 +1,261 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <Modal
+    animationType="slide"
+    onRequestClose={[MockFunction spy]}
+    presentationStyle="pageSheet"
+    visible={true}
+  >
+    <RNCSafeAreaView
+      edges={
+        {
+          "bottom": "additive",
+          "left": "additive",
+          "right": "additive",
+          "top": "additive",
+        }
+      }
+      style={
+        {
+          "backgroundColor": "#ffffff",
+          "flex": 1,
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "backgroundColor": "#ffffff",
+              "flex": 1,
+            },
+            {
+              "paddingBottom": 0,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "padding": 24,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="Cancel"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={8}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 15,
+                    "lineHeight": 20,
+                  },
+                  {
+                    "color": "#8a8a8f",
+                  },
+                  undefined,
+                ]
+              }
+            >
+              Cancel
+            </Text>
+          </View>
+          <Text
+            style={
+              [
+                {
+                  "fontFamily": "Inter_400Regular",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                },
+                {
+                  "color": "#151518",
+                },
+                {
+                  "fontFamily": "Inter_600SemiBold",
+                },
+              ]
+            }
+          >
+            New note
+          </Text>
+          <View
+            accessibilityLabel="Save"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": false,
+                "checked": undefined,
+                "disabled": true,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "borderRadius": 9999,
+                  "height": 36,
+                  "justifyContent": "center",
+                  "minWidth": 72,
+                  "paddingHorizontal": 24,
+                },
+                {
+                  "backgroundColor": "#76ff2c",
+                },
+                false,
+                {
+                  "opacity": 0.4,
+                },
+                undefined,
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 15,
+                    "lineHeight": 20,
+                  },
+                  {
+                    "color": "#151518",
+                  },
+                  [
+                    {
+                      "fontFamily": "Inter_600SemiBold",
+                      "fontSize": 15,
+                      "lineHeight": 20,
+                    },
+                    {
+                      "color": "#151518",
+                    },
+                  ],
+                ]
+              }
+            >
+              Save
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "gap": 8,
+              },
+              {
+                "flex": 1,
+                "paddingBottom": 24,
+                "paddingHorizontal": 24,
+              },
+            ]
+          }
+        >
+          <TextInput
+            accessibilityLabel="Note"
+            autoFocus={true}
+            multiline={true}
+            onChangeText={[Function]}
+            placeholder="What did you talk about?"
+            placeholderTextColor="#8a8a8f"
+            style={
+              [
+                {
+                  "backgroundColor": "#f0f0f3",
+                  "borderColor": "#cfcfcf",
+                  "borderRadius": 8,
+                  "borderWidth": 1,
+                  "color": "#151518",
+                  "fontFamily": "Inter_400Regular",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                  "minHeight": 40,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 8,
+                },
+                {
+                  "minHeight": 96,
+                },
+                null,
+              ]
+            }
+            textAlignVertical="top"
+            value=""
+          />
+        </View>
+      </View>
+    </RNCSafeAreaView>
+  </Modal>
+</View>
+`;
