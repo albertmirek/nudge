@@ -4,13 +4,37 @@ import type { App } from 'supertest/types.js';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module.js';
 import type { AuthenticatedRequest } from '../src/common/current-user.js';
+import { EmailService, type EmailMessage } from '../src/email/email.service.js';
 import { User } from '../src/users/entities/user.entity.js';
 
 export type TestApp = { app: INestApplication<App>; dataSource: DataSource };
 
+/** Captures outbound mail so specs can read verification / reset codes out of it. */
+export class FakeEmailService extends EmailService {
+  sent: EmailMessage[] = [];
+
+  send(message: EmailMessage): Promise<void> {
+    this.sent.push(message);
+    return Promise.resolve();
+  }
+
+  lastCodeFor(email: string): string {
+    const message = [...this.sent].reverse().find((m) => m.to === email);
+    const match = message && /code is (\d{6})/.exec(message.text);
+    if (!match) throw new Error(`No code emailed to ${email}`);
+    // noUncheckedIndexedAccess: group 1 always exists when the regex matches.
+    return match[1]!;
+  }
+}
+
 /** Boots the real AppModule against the e2e database (DATABASE_URL from setup-env.ts). */
-export async function createTestApp(currentUserId?: () => string | undefined): Promise<TestApp> {
-  const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+export async function createTestApp(
+  currentUserId?: () => string | undefined,
+  email?: EmailService,
+): Promise<TestApp> {
+  const moduleBuilder = Test.createTestingModule({ imports: [AppModule] });
+  if (email) moduleBuilder.overrideProvider(EmailService).useValue(email);
+  const moduleRef = await moduleBuilder.compile();
   const app = moduleRef.createNestApplication<INestApplication<App>>();
   if (currentUserId) {
     // Test-only trusted context. Production never accepts identity from a request header/body.

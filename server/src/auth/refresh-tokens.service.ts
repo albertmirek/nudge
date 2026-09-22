@@ -43,12 +43,13 @@ export class RefreshTokensService {
     return { userId: row.userId, token: next };
   }
 
-  async revoke(manager: EntityManager, token: string, now = new Date()): Promise<void> {
-    await manager.update(
-      RefreshToken,
-      { tokenHash: hashToken(token), revokedAt: IsNull() },
-      { revokedAt: now },
-    );
+  async revoke(manager: EntityManager, token: string): Promise<void> {
+    // Deleted outright, not soft-revoked: rotate() treats any *soft-revoked* row it's handed as a
+    // replayed, already-rotated token and revokes every session for that user as a theft signal.
+    // A voluntary sign-out is not theft, so the row must not be left behind in that state — a later
+    // replay of a signed-out token should look "unknown" to rotate() (a 401, nothing more), not
+    // trigger a account-wide revocation of every other device's session.
+    await manager.delete(RefreshToken, { tokenHash: hashToken(token) });
   }
 
   async revokeAllForUser(manager: EntityManager, userId: string, now = new Date()): Promise<void> {
