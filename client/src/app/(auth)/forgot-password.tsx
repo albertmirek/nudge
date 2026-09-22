@@ -1,6 +1,5 @@
-import { Text } from '@/ui';
+import { ForgotPasswordScreen } from '@/screens/forgot-password-screen';
 
-// Placeholder; Task 17 replaces this with the real forgot-password screen.
 export default function ForgotPasswordRoute() {
-  return <Text>Forgot password</Text>;
+  return <ForgotPasswordScreen />;
 }
