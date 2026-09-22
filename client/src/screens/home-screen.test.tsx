@@ -21,6 +21,7 @@ const NOW = new Date('2026-09-14T12:00:00Z');
 const ME: Me = {
   id: 'user-1',
   name: 'Sandra',
+  email: 'sandra@example.com',
   timezone: 'Europe/Prague',
   preferredReminderLocalTime: '18:00:00',
   nudgeEnabled: true,
