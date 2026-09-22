@@ -15,6 +15,9 @@ jest.mock('@/api/users');
 jest.mock('@/api/friends');
 jest.mock('@/api/nudges');
 jest.mock('expo-router', () => ({ useRouter: jest.fn() }));
+jest.mock('@/api/use-sign-out', () => ({
+  useSignOut: () => ({ mutate: jest.fn(), isPending: false }),
+}));
 
 const NOW = new Date('2026-09-14T12:00:00Z');
 
@@ -98,6 +101,7 @@ describe('HomeScreen', () => {
     expect(screen.getByText('Anastasia Kleisioni')).toBeOnTheScreen();
     expect(screen.getByText('Joni Trevo')).toBeOnTheScreen();
     expect(screen.queryByText('Elia Cagnazo')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Sign out' })).toBeOnTheScreen();
   });
 
   it('switches to the upcoming list when that tab is pressed', async () => {

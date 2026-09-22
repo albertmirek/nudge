@@ -98,6 +98,14 @@ never touch your dev database.
 Expo runs on the host, not in Docker, because it needs the simulators and the Metro dev server
 talking to a physical device.
 
+### Authentication
+
+The app signs in against `/v1/auth/*` (see `docs/backend-api.md`). The refresh token is stored in
+the device keychain via `expo-secure-store`; the 15-minute access token lives in memory and is
+refreshed lazily by `src/api/http.ts`. After `pnpm db:seed` sign in with `dev@nudge.local` /
+`nudge-dev-password`. Verification and reset codes appear in the server log when
+`RESEND_API_KEY` is empty. Auth flows need a development build (`expo-dev-client`), not Expo Go.
+
 ## Design system & Storybook
 
 Components are built from typed theme tokens (`client/src/theme`) with plain `StyleSheet`; every
