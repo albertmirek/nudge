@@ -1,5 +1,6 @@
 - Mobile app - Expo development builds
 - Backend - NestJS modular monolith
 - DB - Postgresql + pg-boss
+- Email - Resend (transactional, auth codes)
 - Expo Push service for notigications
 - hosted on Render

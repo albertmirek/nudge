@@ -1,0 +1,28 @@
+meta {
+  name: Verify Email
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/verify-email
+  body: json
+}
+
+body:json {
+  {
+    "email": "{{email}}",
+    "code": "{{code}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("accessToken", res.body.accessToken);
+    bru.setEnvVar("refreshToken", res.body.refreshToken);
+  }
+}
+
+docs {
+  Verifies the email with the code and stores accessToken/refreshToken on success.
+}

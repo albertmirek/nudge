@@ -12,7 +12,15 @@ All bodies and responses use camelCase. Dates are ISO timestamps. IDs are UUIDs.
 
 | Method | Route                                       | Behaviour                                                          |
 | ------ | ------------------------------------------- | ------------------------------------------------------------------ |
-| GET    | `/v1/users/me`                              | Read the current user, including `name`                            |
+| POST   | `/v1/auth/sign-up`                          | Create account and send verification code email                    |
+| POST   | `/v1/auth/verify-email`                     | Verify email with code and issue tokens                            |
+| POST   | `/v1/auth/resend-verification`              | Resend verification code email                                     |
+| POST   | `/v1/auth/sign-in`                          | Sign in and issue tokens (requires verified email)                 |
+| POST   | `/v1/auth/refresh`                          | Refresh access token and rotate refresh token                      |
+| POST   | `/v1/auth/sign-out`                         | Revoke current refresh token                                       |
+| POST   | `/v1/auth/forgot-password`                  | Send password reset code email                                     |
+| POST   | `/v1/auth/reset-password`                   | Reset password with code and issue tokens                          |
+| GET    | `/v1/users/me`                              | Read the current user, including `email` and `name`                |
 | POST   | `/v1/friends`                               | Create a friend and its nudge atomically                           |
 | GET    | `/v1/friends`                               | List the current user's friends, including each nudge and channels |
 | GET    | `/v1/friends/:friendId`                     | Read one friend, including its nudge and channels                  |
@@ -26,9 +34,9 @@ All bodies and responses use camelCase. Dates are ISO timestamps. IDs are UUIDs.
 | POST   | `/v1/nudges/:nudgeId/snooze`                | Add 24 hours to scheduledFor and set status to SNOOZED             |
 | POST   | `/v1/nudges/:nudgeId/confirm`               | Record contact now and replan the same nudge                       |
 
-`GET /v1/users/me` has no request body; it 404s if the authenticated id has no matching row
-(the dev-auth header trusts any well-formed UUID, seeded or not). `name` is free text, empty
-by default; there is no route to edit it yet.
+`GET /v1/users/me` has no request body; it 404s if the authenticated id has no matching row.
+`name` and `email` are in the response; `name` is free text, empty by default, and there is
+no route to edit it yet.
 
 Creation returns 201; reads, updates and nudge actions return 200; deletion returns 204.
 Invalid bodies/UUIDs return 400, missing authentication returns 401, and missing or
@@ -87,13 +95,24 @@ does not replay a previous successful response as an idempotency-key system woul
 
 Unknown fields are rejected, including client-supplied ownership IDs and scheduling fields.
 
-## Authentication boundary
+## Authentication
 
-Authentication remains unimplemented, as in the initial backend. All new routes fail
-closed until trusted authentication middleware resolves the internal user UUID and
-sets `request.user = { id }`. This property must come from verified credentials, never
-an unverified header, body or query parameter. `CurrentUserGuard` checks that this context
-exists; it is an integration boundary, not a token verifier.
+`AuthMiddleware` resolves `Authorization: Bearer <access token>` into `request.user = { id }`;
+`CurrentUserGuard` rejects routes without it (401). Access tokens are HS256 JWTs valid for
+15 minutes. Refresh tokens are opaque, stored hashed, single-use and rotate on every
+`POST /v1/auth/refresh`; a session stays alive while it is refreshed at least every
+`AUTH_REFRESH_IDLE_DAYS` (180) and for at most `AUTH_REFRESH_MAX_DAYS` (730) since sign-in.
+Replaying a rotated token revokes every session of that user.
+
+Accounts are email + password (scrypt). Sign-up emails a 6-digit code (15 minutes, five
+attempts); tokens are only issued to verified emails. `sign-in` on an unverified account
+answers 403 `{ code: "EMAIL_NOT_VERIFIED" }` and re-sends the code. `forgot-password` +
+`reset-password` set a new password, revoke all sessions and sign the user in.
+`resend-verification` and `forgot-password` always answer 204. Sensitive routes are limited
+to 10 requests per minute per IP.
+
+Emails go through Resend (`RESEND_API_KEY`, `EMAIL_FROM`); without a key outside production
+they are logged to the console. E2e tests inject a capturing fake.
 
 Every service query is scoped to the owning user. A catch-up ID must also belong to
 the friend in its URL. Integration tests install trusted context directly in test-only

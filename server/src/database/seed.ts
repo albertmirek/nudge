@@ -4,9 +4,12 @@ import { FriendPeriodicity } from '../friends/entities/friend-periodicity.enum.j
 import { Friend } from '../friends/entities/friend.entity.js';
 import { NudgeSchedulingService } from '../nudges/nudge-scheduling.service.js';
 import { User } from '../users/entities/user.entity.js';
+import { hashPassword } from '../auth/password.js';
 
 /** Fixed id so Bruno and the seed agree on the dev user. */
 export const DEV_USER_ID = '00000000-0000-0000-0000-000000000001';
+export const DEV_USER_EMAIL = 'dev@nudge.local';
+export const DEV_USER_PASSWORD = 'nudge-dev-password';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -99,8 +102,15 @@ export async function seedDevData(dataSource: DataSource): Promise<SeedSummary> 
   return dataSource.transaction(async (manager) => {
     await manager.upsert(
       User,
-      { id: DEV_USER_ID, name: 'Sandra', email: 'dev@nudge.local', timezone: 'Europe/Prague' },
-      { conflictPaths: ['id'], skipUpdateIfNoValuesChanged: true },
+      {
+        id: DEV_USER_ID,
+        name: 'Sandra',
+        email: DEV_USER_EMAIL,
+        emailVerifiedAt: new Date(),
+        passwordHash: await hashPassword(DEV_USER_PASSWORD),
+        timezone: 'Europe/Prague',
+      },
+      { conflictPaths: ['id'] },
     );
     await manager.delete(Friend, { userId: DEV_USER_ID });
 
