@@ -1,5 +1,5 @@
-import { Text } from '@/ui';
+import { SignInScreen } from '@/screens/sign-in-screen';
 
 export default function SignInRoute() {
-  return <Text>Sign in</Text>;
+  return <SignInScreen />;
 }
