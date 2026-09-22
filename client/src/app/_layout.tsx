@@ -16,6 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import StorybookUI from '../../.rnstorybook';
+import { SessionProvider, useSession } from '@/auth/session';
 import { queryClient } from '@/lib/query-client';
 import { ThemeProvider, useTheme, useThemeMode } from '@/theme';
 
@@ -38,21 +39,17 @@ function App() {
     Inter_600SemiBold,
   });
 
-  useEffect(() => {
-    if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
-
   if (!fontsLoaded && !fontError) {
     return null;
   }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <Navigation />
-      </ThemeProvider>
+      <SessionProvider>
+        <ThemeProvider>
+          <Navigation />
+        </ThemeProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }
@@ -61,7 +58,18 @@ function App() {
 function Navigation() {
   const { scheme } = useThemeMode();
   const theme = useTheme();
+  const { status } = useSession();
   const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
+
+  useEffect(() => {
+    if (status !== 'loading') {
+      SplashScreen.hideAsync();
+    }
+  }, [status]);
+
+  if (status === 'loading') {
+    return null;
+  }
 
   return (
     <NavigationThemeProvider
@@ -84,7 +92,13 @@ function Navigation() {
           contentStyle: { backgroundColor: theme.colors.background },
         }}
       >
-        <Stack.Screen name="(tabs)" />
+        <Stack.Protected guard={status === 'signedIn'}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="friend/[id]" />
+        </Stack.Protected>
+        <Stack.Protected guard={status === 'signedOut'}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
       </Stack>
     </NavigationThemeProvider>
   );
