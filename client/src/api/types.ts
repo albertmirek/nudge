@@ -59,9 +59,18 @@ export type CatchUp = {
 
 export type Me = {
   id: string;
+  email: string;
   name: string;
   timezone: string;
   preferredReminderLocalTime: string;
   nudgeEnabled: boolean;
   createdAt: string;
+};
+
+export type SessionResponse = {
+  accessToken: string;
+  /** ISO timestamp. */
+  accessTokenExpiresAt: string;
+  refreshToken: string;
+  user: Me;
 };
