@@ -22,6 +22,7 @@ describe('ResendEmailService', () => {
       subject: 'Hi',
       text: 'Body',
     });
+    expect(init.signal).toBeInstanceOf(AbortSignal);
   });
 
   it('throws on a non-2xx response', async () => {

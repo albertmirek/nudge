@@ -24,6 +24,10 @@ export class ResendEmailService extends EmailService {
         subject: message.subject,
         text: message.text,
       }),
+      // This call runs inside an open DB transaction (see EmailCodesService.issue callers in
+      // AuthService); without a timeout a hung Resend request would pin a DB connection and row
+      // locks for the platform's socket timeout, risking an outage from an email-provider incident.
+      signal: AbortSignal.timeout(10_000),
     });
     if (!response.ok) {
       const body = await response.text().catch(() => '');

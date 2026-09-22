@@ -59,10 +59,10 @@ that produces the slim image used for deployment.
 
 ### Authentication
 
-After `pnpm db:seed`, sign in with `dev@nudge.local` / `nudge-dev-password`. Accounts use email
-
-- password (scrypt); tokens are issued only to verified emails. See [`docs/backend-api.md`](docs/backend-api.md)
-  for token formats, expiry, rate-limiting and environment variables (`RESEND_API_KEY`, `EMAIL_FROM`).
+After `pnpm db:seed`, sign in with `dev@nudge.local` / `nudge-dev-password`. Accounts use an email
+and password (hashed with scrypt); tokens are issued only to verified emails. See
+[`docs/backend-api.md`](docs/backend-api.md) for token formats, expiry, rate-limiting and
+environment variables (`RESEND_API_KEY`, `EMAIL_FROM`).
 
 ### Database & migrations
 

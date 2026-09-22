@@ -96,8 +96,20 @@ async function doRefresh(): Promise<void> {
     }
     throw result.error;
   }
-  await setRefreshToken(result.data.refreshToken);
-  setAccessToken(result.data.accessToken, result.data.accessTokenExpiresAt);
+  try {
+    await setRefreshToken(result.data.refreshToken);
+    setAccessToken(result.data.accessToken, result.data.accessTokenExpiresAt);
+  } catch (persistError) {
+    // The server already rotated the refresh token. If we failed to persist the new one, the
+    // token still on disk is now stale and would be flagged as replayed/stolen on the NEXT
+    // refresh, cascading into revokeAllForUser and signing out every device. Treat a local
+    // persistence failure the same as a definitive server-side rejection: sign out this device
+    // only, so nothing "soon to be revoked" is left on disk.
+    clearAccessToken();
+    await clearRefreshToken().catch(() => {});
+    sessionLostListeners.forEach((listener) => listener());
+    throw persistError;
+  }
 }
 
 /** Single-flight: concurrent callers share one refresh round-trip. */

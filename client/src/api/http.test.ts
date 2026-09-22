@@ -4,6 +4,13 @@ import { ApiError, apiFetch, clearAccessToken, onSessionLost, setAccessToken } f
 import { clearRefreshToken, getRefreshToken, setRefreshToken } from '@/auth/token-store';
 import { __reset } from '@/test/mocks/secure-store';
 
+// Real implementation by default (so seeding/reading tokens in tests still works); individual
+// tests can override one call with mockRejectedValueOnce to simulate a SecureStore write failure.
+jest.mock('@/auth/token-store', () => {
+  const actual: typeof import('@/auth/token-store') = jest.requireActual('@/auth/token-store');
+  return { ...actual, setRefreshToken: jest.fn(actual.setRefreshToken) };
+});
+
 type Call = [string, RequestInit];
 
 const ok = (body: unknown, status = 200) => ({
@@ -119,6 +126,18 @@ describe('authenticated requests', () => {
     await expect(apiFetch('/v1/users/me')).rejects.toThrow('Network request failed');
     await expect(getRefreshToken()).resolves.toBe('refresh-0');
     expect(lost).not.toHaveBeenCalled();
+  });
+
+  it('clears the session locally when persisting the refreshed token fails', async () => {
+    const lost = jest.fn();
+    const unsubscribe = onSessionLost(lost);
+    await setRefreshToken('refresh-0');
+    jest.mocked(setRefreshToken).mockRejectedValueOnce(new Error('keychain unavailable'));
+    fetchMock.mockResolvedValueOnce(ok(session(1)));
+    await expect(apiFetch('/v1/users/me')).rejects.toThrow('keychain unavailable');
+    await expect(getRefreshToken()).resolves.toBeNull();
+    expect(lost).toHaveBeenCalledTimes(1);
+    unsubscribe();
   });
 
   it('does not retry a second 401 after a successful refresh', async () => {

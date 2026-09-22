@@ -6,7 +6,13 @@ meta {
 
 post {
   url: {{baseUrl}}/v1/auth/sign-out
-  body: none
+  body: json
+}
+
+body:json {
+  {
+    "refreshToken": "{{refreshToken}}"
+  }
 }
 
 docs {
