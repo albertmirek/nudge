@@ -74,3 +74,9 @@ export type SessionResponse = {
   refreshToken: string;
   user: Me;
 };
+
+export type EmailBody = { email: string };
+export type CredentialsBody = { email: string; password: string };
+export type SignUpBody = CredentialsBody & { timezone: string };
+export type CodeBody = { email: string; code: string };
+export type ResetPasswordBody = CodeBody & { newPassword: string };
