@@ -5,7 +5,7 @@ import { Friend } from '../friends/entities/friend.entity.js';
 import { NudgeSchedulingService } from '../nudges/nudge-scheduling.service.js';
 import { User } from '../users/entities/user.entity.js';
 
-/** Matches the client's default `x-user-id`, Bruno's Local environment and devAuthMiddleware. */
+/** Fixed id so Bruno and the seed agree on the dev user. */
 export const DEV_USER_ID = '00000000-0000-0000-0000-000000000001';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -99,7 +99,7 @@ export async function seedDevData(dataSource: DataSource): Promise<SeedSummary> 
   return dataSource.transaction(async (manager) => {
     await manager.upsert(
       User,
-      { id: DEV_USER_ID, name: 'Sandra', timezone: 'Europe/Prague' },
+      { id: DEV_USER_ID, name: 'Sandra', email: 'dev@nudge.local', timezone: 'Europe/Prague' },
       { conflictPaths: ['id'], skipUpdateIfNoValuesChanged: true },
     );
     await manager.delete(Friend, { userId: DEV_USER_ID });

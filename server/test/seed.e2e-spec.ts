@@ -6,7 +6,7 @@ import { CatchUp } from '../src/friends/entities/catch-up.entity.js';
 import { Nudge } from '../src/nudges/entities/nudge.entity.js';
 import { NudgeStatus } from '../src/nudges/entities/nudge-status.enum.js';
 import { User } from '../src/users/entities/user.entity.js';
-import { createTestApp, truncateAll } from './create-test-app.js';
+import { createTestApp, createUser, truncateAll } from './create-test-app.js';
 
 describe('Dev seed', () => {
   let dataSource: DataSource;
@@ -57,7 +57,7 @@ describe('Dev seed', () => {
   });
 
   it('leaves other users’ data alone', async () => {
-    const other = await dataSource.getRepository(User).save({ timezone: 'UTC', name: 'Other' });
+    const other = await createUser(dataSource, { name: 'Other' });
     await dataSource.getRepository(Friend).save({
       userId: other.id,
       name: 'Kept',

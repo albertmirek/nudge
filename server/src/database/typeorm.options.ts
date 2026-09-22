@@ -1,4 +1,6 @@
 import type { DataSourceOptions } from 'typeorm';
+import { EmailCode } from '../auth/entities/email-code.entity.js';
+import { RefreshToken } from '../auth/entities/refresh-token.entity.js';
 import { CatchUp } from '../friends/entities/catch-up.entity.js';
 import { Channel } from '../friends/entities/channel.entity.js';
 import { Friend } from '../friends/entities/friend.entity.js';
@@ -15,7 +17,7 @@ export function buildDataSourceOptions(url: string): DataSourceOptions {
     type: 'postgres',
     url,
     uuidExtension: 'pgcrypto',
-    entities: [User, Friend, Channel, CatchUp, Nudge],
+    entities: [User, Friend, Channel, CatchUp, Nudge, RefreshToken, EmailCode],
     migrations,
     migrationsTableName: 'migrations',
     synchronize: false,

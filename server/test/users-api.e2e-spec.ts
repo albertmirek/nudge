@@ -2,8 +2,7 @@ import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { DataSource } from 'typeorm';
-import { User } from '../src/users/entities/user.entity.js';
-import { createTestApp, truncateAll } from './create-test-app.js';
+import { createTestApp, createUser, truncateAll } from './create-test-app.js';
 
 interface UserResponse {
   id: string;
@@ -30,9 +29,7 @@ describe('Users API (e2e)', () => {
   });
 
   it('returns the current user', async () => {
-    userId = (
-      await dataSource.getRepository(User).save({ name: 'Sandra', timezone: 'Europe/Prague' })
-    ).id;
+    userId = (await createUser(dataSource, { name: 'Sandra' })).id;
     const response = await request(app.getHttpServer()).get('/v1/users/me').expect(200);
     expect(response.body as UserResponse).toMatchObject({
       id: userId,

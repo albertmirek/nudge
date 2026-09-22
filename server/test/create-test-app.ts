@@ -4,6 +4,7 @@ import type { App } from 'supertest/types.js';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module.js';
 import type { AuthenticatedRequest } from '../src/common/current-user.js';
+import { User } from '../src/users/entities/user.entity.js';
 
 export type TestApp = { app: INestApplication<App>; dataSource: DataSource };
 
@@ -28,4 +29,19 @@ export async function truncateAll(dataSource: DataSource): Promise<void> {
   const tables = dataSource.entityMetadatas.map((meta) => `"${meta.tableName}"`);
   if (tables.length === 0) return;
   await dataSource.query(`TRUNCATE TABLE ${tables.join(', ')} RESTART IDENTITY CASCADE`);
+}
+
+let userSequence = 0;
+
+/** Inserts a user with a unique email; e2e specs must not hand-roll users now that email is required. */
+export async function createUser(
+  dataSource: DataSource,
+  overrides: Partial<User> = {},
+): Promise<User> {
+  userSequence += 1;
+  return dataSource.getRepository(User).save({
+    email: `user${userSequence}@example.com`,
+    timezone: 'Europe/Prague',
+    ...overrides,
+  });
 }
