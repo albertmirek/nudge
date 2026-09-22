@@ -1,0 +1,434 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "gap": 16,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "gap": 8,
+          },
+          undefined,
+        ]
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+            {
+              "color": "#151518",
+            },
+            undefined,
+          ]
+        }
+      >
+        Email
+      </Text>
+      <TextInput
+        accessibilityLabel="Email"
+        autoCapitalize="none"
+        autoComplete="email"
+        autoCorrect={false}
+        keyboardType="email-address"
+        onChangeText={[Function]}
+        placeholderTextColor="#8a8a8f"
+        style={
+          [
+            {
+              "backgroundColor": "#f0f0f3",
+              "borderColor": "#cfcfcf",
+              "borderRadius": 8,
+              "borderWidth": 1,
+              "color": "#151518",
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+              "minHeight": 40,
+              "paddingHorizontal": 12,
+              "paddingVertical": 8,
+            },
+            undefined,
+            null,
+          ]
+        }
+        textAlignVertical="center"
+        textContentType="emailAddress"
+        value=""
+      />
+    </View>
+    <View>
+      <View
+        style={
+          [
+            {
+              "gap": 8,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              undefined,
+            ]
+          }
+        >
+          Password
+        </Text>
+        <TextInput
+          accessibilityLabel="Password"
+          autoCapitalize="none"
+          autoComplete="password"
+          autoCorrect={false}
+          onChangeText={[Function]}
+          onSubmitEditing={[MockFunction spy]}
+          placeholderTextColor="#8a8a8f"
+          secureTextEntry={true}
+          style={
+            [
+              {
+                "backgroundColor": "#f0f0f3",
+                "borderColor": "#cfcfcf",
+                "borderRadius": 8,
+                "borderWidth": 1,
+                "color": "#151518",
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+                "minHeight": 40,
+                "paddingHorizontal": 12,
+                "paddingVertical": 8,
+              },
+              undefined,
+              null,
+            ]
+          }
+          textAlignVertical="center"
+          textContentType="password"
+          value=""
+        />
+      </View>
+      <View
+        accessibilityLabel="Show password"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={8}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "position": "absolute",
+            "right": 12,
+            "top": 0,
+          }
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 12,
+                "lineHeight": 16,
+              },
+              {
+                "color": "#151518",
+              },
+              {
+                "color": "#3a448a",
+              },
+            ]
+          }
+        >
+          Show
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Forgot password?"
+      accessibilityRole="link"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      hitSlop={8}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        [
+          false,
+          {
+            "alignSelf": "flex-end",
+          },
+        ]
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+            {
+              "color": "#151518",
+            },
+            {
+              "color": "#3a448a",
+              "fontFamily": "Inter_600SemiBold",
+            },
+          ]
+        }
+      >
+        Forgot password?
+      </Text>
+    </View>
+    <View
+      accessibilityLabel="Sign in"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": false,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "minWidth": 72,
+            "paddingHorizontal": 24,
+          },
+          {
+            "backgroundColor": "#76ff2c",
+          },
+          false,
+          false,
+          undefined,
+        ]
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+            {
+              "color": "#151518",
+            },
+            [
+              {
+                "fontFamily": "Inter_600SemiBold",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+            ],
+          ]
+        }
+      >
+        Sign in
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+          "gap": 8,
+          "justifyContent": "center",
+          "paddingTop": 12,
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+            {
+              "color": "#8a8a8f",
+            },
+            undefined,
+          ]
+        }
+      >
+        New here?
+      </Text>
+      <View
+        accessibilityLabel="Create account"
+        accessibilityRole="link"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={8}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            false,
+            undefined,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_400Regular",
+                "fontSize": 15,
+                "lineHeight": 20,
+              },
+              {
+                "color": "#151518",
+              },
+              {
+                "color": "#3a448a",
+                "fontFamily": "Inter_600SemiBold",
+              },
+            ]
+          }
+        >
+          Create account
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
