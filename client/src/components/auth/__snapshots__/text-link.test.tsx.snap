@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <View
+    accessibilityLabel="Forgot password?"
+    accessibilityRole="link"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    hitSlop={8}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      [
+        false,
+        undefined,
+      ]
+    }
+  >
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Inter_400Regular",
+            "fontSize": 15,
+            "lineHeight": 20,
+          },
+          {
+            "color": "#151518",
+          },
+          {
+            "color": "#3a448a",
+            "fontFamily": "Inter_600SemiBold",
+          },
+        ]
+      }
+    >
+      Forgot password?
+    </Text>
+  </View>
+</View>
+`;
