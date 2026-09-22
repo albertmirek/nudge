@@ -2,6 +2,9 @@ import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { DataSource } from 'typeorm';
+import { signAccessToken } from '../src/auth/access-token.js';
+import { AUTH_CONFIG } from '../src/auth/auth-config.js';
+import type { AuthConfig } from '../src/auth/auth-config.js';
 import { createTestApp, createUser, truncateAll } from './create-test-app.js';
 
 interface UserResponse {
@@ -46,5 +49,21 @@ describe('Users API (e2e)', () => {
   it('returns 404 when the authenticated user has no record', async () => {
     userId = '00000000-0000-0000-0000-000000000099';
     await request(app.getHttpServer()).get('/v1/users/me').expect(404);
+  });
+
+  it('does not accept identity from the x-user-id header', async () => {
+    const user = await createUser(dataSource);
+    await request(app.getHttpServer()).get('/v1/users/me').set('x-user-id', user.id).expect(401);
+  });
+
+  it('accepts a bearer access token', async () => {
+    const user = await createUser(dataSource);
+    const token = await signAccessToken(app.get<AuthConfig>(AUTH_CONFIG), user.id);
+    const response = await request(app.getHttpServer())
+      .get('/v1/users/me')
+      .set('authorization', `Bearer ${token}`)
+      .expect(200);
+    expect(response.body).toMatchObject({ id: user.id, email: user.email });
+    expect(response.body).not.toHaveProperty('passwordHash');
   });
 });

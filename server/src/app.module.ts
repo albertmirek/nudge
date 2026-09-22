@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import type { MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { AUTH_CONFIG, loadAuthConfig } from './auth/auth-config.js';
+import { AuthMiddleware } from './auth/auth.middleware.js';
 import { DatabaseModule } from './database/database.module.js';
 import { EmailModule } from './email/email.module.js';
 import { FriendsModule } from './friends/friends.module.js';
@@ -21,6 +24,14 @@ import { UsersModule } from './users/users.module.js';
     NudgesModule,
   ],
   controllers: [AppController, HealthController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: AUTH_CONFIG, inject: [ConfigService], useFactory: loadAuthConfig },
+  ],
+  exports: [AUTH_CONFIG],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AuthMiddleware).forRoutes('*');
+  }
+}
