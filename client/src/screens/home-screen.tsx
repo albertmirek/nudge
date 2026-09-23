@@ -10,6 +10,7 @@ import { useMe } from '@/api/use-me';
 import { ContactRow } from '@/components/contact/contact-row';
 import { NudgeTabs, type NudgeTab } from '@/components/home/nudge-tabs';
 import { TickerBanner } from '@/components/home/ticker-banner';
+import { SignOutButton } from '@/components/settings/sign-out-button';
 import { splitByNudge } from '@/lib/nudges';
 import { type Theme, useStyles } from '@/theme';
 import { Text } from '@/ui';
@@ -106,6 +107,7 @@ export function HomeScreen() {
             {tab === 'overdue' ? 'Nothing overdue right now.' : 'No upcoming check-ins yet.'}
           </Text>
         }
+        ListFooterComponent={<SignOutButton />}
       />
     </SafeAreaView>
   );

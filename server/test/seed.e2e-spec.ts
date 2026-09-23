@@ -1,12 +1,18 @@
 import { DataSource } from 'typeorm';
-import { DEV_USER_ID, seedDevData } from '../src/database/seed.js';
+import {
+  DEV_USER_ID,
+  DEV_USER_EMAIL,
+  DEV_USER_PASSWORD,
+  seedDevData,
+} from '../src/database/seed.js';
 import { Friend } from '../src/friends/entities/friend.entity.js';
 import { FriendPeriodicity } from '../src/friends/entities/friend-periodicity.enum.js';
 import { CatchUp } from '../src/friends/entities/catch-up.entity.js';
 import { Nudge } from '../src/nudges/entities/nudge.entity.js';
 import { NudgeStatus } from '../src/nudges/entities/nudge-status.enum.js';
 import { User } from '../src/users/entities/user.entity.js';
-import { createTestApp, truncateAll } from './create-test-app.js';
+import { verifyPassword } from '../src/auth/password.js';
+import { createTestApp, createUser, truncateAll } from './create-test-app.js';
 
 describe('Dev seed', () => {
   let dataSource: DataSource;
@@ -57,7 +63,7 @@ describe('Dev seed', () => {
   });
 
   it('leaves other users’ data alone', async () => {
-    const other = await dataSource.getRepository(User).save({ timezone: 'UTC', name: 'Other' });
+    const other = await createUser(dataSource, { name: 'Other' });
     await dataSource.getRepository(Friend).save({
       userId: other.id,
       name: 'Kept',
@@ -78,5 +84,18 @@ describe('Dev seed', () => {
     } finally {
       process.env.NODE_ENV = previous;
     }
+  });
+
+  it('seeds a verified dev user who can sign in with the documented password', async () => {
+    await seedDevData(dataSource);
+    const user = await dataSource
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('user.id = :id', { id: DEV_USER_ID })
+      .getOneOrFail();
+    expect(user.email).toBe(DEV_USER_EMAIL);
+    expect(user.emailVerifiedAt).not.toBeNull();
+    await expect(verifyPassword(DEV_USER_PASSWORD, user.passwordHash!)).resolves.toBe(true);
   });
 });

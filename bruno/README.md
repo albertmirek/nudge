@@ -6,20 +6,15 @@ health, friends, catch-ups and nudges.
 ## One-time setup
 
 1. Start the stack: `pnpm docker:up` (or `pnpm docker:db` + `pnpm server:dev`).
-2. Seed a fixed dev user so the collection has someone to authenticate as:
-   ```
-   docker compose exec -T db psql -U nudge -d nudge -f - < server/scripts/seed-dev-user.sql
-   ```
+2. Seed a fixed dev user: `pnpm db:seed`.
 3. Open this `bruno/` folder as a collection in the Bruno app (or `bru run` with the CLI),
    and select the **Local** environment.
 
 ## Auth
 
-There's no login yet. `CurrentUserGuard` on the server just checks `request.user`, and until
-now the only thing that ever set it was the e2e test harness. `server/src/common/dev-auth.middleware.ts`
-adds a dev-only (`NODE_ENV !== 'production'`) middleware that trusts an `x-user-id` header —
-this collection sends it on every request via the collection-level header, sourced from the
-`userId` environment variable (defaults to the seeded user's fixed id).
+Run **Auth → Sign In** to log in with the seeded dev user (`admin@admin.cz` / `12345678`).
+This stores `accessToken` and `refreshToken` in the environment; every other folder automatically
+sends the bearer token on its requests.
 
 ## Chaining requests
 

@@ -8,8 +8,7 @@ import { FriendPeriodicity } from '../src/friends/entities/friend-periodicity.en
 import { Nudge } from '../src/nudges/entities/nudge.entity.js';
 import { NudgeStatus } from '../src/nudges/entities/nudge-status.enum.js';
 import { NudgeSchedulingService } from '../src/nudges/nudge-scheduling.service.js';
-import { User } from '../src/users/entities/user.entity.js';
-import { createTestApp, truncateAll } from './create-test-app.js';
+import { createTestApp, createUser, truncateAll } from './create-test-app.js';
 
 interface NudgeResponse {
   id: string;
@@ -44,7 +43,7 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
   });
   beforeEach(async () => {
     await truncateAll(dataSource);
-    userId = (await dataSource.getRepository(User).save({ timezone: 'Europe/Prague' })).id;
+    userId = (await createUser(dataSource)).id;
   });
   afterAll(async () => {
     await app.close();
@@ -198,7 +197,7 @@ describe('Friends, catch-ups and nudges API (e2e)', () => {
   it('hides another user’s friends, catch-ups and nudges for every operation', async () => {
     const friend = await createFriend();
     const contact = await addNote(friend.id);
-    userId = (await dataSource.getRepository(User).save({ timezone: 'UTC' })).id;
+    userId = (await createUser(dataSource)).id;
     expect((await request(app.getHttpServer()).get('/v1/friends').expect(200)).body).toEqual([]);
     const friendUrl = `/v1/friends/${friend.id}`;
     const contactUrl = `${friendUrl}/catch-up`;

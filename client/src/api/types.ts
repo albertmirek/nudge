@@ -59,9 +59,24 @@ export type CatchUp = {
 
 export type Me = {
   id: string;
+  email: string;
   name: string;
   timezone: string;
   preferredReminderLocalTime: string;
   nudgeEnabled: boolean;
   createdAt: string;
 };
+
+export type SessionResponse = {
+  accessToken: string;
+  /** ISO timestamp. */
+  accessTokenExpiresAt: string;
+  refreshToken: string;
+  user: Me;
+};
+
+export type EmailBody = { email: string };
+export type CredentialsBody = { email: string; password: string };
+export type SignUpBody = CredentialsBody & { timezone: string };
+export type CodeBody = { email: string; code: string };
+export type ResetPasswordBody = CodeBody & { newPassword: string };

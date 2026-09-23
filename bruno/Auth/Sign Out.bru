@@ -1,0 +1,20 @@
+meta {
+  name: Sign Out
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/sign-out
+  body: json
+}
+
+body:json {
+  {
+    "refreshToken": "{{refreshToken}}"
+  }
+}
+
+docs {
+  Signs out the current user (revokes the current refresh token).
+}

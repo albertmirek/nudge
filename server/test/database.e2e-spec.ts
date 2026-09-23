@@ -1,6 +1,9 @@
 import type { INestApplication } from '@nestjs/common';
 import type { App } from 'supertest/types.js';
 import { DataSource, QueryFailedError } from 'typeorm';
+import { EmailCodePurpose } from '../src/auth/entities/email-code-purpose.enum.js';
+import { EmailCode } from '../src/auth/entities/email-code.entity.js';
+import { RefreshToken } from '../src/auth/entities/refresh-token.entity.js';
 import { CatchUp } from '../src/friends/entities/catch-up.entity.js';
 import { ChannelType } from '../src/friends/entities/channel-type.enum.js';
 import { Channel } from '../src/friends/entities/channel.entity.js';
@@ -9,7 +12,7 @@ import { Friend } from '../src/friends/entities/friend.entity.js';
 import { NudgeStatus } from '../src/nudges/entities/nudge-status.enum.js';
 import { Nudge } from '../src/nudges/entities/nudge.entity.js';
 import { User } from '../src/users/entities/user.entity.js';
-import { createTestApp, truncateAll } from './create-test-app.js';
+import { createTestApp, truncateAll, createUser as createTestUser } from './create-test-app.js';
 
 describe('Entities (e2e)', () => {
   let app: INestApplication<App>;
@@ -25,9 +28,7 @@ describe('Entities (e2e)', () => {
     await app.close();
   });
 
-  async function createUser(): Promise<User> {
-    return dataSource.getRepository(User).save({ timezone: 'Europe/Prague' });
-  }
+  const createUser = (overrides?: Partial<User>) => createTestUser(dataSource, overrides);
 
   async function createFriend(user: User): Promise<Friend> {
     return dataSource
@@ -89,7 +90,9 @@ describe('Entities (e2e)', () => {
   });
 
   it('rejects a user without a timezone', async () => {
-    await expect(dataSource.getRepository(User).insert({})).rejects.toMatchObject({
+    await expect(
+      dataSource.getRepository(User).insert({ email: 'tz@example.com' }),
+    ).rejects.toMatchObject({
       driverError: { code: '23502', column: 'timezone' },
     });
   });
@@ -133,5 +136,45 @@ describe('Entities (e2e)', () => {
     const reloaded = await dataSource.getRepository(Friend).findOneByOrFail({ id: friend.id });
     expect(reloaded.name).toBe('Alicia');
     expect(reloaded.updatedAt.getTime()).toBeGreaterThan(friend.updatedAt.getTime());
+  });
+
+  it('stores auth credentials on users and keeps password_hash out of default selects', async () => {
+    const user = await createUser({ email: 'a@example.com', passwordHash: 'x' });
+    const reloaded = await dataSource.getRepository(User).findOneByOrFail({ id: user.id });
+    expect(reloaded.email).toBe('a@example.com');
+    expect(reloaded.emailVerifiedAt).toBeNull();
+    expect(reloaded.passwordHash).toBeUndefined();
+    const withHash = await dataSource
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('user.id = :id', { id: user.id })
+      .getOneOrFail();
+    expect(withHash.passwordHash).toBe('x');
+  });
+
+  it('rejects two users with the same email', async () => {
+    await createUser({ email: 'dup@example.com' });
+    await expect(createUser({ email: 'dup@example.com' })).rejects.toMatchObject({
+      driverError: { code: '23505' },
+    });
+  });
+
+  it('cascades refresh tokens and email codes when the user is deleted', async () => {
+    const user = await createUser();
+    await dataSource.getRepository(RefreshToken).save({
+      userId: user.id,
+      tokenHash: 'h',
+      expiresAt: new Date(Date.now() + 1000),
+    });
+    await dataSource.getRepository(EmailCode).save({
+      userId: user.id,
+      purpose: EmailCodePurpose.VERIFY_EMAIL,
+      codeHash: 'c',
+      expiresAt: new Date(Date.now() + 1000),
+    });
+    await dataSource.getRepository(User).delete({ id: user.id });
+    expect(await dataSource.getRepository(RefreshToken).count()).toBe(0);
+    expect(await dataSource.getRepository(EmailCode).count()).toBe(0);
   });
 });

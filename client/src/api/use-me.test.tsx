@@ -13,6 +13,7 @@ jest.mock('@/api/users');
 const ME: Me = {
   id: 'user-1',
   name: 'Sandra',
+  email: 'sandra@example.com',
   timezone: 'Europe/Prague',
   preferredReminderLocalTime: '18:00:00',
   nudgeEnabled: true,

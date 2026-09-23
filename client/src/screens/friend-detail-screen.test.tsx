@@ -92,7 +92,7 @@ describe('FriendDetailScreen', () => {
     ]);
     expect(screen.getByRole('button', { name: 'Contact' })).toBeOnTheScreen();
     expect(screen.queryByRole('tab', { name: 'Add a friend' })).not.toBeOnTheScreen();
-  });
+  }, 15000); // contended CI workers that has been observed to exceed the default 5s. // First test in the file also pays for RNTL's one-time render setup; under
 
   it('goes back from the chevron and to a tab from the bar', async () => {
     await renderScreen(<FriendDetailScreen friendId="friend-1" />);

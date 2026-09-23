@@ -1,0 +1,27 @@
+meta {
+  name: Refresh
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/refresh
+  body: json
+}
+
+body:json {
+  {
+    "refreshToken": "{{refreshToken}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("accessToken", res.body.accessToken);
+    bru.setEnvVar("refreshToken", res.body.refreshToken);
+  }
+}
+
+docs {
+  Refreshes the access token and rotates the refresh token.
+}

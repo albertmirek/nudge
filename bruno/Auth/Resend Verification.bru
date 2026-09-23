@@ -1,0 +1,20 @@
+meta {
+  name: Resend Verification
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/resend-verification
+  body: json
+}
+
+body:json {
+  {
+    "email": "{{email}}"
+  }
+}
+
+docs {
+  Resends the verification code email (always returns 204, even if email not found).
+}

@@ -57,6 +57,13 @@ Adding a dependency to the server requires `pnpm docker:up` again to rebuild the
 `server/Dockerfile` also has a `prod` target (`docker build -f server/Dockerfile --target prod .`)
 that produces the slim image used for deployment.
 
+### Authentication
+
+After `pnpm db:seed`, sign in with `admin@admin.cz` / `12345678`. Accounts use an email
+and password (hashed with scrypt); tokens are issued only to verified emails. See
+[`docs/backend-api.md`](docs/backend-api.md) for token formats, expiry, rate-limiting and
+environment variables (`RESEND_API_KEY`, `EMAIL_FROM`).
+
 ### Database & migrations
 
 The server uses TypeORM with `synchronize` off — the schema only changes through migrations in
@@ -90,6 +97,14 @@ never touch your dev database.
 
 Expo runs on the host, not in Docker, because it needs the simulators and the Metro dev server
 talking to a physical device.
+
+### Authentication
+
+The app signs in against `/v1/auth/*` (see `docs/backend-api.md`). The refresh token is stored in
+the device keychain via `expo-secure-store`; the 15-minute access token lives in memory and is
+refreshed lazily by `src/api/http.ts`. After `pnpm db:seed` sign in with `admin@admin.cz` /
+`12345678`. Verification and reset codes appear in the server log when
+`RESEND_API_KEY` is empty. Auth flows need a development build (`expo-dev-client`), not Expo Go.
 
 ## Design system & Storybook
 

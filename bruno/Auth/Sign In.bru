@@ -1,0 +1,29 @@
+meta {
+  name: Sign In
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/sign-in
+  body: json
+}
+
+body:json {
+  {
+    "email": "{{email}}",
+    "password": "{{password}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("accessToken", res.body.accessToken);
+    bru.setEnvVar("refreshToken", res.body.refreshToken);
+  }
+}
+
+docs {
+  Stores accessToken/refreshToken in the environment; every other folder sends the bearer.
+  After `pnpm db:seed` the Local environment's email/password sign straight in.
+}
