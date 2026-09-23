@@ -124,6 +124,14 @@ function ChannelEditor({
       setInputError(`That doesn't look like a ${label} ${KIND_NOUN[input]}.`);
       return;
     }
+    // A recognized link always wins over the hint (right for add mode), but a channel's
+    // type is fixed once created, so a link for a different platform can't be saved here.
+    if (channel && parsed.type !== channel.type) {
+      setInputError(
+        `That link is for ${CHANNEL_PLATFORMS[parsed.type].label} — this channel is ${label}.`,
+      );
+      return;
+    }
     confirm(parsed);
   };
 
@@ -142,10 +150,13 @@ function ChannelEditor({
     }
   };
 
-  const paste = async () => setValue(await readClipboard());
+  const paste = async () => {
+    const text = await readClipboard().catch(() => undefined);
+    if (text !== undefined) setValue(text);
+  };
 
   const pickContact = async () => {
-    const values = await pickContactValues();
+    const values = await pickContactValues().catch(() => null);
     if (!values?.length) return;
     if (values.length === 1) setValue(values[0]!);
     else setContactValues(values);

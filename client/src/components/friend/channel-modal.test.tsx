@@ -141,6 +141,21 @@ describe('ChannelModal', () => {
     expect(p.onUpdate).toHaveBeenCalledWith({ handle: 'jan.novak2' });
   });
 
+  it('rejects a pasted link for a different platform when editing', async () => {
+    const p = props({
+      channel: { ...CHANNEL, type: 'TELEGRAM', handle: 'jannovak', link: 'https://t.me/jannovak' },
+    });
+    await renderWithTheme(<ChannelModal {...p} />);
+    await user().clear(screen.getByLabelText('Username'));
+    await user().type(screen.getByLabelText('Username'), 'https://instagram.com/jan_novak2');
+    await user().press(screen.getByRole('button', { name: 'Continue' }));
+    expect(
+      screen.getByText('That link is for Instagram — this channel is Telegram.'),
+    ).toBeOnTheScreen();
+    expect(screen.queryByText(/Instagram · @jan_novak2/)).not.toBeOnTheScreen();
+    expect(p.onUpdate).not.toHaveBeenCalled();
+  });
+
   it('shows the submit error and closes from Cancel', async () => {
     const p = props({ error: 'This friend already has that channel' });
     await renderWithTheme(<ChannelModal {...p} />);
