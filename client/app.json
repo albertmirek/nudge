@@ -38,6 +38,12 @@
         }
       ],
       "expo-sqlite",
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow $(PRODUCT_NAME) to read a contact you pick, to fill in a friend's phone number or email."
+        }
+      ],
       "expo-localization"
     ],
     "experiments": {

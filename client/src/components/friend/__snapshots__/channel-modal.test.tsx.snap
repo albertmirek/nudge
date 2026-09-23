@@ -1,0 +1,975 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the default story snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffffff",
+      "flex": 1,
+      "padding": 16,
+    }
+  }
+>
+  <Modal
+    animationType="slide"
+    onRequestClose={[MockFunction spy]}
+    presentationStyle="pageSheet"
+    visible={true}
+  >
+    <RNCSafeAreaView
+      edges={
+        {
+          "bottom": "additive",
+          "left": "additive",
+          "right": "additive",
+          "top": "additive",
+        }
+      }
+      style={
+        {
+          "backgroundColor": "#ffffff",
+          "flex": 1,
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "backgroundColor": "#ffffff",
+              "flex": 1,
+            },
+            {
+              "paddingBottom": 0,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "padding": 24,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="Cancel"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={8}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 15,
+                    "lineHeight": 20,
+                  },
+                  {
+                    "color": "#8a8a8f",
+                  },
+                  undefined,
+                ]
+              }
+            >
+              Cancel
+            </Text>
+          </View>
+          <Text
+            style={
+              [
+                {
+                  "fontFamily": "Inter_400Regular",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                },
+                {
+                  "color": "#151518",
+                },
+                {
+                  "fontFamily": "Inter_600SemiBold",
+                },
+              ]
+            }
+          >
+            Add a way to reach
+          </Text>
+          <View
+            style={
+              {
+                "width": 40,
+              }
+            }
+          />
+        </View>
+        <RCTScrollView
+          contentContainerStyle={
+            {
+              "gap": 16,
+              "paddingBottom": 24,
+              "paddingHorizontal": 24,
+            }
+          }
+          keyboardShouldPersistTaps="handled"
+        >
+          <View>
+            <View
+              style={
+                {
+                  "flexDirection": "row",
+                  "flexWrap": "wrap",
+                  "gap": 12,
+                }
+              }
+            >
+              <View
+                accessibilityLabel="WhatsApp"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  WhatsApp
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Instagram"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  Instagram
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Messenger"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  Messenger
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Telegram"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  Telegram
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Signal"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  Signal
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="iMessage"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  iMessage
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="SMS"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  SMS
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Phone"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  Phone
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Email"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  Email
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Other"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 9999,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "minWidth": 72,
+                      "paddingHorizontal": 24,
+                    },
+                    {
+                      "backgroundColor": "#76ff2c",
+                    },
+                    false,
+                    false,
+                    {
+                      "flexGrow": 1,
+                      "minWidth": "30%",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontFamily": "Inter_400Regular",
+                        "fontSize": 15,
+                        "lineHeight": 20,
+                      },
+                      {
+                        "color": "#151518",
+                      },
+                      [
+                        {
+                          "fontFamily": "Inter_600SemiBold",
+                          "fontSize": 15,
+                          "lineHeight": 20,
+                        },
+                        {
+                          "color": "#151518",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  Other
+                </Text>
+              </View>
+            </View>
+          </View>
+        </RCTScrollView>
+      </View>
+    </RNCSafeAreaView>
+  </Modal>
+</View>
+`;
