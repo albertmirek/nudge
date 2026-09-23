@@ -12,7 +12,7 @@ health, friends, catch-ups and nudges.
 
 ## Auth
 
-Run **Auth → Sign In** to log in with the seeded dev user (`dev@nudge.local` / `nudge-dev-password`).
+Run **Auth → Sign In** to log in with the seeded dev user (`admin@admin.cz` / `12345678`).
 This stores `accessToken` and `refreshToken` in the environment; every other folder automatically
 sends the bearer token on its requests.
 

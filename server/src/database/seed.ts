@@ -8,8 +8,8 @@ import { hashPassword } from '../auth/password.js';
 
 /** Fixed id so Bruno and the seed agree on the dev user. */
 export const DEV_USER_ID = '00000000-0000-0000-0000-000000000001';
-export const DEV_USER_EMAIL = 'dev@nudge.local';
-export const DEV_USER_PASSWORD = 'nudge-dev-password';
+export const DEV_USER_EMAIL = 'admin@admin.cz';
+export const DEV_USER_PASSWORD = '12345678';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
