@@ -1,20 +1,36 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Linking,
+  Platform,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ApiError } from '@/api/http';
-import type { CatchUp, Friend } from '@/api/types';
+import type { CatchUp, Channel, Friend } from '@/api/types';
 import { useCatchUps } from '@/api/use-catch-ups';
+import {
+  useCreateChannel,
+  useDeleteChannel,
+  useOpenChannel,
+  useUpdateChannel,
+} from '@/api/use-channel-mutations';
 import { useConfirmNudge } from '@/api/use-confirm-nudge';
 import { useCreateCatchUp } from '@/api/use-create-catch-up';
 import { useFriend } from '@/api/use-friend';
 import { useUpdateCatchUp } from '@/api/use-update-catch-up';
 import { useUpdateFriend } from '@/api/use-update-friend';
+import { ChannelList } from '@/components/friend/channel-list';
+import { ChannelModal } from '@/components/friend/channel-modal';
 import { FriendProfile } from '@/components/friend/friend-profile';
 import { NoteCard } from '@/components/friend/note-card';
 import { NoteModal } from '@/components/friend/note-modal';
 import { BottomNav } from '@/components/navigation/bottom-nav';
+import { CHANNEL_PLATFORMS } from '@/lib/channels';
 import {
   type FriendProfileErrors,
   type FriendProfileValues,
@@ -23,11 +39,19 @@ import {
   validateFriendProfile,
 } from '@/lib/friend-form';
 import { type Theme, useStyles } from '@/theme';
-import { IconButton, Text } from '@/ui';
+import { Button, IconButton, Text } from '@/ui';
 
 export type FriendDetailScreenProps = { friendId: string };
 
 type NoteSheet = { mode: 'closed' } | { mode: 'create' } | { mode: 'edit'; note: CatchUp };
+
+type ChannelSheet = { mode: 'closed' } | { mode: 'create' } | { mode: 'edit'; channel: Channel };
+
+/** Result of tapping a channel, shown under the profile (the app has no toast yet). */
+type ChannelStatus =
+  | { kind: 'recorded' }
+  | { kind: 'open-failed'; label: string }
+  | { kind: 'record-failed'; channel: Channel };
 
 const CONFLICT_MESSAGE = 'This reminder changed elsewhere. Reloaded — try again.';
 
@@ -87,12 +111,44 @@ function LoadedFriend({ friend, notes, notesError, onBack, onNavigate }: LoadedF
   const createNote = useCreateCatchUp(friend.id);
   const updateNote = useUpdateCatchUp(friend.id);
   const confirmNudge = useConfirmNudge();
+  const createChannel = useCreateChannel(friend.id);
+  const updateChannel = useUpdateChannel(friend.id);
+  const deleteChannel = useDeleteChannel(friend.id);
+  const openChannel = useOpenChannel(friend.id);
 
   // Draft values exist only while editing; leaving edit mode discards them.
   const [draft, setDraft] = useState<FriendProfileValues | null>(null);
   const [errors, setErrors] = useState<FriendProfileErrors>({});
   const [sheet, setSheet] = useState<NoteSheet>({ mode: 'closed' });
   const [contactError, setContactError] = useState<string | null>(null);
+  const [channelSheet, setChannelSheet] = useState<ChannelSheet>({ mode: 'closed' });
+  const [channelStatus, setChannelStatus] = useState<ChannelStatus | null>(null);
+
+  const recordOpen = (channel: Channel) =>
+    openChannel.mutate(channel.id, {
+      onSuccess: () => setChannelStatus({ kind: 'recorded' }),
+      onError: () => setChannelStatus({ kind: 'record-failed', channel }),
+    });
+
+  // Open first: only a chat that actually opened counts as contact.
+  const openInApp = async (channel: Channel) => {
+    setChannelStatus(null);
+    try {
+      await Linking.openURL(channel.link);
+    } catch {
+      setChannelStatus({ kind: 'open-failed', label: CHANNEL_PLATFORMS[channel.type].label });
+      return;
+    }
+    recordOpen(channel);
+  };
+
+  const closeChannelSheet = () => setChannelSheet({ mode: 'closed' });
+  const channelMutation =
+    channelSheet.mode === 'edit'
+      ? updateChannel.isError
+        ? updateChannel
+        : deleteChannel
+      : createChannel;
 
   const editing = draft !== null;
   const values = draft ?? friendToProfileValues(friend);
@@ -180,6 +236,40 @@ function LoadedFriend({ friend, notes, notesError, onBack, onNavigate }: LoadedF
                   {contactError}
                 </Text>
               ) : null}
+              <ChannelList
+                channels={friend.channels}
+                onOpen={openInApp}
+                onEdit={(channel) => {
+                  updateChannel.reset();
+                  deleteChannel.reset();
+                  setChannelSheet({ mode: 'edit', channel });
+                }}
+                onAdd={() => {
+                  createChannel.reset();
+                  setChannelSheet({ mode: 'create' });
+                }}
+              />
+              {channelStatus?.kind === 'recorded' ? (
+                <Text variant="caption">{`Marked ${friend.name} as contacted`}</Text>
+              ) : null}
+              {channelStatus?.kind === 'open-failed' ? (
+                <Text variant="caption" style={styles.error}>
+                  {`Couldn't open ${channelStatus.label}`}
+                </Text>
+              ) : null}
+              {channelStatus?.kind === 'record-failed' ? (
+                <View style={styles.statusRow}>
+                  <Text variant="caption" style={styles.error}>
+                    {`Couldn't mark ${friend.name} as contacted`}
+                  </Text>
+                  <Button
+                    variant="accent"
+                    label="Retry"
+                    loading={openChannel.isPending}
+                    onPress={() => recordOpen(channelStatus.channel)}
+                  />
+                </View>
+              ) : null}
               <View style={styles.notesHeader}>
                 <Text variant="body" style={styles.notesTitle}>
                   Notes
@@ -217,6 +307,26 @@ function LoadedFriend({ friend, notes, notesError, onBack, onNavigate }: LoadedF
         saving={noteMutation.isPending}
         error={noteMutation.isError ? noteMutation.error.message : undefined}
       />
+      <ChannelModal
+        visible={channelSheet.mode !== 'closed'}
+        channel={channelSheet.mode === 'edit' ? channelSheet.channel : undefined}
+        onCreate={(body) => createChannel.mutate(body, { onSuccess: closeChannelSheet })}
+        onUpdate={(body) => {
+          if (channelSheet.mode !== 'edit') return;
+          updateChannel.mutate(
+            { channelId: channelSheet.channel.id, body },
+            { onSuccess: closeChannelSheet },
+          );
+        }}
+        onDelete={() => {
+          if (channelSheet.mode !== 'edit') return;
+          deleteChannel.mutate(channelSheet.channel.id, { onSuccess: closeChannelSheet });
+        }}
+        onTest={(channel) => Linking.openURL(channel.link).catch(() => {})}
+        onClose={closeChannelSheet}
+        saving={createChannel.isPending || updateChannel.isPending || deleteChannel.isPending}
+        error={channelMutation.isError ? channelMutation.error.message : undefined}
+      />
     </SafeAreaView>
   );
 }
@@ -229,6 +339,12 @@ const makeStyles = (theme: Theme) => ({
   header: { gap: theme.spacing[5], paddingVertical: theme.spacing[3] },
   back: { alignSelf: 'flex-start' as const, marginLeft: -theme.spacing[3] },
   error: { color: theme.colors.danger },
+  statusRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    gap: theme.spacing[3],
+  },
   notesHeader: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

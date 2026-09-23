@@ -2,8 +2,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, userEvent, waitFor } from '@testing-library/react-native';
 import { useRouter } from 'expo-router';
 import type { ReactElement } from 'react';
+import { Linking } from 'react-native';
 
 import * as catchUpsApi from '@/api/catch-ups';
+import * as channelsApi from '@/api/channels';
 import * as friendsApi from '@/api/friends';
 import { ApiError } from '@/api/http';
 import * as nudgesApi from '@/api/nudges';
@@ -15,6 +17,11 @@ import { FriendDetailScreen } from './friend-detail-screen';
 jest.mock('@/api/friends');
 jest.mock('@/api/catch-ups');
 jest.mock('@/api/nudges');
+jest.mock('@/api/channels');
+jest.mock('@/lib/device-input', () => ({
+  readClipboard: jest.fn(async () => ''),
+  pickContactValues: jest.fn(async () => null),
+}));
 jest.mock('expo-router', () => ({ useRouter: jest.fn() }));
 
 const NOW = new Date('2026-09-17T12:00:00Z');
@@ -38,7 +45,15 @@ const FRIEND: Friend = {
     revision: 4,
     lastEditedAt: '2025-01-03T10:00:00Z',
   },
-  channels: [],
+  channels: [
+    {
+      id: 'channel-1',
+      type: 'WHATSAPP',
+      handle: '+420777123456',
+      deepLink: null,
+      link: 'https://wa.me/420777123456',
+    },
+  ],
 };
 
 const NOTES: CatchUp[] = [
@@ -75,6 +90,12 @@ describe('FriendDetailScreen', () => {
     });
     jest.mocked(catchUpsApi.updateCatchUp).mockResolvedValue({ ...NOTES[0]!, note: 'Edited' });
     jest.mocked(nudgesApi.confirmNudge).mockResolvedValue({ ...FRIEND.nudge!, revision: 5 });
+    jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+    jest.mocked(channelsApi.openChannel).mockResolvedValue({
+      lastContactAt: NOW.toISOString(),
+      nudge: { ...FRIEND.nudge!, revision: 5 },
+    });
+    jest.mocked(channelsApi.createChannel).mockResolvedValue(FRIEND.channels[0]!);
   });
 
   afterEach(() => {
@@ -208,5 +229,50 @@ describe('FriendDetailScreen', () => {
     jest.mocked(friendsApi.getFriend).mockRejectedValue(new ApiError(404, 'Friend not found'));
     await renderScreen(<FriendDetailScreen friendId="missing" />);
     await waitFor(() => expect(screen.getByText("Couldn't load this friend.")).toBeOnTheScreen());
+  });
+
+  it('opens a channel, then records contact', async () => {
+    await renderScreen(<FriendDetailScreen friendId="friend-1" />);
+    await user().press(await screen.findByRole('button', { name: 'Open WhatsApp' }));
+    expect(Linking.openURL).toHaveBeenCalledWith('https://wa.me/420777123456');
+    await waitFor(() =>
+      expect(channelsApi.openChannel).toHaveBeenCalledWith('friend-1', 'channel-1'),
+    );
+    expect(await screen.findByText('Marked Anastasia Kleisioni as contacted')).toBeOnTheScreen();
+  });
+
+  it('records nothing when the link cannot be opened', async () => {
+    jest.mocked(Linking.openURL).mockRejectedValue(new Error('No app'));
+    await renderScreen(<FriendDetailScreen friendId="friend-1" />);
+    await user().press(await screen.findByRole('button', { name: 'Open WhatsApp' }));
+    expect(await screen.findByText("Couldn't open WhatsApp")).toBeOnTheScreen();
+    expect(channelsApi.openChannel).not.toHaveBeenCalled();
+  });
+
+  it('offers a retry when recording fails', async () => {
+    jest.mocked(channelsApi.openChannel).mockRejectedValueOnce(new ApiError(500, 'Server down'));
+    await renderScreen(<FriendDetailScreen friendId="friend-1" />);
+    await user().press(await screen.findByRole('button', { name: 'Open WhatsApp' }));
+    expect(
+      await screen.findByText("Couldn't mark Anastasia Kleisioni as contacted"),
+    ).toBeOnTheScreen();
+    await user().press(screen.getByRole('button', { name: 'Retry' }));
+    await waitFor(() => expect(channelsApi.openChannel).toHaveBeenCalledTimes(2));
+    expect(Linking.openURL).toHaveBeenCalledTimes(1);
+  });
+
+  it('adds a channel through the modal', async () => {
+    await renderScreen(<FriendDetailScreen friendId="friend-1" />);
+    await user().press(await screen.findByRole('button', { name: 'Add a way to reach' }));
+    await user().press(screen.getByRole('button', { name: 'Instagram' }));
+    await user().type(screen.getByLabelText('Username'), 'jan.novak');
+    await user().press(screen.getByRole('button', { name: 'Continue' }));
+    await user().press(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(channelsApi.createChannel).toHaveBeenCalledWith('friend-1', {
+        type: 'INSTAGRAM',
+        handle: 'jan.novak',
+      }),
+    );
   });
 });
