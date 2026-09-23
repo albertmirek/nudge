@@ -50,7 +50,7 @@ describe('Entities (e2e)', () => {
     const friend = await createFriend(user);
     await dataSource
       .getRepository(Channel)
-      .save({ friendId: friend.id, type: ChannelType.WHATSAPP, deepLink: 'whatsapp://send' });
+      .save({ friendId: friend.id, type: ChannelType.WHATSAPP, handle: '+420777123456' });
     await dataSource.getRepository(CatchUp).save({ friendId: friend.id, note: 'coffee' });
     await dataSource.getRepository(Nudge).save({
       userId: user.id,
@@ -67,7 +67,12 @@ describe('Entities (e2e)', () => {
     expect(loaded.periodicity).toBe(FriendPeriodicity.MONTHLY);
     expect(loaded.lastContactAt).toBeNull();
     expect(loaded.channels).toEqual([
-      expect.objectContaining({ type: ChannelType.WHATSAPP, deepLink: 'whatsapp://send' }),
+      expect.objectContaining({
+        type: ChannelType.WHATSAPP,
+        handle: '+420777123456',
+        deepLink: null,
+        link: 'https://wa.me/420777123456',
+      }),
     ]);
     expect(loaded.catchUps).toEqual([expect.objectContaining({ note: 'coffee' })]);
     expect(loaded.nudge).toEqual(
@@ -86,6 +91,29 @@ describe('Entities (e2e)', () => {
         .getRepository(Friend)
         .insert({ userId: user.id, name: 'Bob', periodicity: 'DAILY' as FriendPeriodicity }),
     ).rejects.toBeInstanceOf(QueryFailedError);
+  });
+
+  it('enforces channel link and uniqueness constraints', async () => {
+    const user = await createUser();
+    const friend = await createFriend(user);
+    const channels = dataSource.getRepository(Channel);
+
+    await expect(
+      channels.insert({
+        friendId: friend.id,
+        type: ChannelType.WHATSAPP,
+        handle: '+420777123456',
+        deepLink: 'https://wa.me/1',
+      }),
+    ).rejects.toThrow(QueryFailedError);
+    await expect(
+      channels.insert({ friendId: friend.id, type: ChannelType.OTHER, handle: 'Discord' }),
+    ).rejects.toThrow(QueryFailedError);
+
+    await channels.insert({ friendId: friend.id, type: ChannelType.INSTAGRAM, handle: 'jan' });
+    await expect(
+      channels.insert({ friendId: friend.id, type: ChannelType.INSTAGRAM, handle: 'jan' }),
+    ).rejects.toThrow(QueryFailedError);
   });
 
   it('rejects a user without a timezone', async () => {
@@ -109,7 +137,7 @@ describe('Entities (e2e)', () => {
     const friend = await createFriend(user);
     await dataSource
       .getRepository(Channel)
-      .save({ friendId: friend.id, type: ChannelType.SMS, deepLink: 'sms:+420' });
+      .save({ friendId: friend.id, type: ChannelType.SMS, handle: '+420777123456' });
     await dataSource.getRepository(CatchUp).save({ friendId: friend.id, note: null });
     await dataSource
       .getRepository(Nudge)
