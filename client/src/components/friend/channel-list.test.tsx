@@ -1,6 +1,7 @@
 import { composeStories } from '@storybook/react';
 import { render, screen, userEvent } from '@testing-library/react-native';
 
+import type { Channel } from '@/api/types';
 import { renderWithTheme } from '@/test/render';
 import { describeStories } from '@/test/stories';
 
@@ -8,6 +9,23 @@ import { ChannelList } from './channel-list';
 import * as stories from './channel-list.stories';
 
 const { Default } = composeStories(stories);
+
+const CHANNELS: Channel[] = [
+  {
+    id: 'c1',
+    type: 'WHATSAPP',
+    handle: '+420777123456',
+    deepLink: null,
+    link: 'https://wa.me/420777123456',
+  },
+  {
+    id: 'c2',
+    type: 'INSTAGRAM',
+    handle: 'jan.novak',
+    deepLink: null,
+    link: 'https://ig.me/m/jan.novak',
+  },
+];
 
 describe('ChannelList', () => {
   it('shows each channel with its platform and handle', async () => {
@@ -21,7 +39,9 @@ describe('ChannelList', () => {
     const onOpen = jest.fn();
     const onEdit = jest.fn();
     const onAdd = jest.fn();
-    await render(<Default onOpen={onOpen} onEdit={onEdit} onAdd={onAdd} />);
+    await renderWithTheme(
+      <ChannelList channels={CHANNELS} onOpen={onOpen} onEdit={onEdit} onAdd={onAdd} />,
+    );
     await userEvent.setup().press(screen.getByRole('button', { name: 'Open Instagram' }));
     expect(onOpen).toHaveBeenCalledWith(expect.objectContaining({ id: 'c2' }));
     await userEvent.setup().press(screen.getByRole('button', { name: 'Edit WhatsApp' }));
