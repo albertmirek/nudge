@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { EntityManager } from 'typeorm';
 import { FriendPeriodicity } from '../friends/entities/friend-periodicity.enum.js';
-import type { Friend } from '../friends/entities/friend.entity.js';
+import { Friend } from '../friends/entities/friend.entity.js';
 import { User } from '../users/entities/user.entity.js';
 import { NudgeStatus } from './entities/nudge-status.enum.js';
 import { Nudge } from './entities/nudge.entity.js';
@@ -40,6 +40,13 @@ export class NudgeSchedulingService {
     nudge.status = NudgeStatus.PLANNED;
     nudge.revision += 1;
     return manager.save(Nudge, nudge);
+  }
+
+  /** Contact happened now: store it and plan the next reminder from it. Caller holds the friend lock. */
+  async recordContact(manager: EntityManager, friend: Friend): Promise<Nudge> {
+    friend.lastContactAt = new Date();
+    await manager.save(Friend, friend);
+    return this.plan(manager, friend);
   }
 
   /** Invalidate queued jobs when enabled changes without discarding a snoozed schedule. */

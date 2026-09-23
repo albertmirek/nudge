@@ -1,0 +1,21 @@
+meta {
+  name: Update Channel
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{baseUrl}}/v1/friends/{{friendId}}/channels/{{channelId}}
+  body: json
+}
+
+body:json {
+  {
+    "handle": "+420777000111"
+  }
+}
+
+docs {
+  Nonempty subset of handle and deepLink, validated against the stored type. type is
+  immutable: delete and re-add to change platform.
+}

@@ -1,0 +1,30 @@
+meta {
+  name: Create Channel
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/friends/{{friendId}}/channels
+  body: json
+}
+
+body:json {
+  {
+    "type": "WHATSAPP",
+    "handle": "+420777123456"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setEnvVar("channelId", res.body.id);
+  }
+}
+
+docs {
+  type is one of WHATSAPP, TELEGRAM, SIGNAL, IMESSAGE, SMS, PHONE, EMAIL, INSTAGRAM,
+  MESSENGER, OTHER. handle is an E.164 phone, a username (leading @ stripped) or an email,
+  depending on type. deepLink is required for OTHER and rejected otherwise. The response
+  carries the derived link.
+}

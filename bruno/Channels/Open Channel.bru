@@ -1,0 +1,21 @@
+meta {
+  name: Open Channel
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/v1/friends/{{friendId}}/channels/{{channelId}}/open
+  body: none
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("revision", res.body.nudge.revision);
+  }
+}
+
+docs {
+  Call after the app opened the channel's link. Records contact now and replans the
+  nudge, like Confirm Nudge but without a revision. Returns { lastContactAt, nudge }.
+}

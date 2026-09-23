@@ -3,28 +3,33 @@
 The API stores one current nudge per friend. This is a good fit for the next reminder.
 Catch-ups are the user's notes about a friend (what they last talked about, to pick the
 conversation up quickly next time); they are independent of contact history, which is
-recorded only by nudge confirmation. Delivery attempts and notification history, if
-needed, should have separate records rather than being inferred from the mutable nudge.
+recorded by nudge confirmation or by opening a channel. Delivery attempts and
+notification history, if needed, should have separate records rather than being
+inferred from the mutable nudge.
 
 ## Routes
 
 All bodies and responses use camelCase. Dates are ISO timestamps. IDs are UUIDs.
 
-| Method | Route                                       | Behaviour                                                          |
-| ------ | ------------------------------------------- | ------------------------------------------------------------------ |
-| GET    | `/v1/users/me`                              | Read the current user, including `name`                            |
-| POST   | `/v1/friends`                               | Create a friend and its nudge atomically                           |
-| GET    | `/v1/friends`                               | List the current user's friends, including each nudge and channels |
-| GET    | `/v1/friends/:friendId`                     | Read one friend, including its nudge and channels                  |
-| PATCH  | `/v1/friends/:friendId`                     | Edit name, periodicity, nudgeEnabled or profile fields             |
-| DELETE | `/v1/friends/:friendId`                     | Delete the friend, nudge, catch-ups and channels                   |
-| POST   | `/v1/friends/:friendId/catch-up`            | Add a note; never touches lastContactAt or the nudge               |
-| GET    | `/v1/friends/:friendId/catch-up`            | List notes, newest first                                           |
-| GET    | `/v1/friends/:friendId/catch-up/:catchUpId` | Read a note                                                        |
-| PATCH  | `/v1/friends/:friendId/catch-up/:catchUpId` | Edit the note's text                                               |
-| DELETE | `/v1/friends/:friendId/catch-up/:catchUpId` | Delete a note                                                      |
-| POST   | `/v1/nudges/:nudgeId/snooze`                | Add 24 hours to scheduledFor and set status to SNOOZED             |
-| POST   | `/v1/nudges/:nudgeId/confirm`               | Record contact now and replan the same nudge                       |
+| Method | Route                                            | Behaviour                                                          |
+| ------ | ------------------------------------------------ | ------------------------------------------------------------------ |
+| GET    | `/v1/users/me`                                   | Read the current user, including `name`                            |
+| POST   | `/v1/friends`                                    | Create a friend and its nudge atomically                           |
+| GET    | `/v1/friends`                                    | List the current user's friends, including each nudge and channels |
+| GET    | `/v1/friends/:friendId`                          | Read one friend, including its nudge and channels                  |
+| PATCH  | `/v1/friends/:friendId`                          | Edit name, periodicity, nudgeEnabled or profile fields             |
+| DELETE | `/v1/friends/:friendId`                          | Delete the friend, nudge, catch-ups and channels                   |
+| POST   | `/v1/friends/:friendId/catch-up`                 | Add a note; never touches lastContactAt or the nudge               |
+| GET    | `/v1/friends/:friendId/catch-up`                 | List notes, newest first                                           |
+| GET    | `/v1/friends/:friendId/catch-up/:catchUpId`      | Read a note                                                        |
+| PATCH  | `/v1/friends/:friendId/catch-up/:catchUpId`      | Edit the note's text                                               |
+| DELETE | `/v1/friends/:friendId/catch-up/:catchUpId`      | Delete a note                                                      |
+| POST   | `/v1/friends/:friendId/channels`                 | Add a way to reach the friend; returns it with its derived `link`  |
+| PATCH  | `/v1/friends/:friendId/channels/:channelId`      | Edit `handle` or (OTHER only) `deepLink`                           |
+| DELETE | `/v1/friends/:friendId/channels/:channelId`      | Delete the channel                                                 |
+| POST   | `/v1/friends/:friendId/channels/:channelId/open` | Record contact now and replan; no revision                         |
+| POST   | `/v1/nudges/:nudgeId/snooze`                     | Add 24 hours to scheduledFor and set status to SNOOZED             |
+| POST   | `/v1/nudges/:nudgeId/confirm`                    | Record contact now and replan the same nudge                       |
 
 `GET /v1/users/me` has no request body; it 404s if the authenticated id has no matching row
 (the dev-auth header trusts any well-formed UUID, seeded or not). `name` is free text, empty
@@ -86,6 +91,37 @@ revision: it may refer to a different reminder. This prevents duplicate effects 
 does not replay a previous successful response as an idempotency-key system would.
 
 Unknown fields are rejected, including client-supplied ownership IDs and scheduling fields.
+
+## Channels
+
+A channel is a way to reach a friend. The server stores `type` and `handle` and derives
+`link`, the URL the app opens, so stored channels survive link-format changes:
+
+| Type      | Handle                             | `link`                         |
+| --------- | ---------------------------------- | ------------------------------ |
+| WHATSAPP  | E.164 phone                        | `https://wa.me/<digits>`       |
+| SIGNAL    | E.164 phone                        | `https://signal.me/#p/<phone>` |
+| SMS       | E.164 phone                        | `sms:<phone>`                  |
+| PHONE     | E.164 phone                        | `tel:<phone>`                  |
+| IMESSAGE  | E.164 phone or email               | `sms:<handle>`                 |
+| TELEGRAM  | Username (5–32, `A-Z a-z 0-9 _`)   | `https://t.me/<username>`      |
+| INSTAGRAM | Username (1–30, `A-Z a-z 0-9 . _`) | `https://ig.me/m/<username>`   |
+| MESSENGER | Username or numeric id (5–50)      | `https://m.me/<handle>`        |
+| EMAIL     | Email                              | `mailto:<email>`               |
+| OTHER     | Label (≤ 100 characters)           | `deepLink`                     |
+
+```json
+{ "type": "INSTAGRAM", "handle": "@jan.novak" }
+```
+
+A leading `@` is stripped. `deepLink` is required for OTHER (`https:`, `tel:`, `sms:` or
+`mailto:`) and rejected for every other type. A friend cannot have the same
+`(type, handle)` twice (409). `type` cannot be changed.
+
+`open` is called by the app after it opened the link. It records contact exactly like
+nudge confirmation (sets `lastContactAt` to now and replans from it, creating the nudge if
+it is missing) and returns `{ "lastContactAt": "…", "nudge": { … } }`. It takes no revision:
+opening a chat is a fact about now, not an action on one reminder occurrence.
 
 ## Authentication boundary
 
