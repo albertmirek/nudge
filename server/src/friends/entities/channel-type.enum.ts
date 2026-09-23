@@ -6,5 +6,7 @@ export enum ChannelType {
   SMS = 'SMS',
   PHONE = 'PHONE',
   EMAIL = 'EMAIL',
+  INSTAGRAM = 'INSTAGRAM',
+  MESSENGER = 'MESSENGER',
   OTHER = 'OTHER',
 }
