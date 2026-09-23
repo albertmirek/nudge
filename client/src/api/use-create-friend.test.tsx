@@ -23,6 +23,7 @@ const FRIEND: Friend = {
   createdAt: '2026-09-17T10:00:00Z',
   updatedAt: '2026-09-17T10:00:00Z',
   nudge: null,
+  channels: [],
 };
 
 it('creates a friend and invalidates the friends query on success', async () => {

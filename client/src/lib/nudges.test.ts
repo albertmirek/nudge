@@ -18,6 +18,7 @@ function friend(overrides: Partial<Friend> & { id: string }): Friend {
     createdAt: NOW.toISOString(),
     updatedAt: NOW.toISOString(),
     nudge: null,
+    channels: [],
     ...overrides,
   };
 }

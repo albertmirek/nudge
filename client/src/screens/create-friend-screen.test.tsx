@@ -28,6 +28,7 @@ const CREATED: Friend = {
   createdAt: NOW.toISOString(),
   updatedAt: NOW.toISOString(),
   nudge: null,
+  channels: [],
 };
 
 function renderScreen(ui: ReactElement) {

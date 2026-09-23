@@ -26,6 +26,7 @@ function friend(id: string, name: string): Friend {
     createdAt: '2026-01-01T00:00:00Z',
     updatedAt: '2026-01-01T00:00:00Z',
     nudge: null,
+    channels: [],
   };
 }
 

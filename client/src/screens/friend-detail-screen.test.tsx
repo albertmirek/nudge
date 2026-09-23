@@ -38,6 +38,7 @@ const FRIEND: Friend = {
     revision: 4,
     lastEditedAt: '2025-01-03T10:00:00Z',
   },
+  channels: [],
 };
 
 const NOTES: CatchUp[] = [
